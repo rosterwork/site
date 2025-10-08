@@ -1,4 +1,10 @@
 <svg width="44.2rem" height="22.8rem" viewBox="0 0 186.44 96.312" xmlns="http://www.w3.org/2000/svg" style="width: auto; height: 6rem; background: transparent; display: block;">
+  <defs>
+    <style type="text/css"><![CDATA[
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+      text { font-family: 'Montserrat', sans-serif; }
+    ]]></style>
+  </defs>
   <text transform="matrix(.47482 0 0 .47482 10.627 45.261)" x="0.5575586" fill="hsl(0, 0%, 20%)" font-family="Montserrat" font-size="5.989rem" font-weight="900" letter-spacing="1.1145px" style="paint-order:stroke fill markers;white-space:pre" xml:space="preserve"><tspan x="0" y="0">Roster</tspan></text>
   <text transform="matrix(.47482 0 0 .47482 48.217 82.589)" x="0.5575586" fill="hsl(0, 0%, 20%)" font-family="Montserrat" font-size="5.989rem" font-weight="900" letter-spacing="1.1145px" style="paint-order:stroke fill markers;white-space:pre" xml:space="preserve"><tspan x="0" y="0">Work</tspan></text>
   <path transform="translate(-28.744 -96.881)" d="m56.266 149.13-0.07813 0.87695c-0.18253-6e-3 -0.35164-0.0742-0.53516-0.0742-8.8247 0-16 7.1753-16 16s7.1753 16 16 16c1.4213 0 2.8357-0.18873 4.207-0.5625l0.96484-0.26367-0.20703-0.75977c6.4849-2.0433 11.23-8.039 11.23-15.191 0-8.2793-6.3387-15.206-14.586-15.938zm-0.61328 2.8027c5.1907 0 9.9513 2.8682 12.377 7.457l0.4668 0.88477 0.39258-0.20899c0.61644 1.5811 0.95898 3.2973 0.95898 5.0898 0 7.7439-6.2561 14-14 14-2.2298 0-4.4278-0.53194-6.4102-1.5527l-0.88867-0.45898-0.32031 0.62304c-3.9407-2.4744-6.5762-6.8279-6.5762-11.834 0-7.7439 6.2561-14 14-14z" fill="hsl(0, 0%, 20%)"/>
