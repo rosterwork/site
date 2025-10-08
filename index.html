@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RosterWork - Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <div class="page">
+      <div class="card" role="main" aria-labelledby="loginTitle">
+        <div class="logo-area" aria-hidden="false">
+          <img src="svg/logo.svg" alt="RosterWork logo">
+        </div>
+        <div class="form-area">
+          <h1 id="loginTitle" style="font-size:1.25rem;margin-bottom:1rem">Acesse sua conta</h1>
+
+          <div class="form-row">
+            <label for="usuario">RG ou CPF (com dígito)</label>
+            <input id="usuario" name="usuario" type="text" placeholder="RG ou CPF (com dígito)" autocomplete="off">
+            <div class="mensagemDeErro" aria-live="polite"></div>
+          </div>
+
+          <div class="form-row">
+            <label for="senha">Senha</label>
+            <input id="senha" name="senha" type="password" placeholder="Senha">
+            <div class="mensagemDeErro" aria-live="polite"></div>
+          </div>
+
+          <div class="actions">
+            <button id="btnEntrar" class="btn btn-primary">ENTRAR</button>
+            <div class="links">
+              <button class="link-create">Criar nova conta</button>
+              <button class="link-forgot">Esqueci minha senha</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="js/login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;600;700&display=swap');
+
+:root {
+  --bg-start: #f0f2f5;
+  --bg-end: #d9dce8;
+  --container-bg: #ffffff;
+  --accent: #0b5bd7;
+  --accent-dark: #0b3ccf;
+  --text: #222;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: Montserrat, Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg-start), var(--bg-end));
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.card {
+  background: var(--container-bg);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(15, 20, 30, 0.08);
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem;
+  max-width: 48rem;
+  width: 100%;
+}
+
+.logo-area {
+  flex: 0 0 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-area img {
+  max-width: 180px;
+  height: auto;
+  display: block;
+}
+
+.form-area {
+  flex: 1;
+  min-width: 220px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-size: .9rem;
+  color: #444;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: .9rem 1rem;
+  border: 1px solid #e3e6ee;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+input[type="text"].erro,
+input[type="password"].erro {
+  border-color: #d44;
+}
+
+.mensagemDeErro {
+  color: #b00;
+  font-size: .85rem;
+  margin-top: .35rem;
+  min-height: 1.1rem;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  margin-top: .4rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .8rem 1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+  color: #fff;
+}
+
+.btn-primary:hover { filter: brightness(.95); }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #e3e6ee;
+  color: #444;
+  padding: .6rem 1rem;
+  border-radius: 8px;
+}
+
+.links {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  margin-top: .5rem;
+}
+
+.links button {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: .2rem;
+  font-size: .95rem;
+}
+
+@media (max-width: 720px) {
+  .card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.4rem;
+  }
+  .logo-area { order: -1; flex: 0 0 auto; }
+}
