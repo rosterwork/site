@@ -10,11 +10,19 @@ document.addEventListener('DOMContentLoaded', function () {
   function formatarCpfRg(v) {
     var d = apenasDigitos(v);
     if (d.length <= 8) {
-      if (d.length <= 7) return d;
-      if (d.length === 8) return d.replace(/(\d)(\d{3})(\d{3})(\d)/, '$1.$2.$3-$4');
-      return d;
+      return d.replace(/(\d)(\d{3})(\d{3})(\d?)/, function(match, p1, p2, p3, p4) {
+        if (p4) return p1 + '.' + p2 + '.' + p3 + '-' + p4;
+        if (p3.length === 3) return p1 + '.' + p2 + '.' + p3;
+        if (p2.length === 3) return p1 + '.' + p2;
+        return p1;
+      });
     }
-    if (d.length <= 11) return d.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/, '$1.$2.$3-$4');
+    if (d.length === 9) {
+      return d.replace(/(\d{2})(\d{3})(\d{3})(\d)/, '$1.$2.$3-$4');
+    }
+    if (d.length >= 10) {
+      return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
     return d;
   }
 

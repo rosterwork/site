@@ -4,38 +4,38 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>RosterWork - Login</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=block" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
   </head>
   <body>
     <div class="page">
-      <div class="card" role="main" aria-labelledby="loginTitle">
-        <div class="logo-area" aria-hidden="false">
-          <img src="svg/logo.svg" alt="RosterWork logo">
+      <div class="logo-container">
+        <div class="logo-area">
+          <img src="svg/logo.svg" alt="RosterWork">
         </div>
-        <div class="form-area">
-          <h1 id="loginTitle" style="font-size:1.25rem;margin-bottom:1rem">Acesse sua conta</h1>
-
+      </div>
+      <div class="card" role="main">
           <div class="form-row">
             <label for="usuario">RG ou CPF (com dígito)</label>
-            <input id="usuario" name="usuario" type="text" placeholder="RG ou CPF (com dígito)" autocomplete="off">
-            <div class="mensagemDeErro" aria-live="polite"></div>
+            <input id="usuario" type="text" placeholder="RG ou CPF (com dígito)" autocomplete="off">
+            <div class="mensagemDeErro"></div>
           </div>
 
           <div class="form-row">
             <label for="senha">Senha</label>
-            <input id="senha" name="senha" type="password" placeholder="Senha">
-            <div class="mensagemDeErro" aria-live="polite"></div>
+            <input id="senha" type="password" placeholder="Senha">
+            <div class="mensagemDeErro"></div>
           </div>
 
           <div class="actions">
             <button id="btnEntrar" class="btn btn-primary">ENTRAR</button>
             <div class="links">
-              <button class="link-create">Criar nova conta</button>
-              <button class="link-forgot">Esqueci minha senha</button>
+              <button onclick="window.location.href='cadastro.html'">Criar nova conta</button>
+              <button>Esqueci minha senha</button>
             </div>
           </div>
-
-        </div>
       </div>
     </div>
 
