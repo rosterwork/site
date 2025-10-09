@@ -12,7 +12,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 7rem 2rem 2rem 2rem;
+  padding: 4rem 2rem 2rem 2rem;
 }
 
 .logo-area {
@@ -140,4 +140,5 @@ input[type="password"].erro {
 .links button:hover {
   font-weight: 800;
 }
+
 
