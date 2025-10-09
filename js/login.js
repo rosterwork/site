@@ -77,27 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
       btnEntrar.textContent = 'Verificando...';
       setTimeout(function () {
         btnEntrar.textContent = 'ENTRAR';
-        showMainScreen();
       }, 800);
     }
   });
-
-  document.getElementById('btnSair').addEventListener('click', function() {
-    showLoginScreen();
-  });
-
-  function showMainScreen() {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainScreen').style.display = 'flex';
-  }
-
-  function showLoginScreen() {
-    document.getElementById('mainScreen').style.display = 'none';
-    document.getElementById('loginScreen').style.display = 'block';
-    
-    inputUsuario.value = '';
-    inputSenha.value = '';
-    clearErro(inputUsuario);
-    clearErro(inputSenha);
-  }
 });
