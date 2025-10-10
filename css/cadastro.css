@@ -31,7 +31,7 @@ body {
 .textoCadastro {
   font-size: 1.5rem;
   font-weight: 900;
-  color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 0%);
   text-align: center;
   margin: 0;
   margin-bottom: 1rem;
@@ -57,7 +57,7 @@ body {
   font-weight: 600;
   font-size: 0.7rem;
   margin: 0;
-  color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 0%);
   font-family: 'Montserrat', sans-serif;
   background: hsl(0, 0%, 100%);
   border-radius: 0.35rem;
@@ -74,14 +74,14 @@ body {
 
 .campo {
   background-color: hsl(0, 0%, 100%);
-  border: 1px solid hsl(0, 0%, 20%);
+  border: 1px solid hsl(0, 0%, 0%);
   border-radius: 0.3rem;
   min-height: 2.5rem;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   transition: all 0.3s ease;
-  color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 0%);
   width: 100%;
   box-sizing: border-box;
   padding: 0 0.6rem;
@@ -96,7 +96,7 @@ body {
 .campoSelecionado:not(.mostrandoPlaceholder),
 .campoSelecionado:focus,
 .campoSelecionado.setaAtiva {
-  color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 0%);
 }
 
 .campoSelecionado:focus,
@@ -111,7 +111,7 @@ body {
   left: 0;
   right: 0;
   z-index: 99;
-  border: 1px solid hsl(0, 0%, 20%);
+  border: 1px solid hsl(0, 0%, 0%);
   border-top: none;
   border-radius: 0 0 0.3rem 0.3rem;
   max-height: 10rem;
@@ -133,13 +133,13 @@ body {
 .itensSelecao.paraCima {
   top: auto;
   bottom: 100%;
-  border-top: 1px solid hsl(0, 0%, 20%);
+  border-top: 1px solid hsl(0, 0%, 0%);
   border-bottom: none;
   border-radius: 0.3rem 0.3rem 0 0;
 }
 
 .itensSelecao div {
-  color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 0%);
   padding: 0.25rem 0.6rem;
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
@@ -207,14 +207,14 @@ textarea.campoNomeCompleto {
 }
 
 .botaoEnviar {
-  background-color: hsl(0, 0%, 20%);
+  background-color: hsl(0, 0%, 0%);
   color: hsl(0, 0%, 100%);
   margin-top: 2rem;
 }
 
 .botaoVoltar {
   background: none;
-  color: hsl(0, 0%, 20%);
+  color: hsl(0, 0%, 0%);
   margin-top: 1rem;
 }
 
@@ -241,9 +241,9 @@ textarea.campoNomeCompleto {
 }
 
 .botaoCalendario {
-  width: 2.8rem;
+  width: 2.5rem;
   height: 2.5rem;
-  border: 1px solid hsl(0, 0%, 20%);
+  border: 1px solid hsl(0, 0%, 0%);
   border-radius: 0.3rem;
   background: hsl(0, 0%, 100%);
   cursor: pointer;
@@ -259,8 +259,8 @@ textarea.campoNomeCompleto {
 }
 
 .botaoCalendario svg {
-  fill: hsl(0, 0%, 20%);
-  stroke: hsl(0, 0%, 20%);
+  fill: hsl(0, 0%, 0%);
+  stroke: hsl(0, 0%, 0%);
 }
 
 .linhaLocalTrabalho {
@@ -279,10 +279,9 @@ textarea.campoNomeCompleto {
 
 .botaoRemover,
 .botaoAdicionar {
-  width: 2.8rem;
+  width: 2.5rem;
   height: 2.5rem;
-  min-width: 2.8rem;
-  border: 1px solid hsl(0, 0%, 20%);
+  border: 1px solid hsl(0, 0%, 0%);
   border-radius: 0.3rem;
   background: hsl(0, 0%, 100%);
   cursor: pointer;

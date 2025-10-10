@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RosterWork - Main</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=block" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/confirmacaoSair.css">
+  </head>
+  <body>
+    <div class="cabecalho">
+      <div class="cabecalhoEsquerdo">
+        <img class="logo" src="svg/logo.svg" alt="RosterWork">
+        <div class="cabecalhoEsquerda">
+          <h1 class="cabecalhoTitulo">Corpo de Bombeiros do Paraná</h1>
+        </div>
+      </div>
+      <div class="cabecalhoDireito">
+        <div class="cabecalhoDireita">
+          <div class="cabecalhoDireitaBox cabecalhoDireitaBox1">4ºCRBM / 2ªCIBM / 1ºPEL</div>
+          <div class="cabecalhoDireitaBox cabecalhoDireitaBox2">Cb. Henry</div>
+          <div class="cabecalhoDireitaBox cabecalhoDireitaBox3">Administrador</div>
+        </div>
+        <div class="cabecalhoBotoes">
+          <button class="botaoCabecalho">
+            <img src="svg/engrenagem.svg" alt="Engrenagem" width="20" height="20" style="display:block;">
+          </button>
+          <button class="botaoCabecalho" onclick="mostrarConfirmacaoSairLogout()">
+            <img src="svg/logout.svg" alt="Logout" width="20" height="20" style="display:block;">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de confirmação de logout -->
+    <div id="confirmacaoSairLogout" class="confirmacaoSair-overlay">
+      <div class="confirmacaoSair-box">
+        <p class="confirmacaoSair-text">Tem certeza que deseja sair?</p>
+        <div class="confirmacaoSair-buttons">
+          <button class="confirmacaoSair-btn confirmacaoSair-btn-nao" onclick="fecharConfirmacaoSairLogout()">NÃO</button>
+          <button class="confirmacaoSair-btn confirmacaoSair-btn-sim" onclick="confirmarLogout()">SIM</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function mostrarConfirmacaoSairLogout() {
+        document.getElementById('confirmacaoSairLogout').style.display = 'flex';
+      }
+
+      function fecharConfirmacaoSairLogout() {
+        document.getElementById('confirmacaoSairLogout').style.display = 'none';
+      }
+
+      function confirmarLogout() {
+        window.location.href = 'index.html';
+      }
+    </script>
+  </body>
+</html>

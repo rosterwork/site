@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
       btnEntrar.textContent = 'Verificando...';
       setTimeout(function () {
         btnEntrar.textContent = 'ENTRAR';
+        window.location.href = 'main.html';
       }, 800);
     }
   });
