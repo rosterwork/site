@@ -846,25 +846,22 @@ function enviarCadastro() {
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
   
-  fetch('https://script.google.com/macros/s/AKfycbyJeyB2ibE-o71rzo8RoUR2TsR93D9wbPNK3nqUqr4VKeU12-Abhm6sF_ZM1Y_7yqQc3w/exec', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(dados)
-  })
-  .then(response => response.json())
-  .then(resultado => {
-    if (resultado.success) {
-      mostrarModal('Solicitação de cadastro realizado com sucesso, aguarde aprovação.', () => {
-        window.location.href = 'index.html';
-      });
-    } else {
-      mostrarModal('Erro ao processar cadastro. Tente novamente.', () => {
-        btnEnviar.textContent = 'ENVIAR';
-        btnEnviar.disabled = false;
-      });
-    }
-  })
-  .catch(error => {
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://script.google.com/macros/s/AKfycbyJeyB2ibE-o71rzo8RoUR2TsR93D9wbPNK3nqUqr4VKeU12-Abhm6sF_ZM1Y_7yqQc3w/exec';
+  form.target = '_blank';
+  
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'dados';
+  input.value = JSON.stringify(dados);
+  
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+  
+  mostrarModal('Dados enviados! Verifique a nova aba que foi aberta.', () => {
     btnEnviar.textContent = 'ENVIAR';
     btnEnviar.disabled = false;
   });
