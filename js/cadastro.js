@@ -865,10 +865,8 @@ function enviarCadastro() {
     }
   })
   .catch(error => {
-    mostrarModal('Erro de conexão. Verifique sua internet e tente novamente.', () => {
-      btnEnviar.textContent = 'ENVIAR';
-      btnEnviar.disabled = false;
-    });
+    btnEnviar.textContent = 'ENVIAR';
+    btnEnviar.disabled = false;
   });
 }
 
