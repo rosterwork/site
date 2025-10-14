@@ -689,3 +689,214 @@ function abrirCalendario(event) {
 function voltarParaLogin() {
   window.location.href = 'index.html';
 }
+
+// ============================================================================
+// VALIDAÇÃO E ENVIO DE CADASTRO
+// ============================================================================
+
+function validarTodosCampos() {
+  let todosValidos = true;
+  
+  const organizacao = document.getElementById('organizacao');
+  if (!organizacao || organizacao.classList.contains('mostrandoPlaceholder') || !organizacao.value.trim()) {
+    setErro(organizacao, 'Selecione uma organização');
+    todosValidos = false;
+  }
+  
+  const camposObrigatorios = [
+    'nomeCompleto', 'nomeGuerra', 'cpf', 'rg', 
+    'diaData', 'mesData', 'anoData',
+    'categoriaCnh', 'postoPatente',
+    'diaUltimaPromocao', 'mesUltimaPromocao', 'anoUltimaPromocao',
+    'diaPenultimaPromocao', 'mesPenultimaPromocao', 'anoPenultimaPromocao',
+    'classificacaoCfpCfo', 'senha', 'confirmeSenha'
+  ];
+  
+  camposObrigatorios.forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo) {
+      if (campo.classList.contains('mostrandoPlaceholder') || !campo.value.trim()) {
+        const label = campo.closest('.grupoDeFormulario')?.querySelector('label')?.textContent?.replace(':', '') || id;
+        setErro(campo, `${label} é obrigatório`);
+        todosValidos = false;
+      }
+    }
+  });
+  
+  if (locaisSelecionados.length === 0) {
+    mostrarErroGeral('Selecione pelo menos um local de trabalho');
+    todosValidos = false;
+  }
+  
+  if (funcoesSelecionadas.length === 0) {
+    mostrarErroGeral('Selecione pelo menos uma função/setor');
+    todosValidos = false;
+  }
+  
+  return todosValidos;
+}
+
+function coletarDadosFormulario() {
+  return {
+    organizacao: document.getElementById('organizacao')?.value.trim(),
+    nomeCompleto: document.getElementById('nomeCompleto')?.value.trim(),
+    nomeGuerra: document.getElementById('nomeGuerra')?.value.trim(),
+    cpf: document.getElementById('cpf')?.value.trim(),
+    rg: document.getElementById('rg')?.value.trim(),
+    dataNascimento: {
+      dia: document.getElementById('diaData')?.value,
+      mes: converterMesParaNumero(document.getElementById('mesData')?.value),
+      ano: document.getElementById('anoData')?.value
+    },
+    categoriaCnh: document.getElementById('categoriaCnh')?.value.trim(),
+    postoPatente: document.getElementById('postoPatente')?.value.trim(),
+    locaisTrabalho: [...locaisSelecionados],
+    funcoes: [...funcoesSetorSelecionadas],
+    ultimaPromocao: {
+      dia: document.getElementById('diaUltimaPromocao')?.value,
+      mes: converterMesParaNumero(document.getElementById('mesUltimaPromocao')?.value),
+      ano: document.getElementById('anoUltimaPromocao')?.value
+    },
+    penultimaPromocao: {
+      dia: document.getElementById('diaPenultimaPromocao')?.value,
+      mes: converterMesParaNumero(document.getElementById('mesPenultimaPromocao')?.value),
+      ano: document.getElementById('anoPenultimaPromocao')?.value
+    },
+    classificacaoCfpCfo: document.getElementById('classificacaoCfpCfo')?.value.trim(),
+    senha: document.getElementById('senha')?.value.trim()
+  };
+}
+
+function converterMesParaNumero(mes) {
+  const meses = {
+    'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
+    'Maio': '05', 'Junho': '06', 'Julho': '07', 'Agosto': '08',
+    'Setembro': '09', 'Outubro': '10', 'Novembro': '11', 'Dezembro': '12'
+  };
+  return meses[mes] || mes;
+}
+
+function setErro(campo, mensagem) {
+  if (!campo) return;
+  campo.classList.add('erro');
+  const erroEl = campo.closest('.grupoDeFormulario')?.querySelector('.mensagemDeErro');
+  if (erroEl) erroEl.textContent = mensagem;
+}
+
+function limparErro(campo) {
+  if (!campo) return;
+  campo.classList.remove('erro');
+  const erroEl = campo.closest('.grupoDeFormulario')?.querySelector('.mensagemDeErro');
+  if (erroEl) erroEl.textContent = '';
+}
+
+function mostrarErroGeral(mensagem) {
+  // Criar ou atualizar mensagem de erro geral
+  let erroGeral = document.getElementById('erroGeral');
+  if (!erroGeral) {
+    erroGeral = document.createElement('div');
+    erroGeral.id = 'erroGeral';
+    erroGeral.style.cssText = 'color: red; font-weight: bold; margin: 1rem 0; padding: 0.5rem; background: #ffe6e6; border: 1px solid red; border-radius: 4px;';
+    document.querySelector('.containerFundoBranco').insertBefore(erroGeral, document.getElementById('btnEnviar'));
+  }
+  erroGeral.textContent = mensagem;
+  erroGeral.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function removerErroGeral() {
+  const erroGeral = document.getElementById('erroGeral');
+  if (erroGeral) erroGeral.remove();
+}
+
+function enviarCadastro() {
+  // Limpar erros anteriores
+  removerErroGeral();
+  document.querySelectorAll('.campo.erro').forEach(campo => limparErro(campo));
+  
+  // Validar todos os campos
+  if (!validarTodosCampos()) {
+    mostrarErroGeral('Por favor, corrija os erros indicados nos campos acima.');
+    return;
+  }
+  
+  // Coletar dados
+  const dados = coletarDadosFormulario();
+  
+  // Mostrar loading
+  const btnEnviar = document.getElementById('btnEnviar');
+  btnEnviar.textContent = 'ENVIANDO...';
+  btnEnviar.disabled = true;
+  
+  fetch('https://script.google.com/macros/s/AKfycbz89JT39_dozK4ERdxkJEvpULKS0ObSWI7ZlCYevtMAPDwD5nErdgJ2SwhofNj_iMC3lg/exec', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dados)
+  })
+  .then(response => response.json())
+  .then(resultado => {
+    if (resultado.success) {
+      btnEnviar.textContent = 'CADASTRO REALIZADO!';
+      btnEnviar.style.backgroundColor = '#28a745';
+      
+      mostrarModal('Solicitação de cadastro realizado com sucesso, aguarde aprovação.', () => {
+        window.location.href = 'index.html';
+      });
+    } else {
+      throw new Error(resultado.error || 'Erro desconhecido');
+    }
+  })
+  .catch(error => {
+    console.error('Erro no cadastro:', error);
+    btnEnviar.textContent = 'ERRO - TENTE NOVAMENTE';
+    btnEnviar.style.backgroundColor = '#dc3545';
+    btnEnviar.disabled = false;
+    
+    setTimeout(() => {
+      btnEnviar.textContent = 'ENVIAR CADASTRO';
+      btnEnviar.style.backgroundColor = '';
+    }, 3000);
+  });
+}
+
+function mostrarModal(mensagem, callback) {
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+  `;
+  
+  const conteudo = document.createElement('div');
+  conteudo.style.cssText = `
+    background: white; padding: 20px; border-radius: 8px; text-align: center;
+    max-width: 400px; margin: 20px;
+  `;
+  
+  const texto = document.createElement('p');
+  texto.textContent = mensagem;
+  texto.style.marginBottom = '20px';
+  
+  const botao = document.createElement('button');
+  botao.textContent = 'OK';
+  botao.style.cssText = `
+    background: #007bff; color: white; border: none; padding: 10px 20px;
+    border-radius: 4px; cursor: pointer;
+  `;
+  
+  botao.onclick = () => {
+    document.body.removeChild(modal);
+    if (callback) callback();
+  };
+  
+  conteudo.appendChild(texto);
+  conteudo.appendChild(botao);
+  modal.appendChild(conteudo);
+  document.body.appendChild(modal);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const btnEnviar = document.getElementById('btnEnviar');
+  if (btnEnviar) {
+    btnEnviar.addEventListener('click', enviarCadastro);
+  }
+});
