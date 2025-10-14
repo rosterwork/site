@@ -553,19 +553,13 @@ function preloadCalendario() {
   if (window.calendarioShared && window.calendarioShared.create) {
     try {
       window.calendarioShared.create();
-      console.log('✅ Calendário pré-carregado com sucesso');
-    } catch (e) {
-      console.warn('⚠️ Erro no preload do calendário:', e.message);
-    }
+    } catch (e) {}
   } else {
     setTimeout(() => {
       if (window.calendarioShared && window.calendarioShared.create) {
         try {
           window.calendarioShared.create();
-          console.log('✅ Calendário pré-carregado com sucesso (retry)');
-        } catch (e) {
-          console.warn('⚠️ Erro no preload do calendário (retry):', e.message);
-        }
+        } catch (e) {}
       }
     }, 100);
   }
@@ -578,7 +572,13 @@ function mostrarCamposAdicionais(org) {
     if (btn) btn.style.display = 'none';
     return c.style.display = 'none';
   }
-  if (btn) btn.style.display = 'block';
+  if (btn) {
+    btn.style.display = 'block';
+    if (!btn.hasAttribute('data-event-attached')) {
+      btn.addEventListener('click', enviarCadastro);
+      btn.setAttribute('data-event-attached', 'true');
+    }
+  }
   const pre = document.getElementById('preloadCamposAdicionais');
   if (pre) {
     c.innerHTML = pre.innerHTML;
@@ -598,11 +598,23 @@ function mostrarCamposAdicionais(org) {
     renderizarLocaisTrabalho();
     funcoesSetorSelecionadas = [];
     renderizarFuncoesSetor();
+    
+    const btnEnviar = document.getElementById('btnEnviar');
+    if (btnEnviar && !btnEnviar.hasAttribute('data-event-attached')) {
+      btnEnviar.addEventListener('click', enviarCadastro);
+      btnEnviar.setAttribute('data-event-attached', 'true');
+    }
     return;
   }
   c.innerHTML = gerarCamposAdicionais();
   c.style.display = 'block';
   configurarCamposTexto(c);
+  
+  const btnEnviar = document.getElementById('btnEnviar');
+  if (btnEnviar && !btnEnviar.hasAttribute('data-event-attached')) {
+    btnEnviar.addEventListener('click', enviarCadastro);
+    btnEnviar.setAttribute('data-event-attached', 'true');
+  }
   c.querySelectorAll('.selecaoCustomizada').forEach(container => {
     const campo = container.querySelector('.campoSelecionado');
     criarSelecaoCustomizada(container, (campo.id.includes('Data') || campo.id.includes('UltimaPromocao') || campo.id.includes('PenultimaPromocao')) ? validarData : null);
@@ -699,37 +711,64 @@ function validarTodosCampos() {
   
   const organizacao = document.getElementById('organizacao');
   if (!organizacao || organizacao.classList.contains('mostrandoPlaceholder') || !organizacao.value.trim()) {
-    setErro(organizacao, 'Selecione uma organização');
+    organizacao.classList.add('erro');
+    const erroEl = organizacao.closest('.grupoDeFormulario')?.querySelector('.mensagemDeErro');
+    if (erroEl) erroEl.textContent = 'Selecione uma opção';
     todosValidos = false;
   }
   
-  const camposObrigatorios = [
-    'nomeCompleto', 'nomeGuerra', 'cpf', 'rg', 
-    'diaData', 'mesData', 'anoData',
-    'categoriaCnh', 'postoPatente',
-    'diaUltimaPromocao', 'mesUltimaPromocao', 'anoUltimaPromocao',
-    'diaPenultimaPromocao', 'mesPenultimaPromocao', 'anoPenultimaPromocao',
-    'classificacaoCfpCfo', 'senha', 'confirmeSenha'
-  ];
-  
-  camposObrigatorios.forEach(id => {
-    const campo = document.getElementById(id);
-    if (campo) {
-      if (campo.classList.contains('mostrandoPlaceholder') || !campo.value.trim()) {
-        const label = campo.closest('.grupoDeFormulario')?.querySelector('label')?.textContent?.replace(':', '') || id;
-        setErro(campo, `${label} é obrigatório`);
+  document.querySelectorAll('.campoNomeCompleto').forEach(el => {
+    if (el.offsetParent !== null) {
+      const evento = new Event('blur');
+      el.dispatchEvent(evento);
+      if (el.classList.contains('erro')) {
         todosValidos = false;
       }
     }
   });
   
+  ['diaData', 'mesData', 'anoData', 'categoriaCnh', 'postoPatente',
+   'diaUltimaPromocao', 'mesUltimaPromocao', 'anoUltimaPromocao',
+   'diaPenultimaPromocao', 'mesPenultimaPromocao', 'anoPenultimaPromocao'].forEach(id => {
+    const campo = document.getElementById(id);
+    if (campo && (campo.classList.contains('mostrandoPlaceholder') || !campo.value.trim())) {
+      campo.classList.add('erro');
+      const erroEl = document.getElementById('erro' + id[0].toUpperCase() + id.slice(1));
+      if (erroEl && id.includes('Data')) {
+        const msgs = {
+          'diaData': 'Insira o dia', 'mesData': 'Insira o mês', 'anoData': 'Insira o ano',
+          'diaUltimaPromocao': 'Insira o dia', 'mesUltimaPromocao': 'Insira o mês', 'anoUltimaPromocao': 'Insira o ano',
+          'diaPenultimaPromocao': 'Insira o dia', 'mesPenultimaPromocao': 'Insira o mês', 'anoPenultimaPromocao': 'Insira o ano'
+        };
+        erroEl.textContent = msgs[id] || 'Campo inválido';
+      } else if (erroEl) {
+        erroEl.textContent = 'Selecione uma opção';
+      }
+      todosValidos = false;
+    }
+  });
+  
   if (locaisSelecionados.length === 0) {
-    mostrarErroGeral('Selecione pelo menos um local de trabalho');
+    const container = document.getElementById('containerLocaisTrabalho');
+    const primeiraLinha = container?.querySelector('.linhaLocalTrabalho');
+    const campo = primeiraLinha?.querySelector('.campoSelecionado');
+    const erroEl = primeiraLinha?.querySelector('.mensagemDeErro');
+    if (campo && erroEl) {
+      campo.classList.add('erro');
+      erroEl.textContent = 'Selecione uma opção';
+    }
     todosValidos = false;
   }
   
-  if (funcoesSelecionadas.length === 0) {
-    mostrarErroGeral('Selecione pelo menos uma função/setor');
+  if (funcoesSetorSelecionadas.length === 0) {
+    const container = document.getElementById('containerFuncaoSetor');
+    const primeiraLinha = container?.querySelector('.linhaLocalTrabalho');
+    const campo = primeiraLinha?.querySelector('.campoSelecionado');
+    const erroEl = primeiraLinha?.querySelector('.mensagemDeErro');
+    if (campo && erroEl) {
+      campo.classList.add('erro');
+      erroEl.textContent = 'Selecione uma opção';
+    }
     todosValidos = false;
   }
   
@@ -790,40 +829,18 @@ function limparErro(campo) {
   if (erroEl) erroEl.textContent = '';
 }
 
-function mostrarErroGeral(mensagem) {
-  // Criar ou atualizar mensagem de erro geral
-  let erroGeral = document.getElementById('erroGeral');
-  if (!erroGeral) {
-    erroGeral = document.createElement('div');
-    erroGeral.id = 'erroGeral';
-    erroGeral.style.cssText = 'color: red; font-weight: bold; margin: 1rem 0; padding: 0.5rem; background: #ffe6e6; border: 1px solid red; border-radius: 4px;';
-    document.querySelector('.containerFundoBranco').insertBefore(erroGeral, document.getElementById('btnEnviar'));
-  }
-  erroGeral.textContent = mensagem;
-  erroGeral.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
 
-function removerErroGeral() {
-  const erroGeral = document.getElementById('erroGeral');
-  if (erroGeral) erroGeral.remove();
-}
 
 function enviarCadastro() {
-  // Limpar erros anteriores
-  removerErroGeral();
-  document.querySelectorAll('.campo.erro').forEach(campo => limparErro(campo));
-  
-  // Validar todos os campos
   if (!validarTodosCampos()) {
-    mostrarErroGeral('Por favor, corrija os erros indicados nos campos acima.');
     return;
   }
   
-  // Coletar dados
   const dados = coletarDadosFormulario();
   
-  // Mostrar loading
   const btnEnviar = document.getElementById('btnEnviar');
+  if (!btnEnviar) return;
+  
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
   
@@ -835,26 +852,14 @@ function enviarCadastro() {
   .then(response => response.json())
   .then(resultado => {
     if (resultado.success) {
-      btnEnviar.textContent = 'CADASTRO REALIZADO!';
-      btnEnviar.style.backgroundColor = '#28a745';
-      
       mostrarModal('Solicitação de cadastro realizado com sucesso, aguarde aprovação.', () => {
         window.location.href = 'index.html';
       });
-    } else {
-      throw new Error(resultado.error || 'Erro desconhecido');
     }
   })
-  .catch(error => {
-    console.error('Erro no cadastro:', error);
-    btnEnviar.textContent = 'ERRO - TENTE NOVAMENTE';
-    btnEnviar.style.backgroundColor = '#dc3545';
+  .catch(() => {
+    btnEnviar.textContent = 'ENVIAR';
     btnEnviar.disabled = false;
-    
-    setTimeout(() => {
-      btnEnviar.textContent = 'ENVIAR CADASTRO';
-      btnEnviar.style.backgroundColor = '';
-    }, 3000);
   });
 }
 
@@ -894,9 +899,3 @@ function mostrarModal(mensagem, callback) {
   document.body.appendChild(modal);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  const btnEnviar = document.getElementById('btnEnviar');
-  if (btnEnviar) {
-    btnEnviar.addEventListener('click', enviarCadastro);
-  }
-});
