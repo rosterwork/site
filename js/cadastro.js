@@ -832,15 +832,24 @@ function limparErro(campo) {
 
 
 function enviarCadastro() {
+  console.log('1. Iniciando enviarCadastro');
+  
   if (!validarTodosCampos()) {
+    console.log('2. Validação falhou');
     return;
   }
   
+  console.log('3. Validação passou');
   const dados = coletarDadosFormulario();
+  console.log('4. Dados coletados:', dados);
   
   const btnEnviar = document.getElementById('btnEnviar');
-  if (!btnEnviar) return;
+  if (!btnEnviar) {
+    console.log('5. Botão não encontrado');
+    return;
+  }
   
+  console.log('6. Iniciando envio');
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
   
@@ -849,15 +858,23 @@ function enviarCadastro() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dados)
   })
-  .then(response => response.json())
+  .then(response => {
+    console.log('7. Resposta recebida:', response);
+    return response.json();
+  })
   .then(resultado => {
+    console.log('8. Resultado:', resultado);
     if (resultado.success) {
+      console.log('9. Sucesso - mostrando modal');
       mostrarModal('Solicitação de cadastro realizado com sucesso, aguarde aprovação.', () => {
         window.location.href = 'index.html';
       });
+    } else {
+      console.log('10. Falha no resultado:', resultado);
     }
   })
-  .catch(() => {
+  .catch(error => {
+    console.log('11. Erro capturado:', error);
     btnEnviar.textContent = 'ENVIAR';
     btnEnviar.disabled = false;
   });
