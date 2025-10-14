@@ -338,11 +338,11 @@ function gerarCamposAdicionais() {
 }
 
 const LOCAIS_TRABALHO = [
-  { texto: '4º CRBM - Maringá', nivel: 1 },
-  { texto: '2ª CIBM - Umuarama', nivel: 2 },
-  { texto: '1º Pel - Umuarama', nivel: 3 },
-  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 3 },
-  { texto: '3º Pel - Altônia', nivel: 3 }
+  { texto: '4º CRBM - Maringá', nivel: 2 },
+  { texto: '2ª CIBM - Umuarama', nivel: 3 },
+  { texto: '1º Pel - Umuarama', nivel: 4 },
+  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 4 },
+  { texto: '3º Pel - Altônia', nivel: 4 }
 ];
 let locaisSelecionados = [];
 
