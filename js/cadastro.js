@@ -848,7 +848,7 @@ function enviarCadastro() {
   
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = 'https://script.google.com/macros/s/AKfycbyJeyB2ibE-o71rzo8RoUR2TsR93D9wbPNK3nqUqr4VKeU12-Abhm6sF_ZM1Y_7yqQc3w/exec';
+  form.action = 'https://script.google.com/macros/s/AKfycbxmbjLjoDYKKImEkuljSGkQF0upigKWHXr1JUB9QJGjj4Oo2zz1NqNIjAqAGp1C_F6-qQ/exec';
   form.target = '_blank';
   
   const input = document.createElement('input');
