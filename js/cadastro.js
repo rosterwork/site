@@ -832,51 +832,43 @@ function limparErro(campo) {
 
 
 function enviarCadastro() {
-  console.log('1. Iniciando enviarCadastro');
-  
   if (!validarTodosCampos()) {
-    console.log('2. Validação falhou');
     return;
   }
   
-  console.log('3. Validação passou');
   const dados = coletarDadosFormulario();
-  console.log('4. Dados coletados:', dados);
   
   const btnEnviar = document.getElementById('btnEnviar');
   if (!btnEnviar) {
-    console.log('5. Botão não encontrado');
     return;
   }
   
-  console.log('6. Iniciando envio');
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
   
-  fetch('https://script.google.com/macros/s/AKfycbz89JT39_dozK4ERdxkJEvpULKS0ObSWI7ZlCYevtMAPDwD5nErdgJ2SwhofNj_iMC3lg/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbyJeyB2ibE-o71rzo8RoUR2TsR93D9wbPNK3nqUqr4VKeU12-Abhm6sF_ZM1Y_7yqQc3w/exec', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dados)
   })
-  .then(response => {
-    console.log('7. Resposta recebida:', response);
-    return response.json();
-  })
+  .then(response => response.json())
   .then(resultado => {
-    console.log('8. Resultado:', resultado);
     if (resultado.success) {
-      console.log('9. Sucesso - mostrando modal');
       mostrarModal('Solicitação de cadastro realizado com sucesso, aguarde aprovação.', () => {
         window.location.href = 'index.html';
       });
     } else {
-      console.log('10. Falha no resultado:', resultado);
+      mostrarModal('Erro ao processar cadastro. Tente novamente.', () => {
+        btnEnviar.textContent = 'ENVIAR';
+        btnEnviar.disabled = false;
+      });
     }
   })
   .catch(error => {
-    console.log('11. Erro capturado:', error);
-    btnEnviar.textContent = 'ENVIAR';
-    btnEnviar.disabled = false;
+    mostrarModal('Erro de conexão. Verifique sua internet e tente novamente.', () => {
+      btnEnviar.textContent = 'ENVIAR';
+      btnEnviar.disabled = false;
+    });
   });
 }
 
