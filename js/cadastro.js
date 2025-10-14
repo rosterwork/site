@@ -337,12 +337,30 @@ function gerarCamposAdicionais() {
   campo('confirmeSenha', 'Confirme a senha', 'input', 'Confirme sua senha', 'type="password"');
 }
 
+const IndiceDocP1A1 = 'cbmpr';
+
+const IndiceDocP1A1L8 = '8';
+const IndiceDocP1A1L9 = '9';
+const IndiceDocP1A1L11 = '11';
+const IndiceDocP1A1L12 = '12';
+const IndiceDocP1A1L15 = '15';
+const IndiceDocP1A1L16 = '16';
+const IndiceDocP1A1L18 = '18';
+const IndiceDocP1A1L19 = '19';
+const IndiceDocP1A1L22 = '22';
+const IndiceDocP1A1L23 = '23';
+const IndiceDocP1A1L25 = '25';
+const IndiceDocP1A1L26 = '26';
+const IndiceDocP1A1L29 = '29';
+const IndiceDocP1A1L30 = '30';
+const IndiceDocP1A1L32 = '32';
+const IndiceDocP1A1L33 = '33';
+
 const LOCAIS_TRABALHO = [
-  { texto: '4º CRBM - Maringá', nivel: 2 },
-  { texto: '2ª CIBM - Umuarama', nivel: 3 },
-  { texto: '1º Pel - Umuarama', nivel: 4 },
-  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 4 },
-  { texto: '3º Pel - Altônia', nivel: 4 }
+  { texto: '2ª CIBM - Umuarama', nivel: 3, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L8, fim: IndiceDocP1A1L9}, pracas: {inicio: IndiceDocP1A1L11, fim: IndiceDocP1A1L12}} },
+  { texto: '1º Pel - Umuarama', nivel: 4, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L15, fim: IndiceDocP1A1L16}, pracas: {inicio: IndiceDocP1A1L18, fim: IndiceDocP1A1L19}} },
+  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 4, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L22, fim: IndiceDocP1A1L23}, pracas: {inicio: IndiceDocP1A1L25, fim: IndiceDocP1A1L26}} },
+  { texto: '3º Pel - Altônia', nivel: 4, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L29, fim: IndiceDocP1A1L30}, pracas: {inicio: IndiceDocP1A1L32, fim: IndiceDocP1A1L33}} }
 ];
 let locaisSelecionados = [];
 
@@ -568,7 +586,7 @@ function preloadCalendario() {
 function mostrarCamposAdicionais(org) {
   const c = document.getElementById('camposAdicionais');
   const btn = document.getElementById('btnEnviar');
-  if (org !== 'cbmpr') {
+  if (org !== IndiceDocP1A1) {
     if (btn) btn.style.display = 'none';
     return c.style.display = 'none';
   }
@@ -777,6 +795,7 @@ function validarTodosCampos() {
 
 function coletarDadosFormulario() {
   return {
+    indiceDocPlanilha: IndiceDocP1A1,
     organizacao: document.getElementById('organizacao')?.value.trim(),
     nomeCompleto: document.getElementById('nomeCompleto')?.value.trim(),
     nomeGuerra: document.getElementById('nomeGuerra')?.value.trim(),
@@ -902,4 +921,3 @@ function mostrarModal(mensagem, callback) {
   modal.appendChild(conteudo);
   document.body.appendChild(modal);
 }
-
