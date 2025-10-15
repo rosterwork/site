@@ -901,24 +901,25 @@ function enviarCadastro() {
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
   
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://script.google.com/macros/s/AKfycbyDE_SPJI4aCv8GZm28lawbneWR2zeM1YD2KxuqwKaYwzl9k8GcFoJo-N89G4RX_As6Ig/exec';
-  form.target = '_blank';
+  const formData = new URLSearchParams();
+  formData.append('dados', JSON.stringify(dados));
   
-  const input = document.createElement('input');
-  input.type = 'hidden';
-  input.name = 'dados';
-  input.value = JSON.stringify(dados);
-  
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-  
-  mostrarModal('Dados enviados! Verifique a nova aba que foi aberta.', () => {
-    btnEnviar.textContent = 'ENVIAR';
-    btnEnviar.disabled = false;
+  fetch('https://script.google.com/macros/s/AKfycbyDE_SPJI4aCv8GZm28lawbneWR2zeM1YD2KxuqwKaYwzl9k8GcFoJo-N89G4RX_As6Ig/exec', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(result => {
+    mostrarModal(result.success ? 'Cadastro realizado com sucesso!' : 'Erro no cadastro. Tente novamente.', () => {
+      btnEnviar.textContent = 'ENVIAR';
+      btnEnviar.disabled = false;
+    });
+  })
+  .catch(error => {
+    mostrarModal('Erro de conexão. Tente novamente.', () => {
+      btnEnviar.textContent = 'ENVIAR';
+      btnEnviar.disabled = false;
+    });
   });
 }
 
