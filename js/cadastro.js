@@ -1,3 +1,39 @@
+/**
+// O QUE É ÍNDICE DOC:
+// - Nomenclatura exclusiva desse sistema.
+// - OS NÚMEROS ÍNDICE DOCS, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
+// - OS INDICE DOCS SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
+// - CONFORME DADOS SÃO MANIPULADOS NAS PLANILHAS, OS ÍNDICES DOCS PODEM MUDAR DE LUGAR
+// - Exclusivamente para planilhas e abas, o índice doc é o número físico do título.
+// - Tem função de MAPEAR localizações de dados nas planilhas.
+// - Pode ser usado para identificar planilhas, abas, linhas, colunas e células.
+// - C# e L# são números (#) físicos respectivamente ESCRITOS NAS PRIMEIRAS LINHAS E PRIMEIRAS COLUNAS das planilhas.
+// - P# e A# são números (#) físicos respectivamente ESCRITOS NO TITULO DAS PLANILHAS E ABAS.
+// - Os Índices Doc que sinalizam as colunas, estão escritos na primeira linha da planilha.
+// - Os Índices Doc que sinalizam as linhas, estão escritos na primeira coluna da planilha.
+
+// - DETALHES:
+// - Nem todas as linhas ou colunas tem Índice Doc.
+// - Linhas e colunas que não tem Índice Doc, são consideradas "dentro de uma seção".
+// - No caso do item acima, os Índices Doc servem para identificar o início e o fim dessas seções.
+// - Exclusivamente para seções de apenas uma linha, a celula pode ter dois Índices Docs escritos separados por "/" (#/#)
+// - Celulas que tenha o indice doc escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
+
+// ESTRUTURA DO ÍNDICE DOC:
+// - Forma de identificação: Planilha (P), Aba (A), Coluna (C), Linha (L).
+// - P significa Planilha; A significa Aba; C significa Coluna; L significa Linha.
+// - Os valores numéricos para C e L são números físicos (zero-based) 
+// - Os valores numéricos para P e A são números físicos no título.
+// - Sempre escritos na ordem hierárquica: P#A#C#L#
+// * PARA OS EXEMPLOS ABAIXO, CONSIDERAR QUE NA PLANILHAS AS SEGUINTES CÉLULAS CONTEM OS SEGUINTES DADOS ESCRITOS: A1=0, B1=1, C1=2, D1=3, A2=1, A3=2
+// - Índices DOC com 3 valores são referências à todas as células da COLUNA ou LINHA (*Ex.: P1A1C1 = toda a coluna B da planilha 1 e aba 1).
+// - Índices DOC com 4 valores são referências de CÉLULA (*Ex.: P1A1C1L1 = Célula B2).
+// - Para intervalos, separar dois índices DOC com ":" (*Ex.: P1A1C1L1:P1A1C3L1 = B2:D2).
+
+// - AS DESCRIÇÕES DAS ESTRUTURAS E MAPEAMENTOS DAS PLANILHAS ESTÃO NO ANEXO 1.
+ 
+*/
+
 const erro = id => document.getElementById(`erro${id[0].toUpperCase() + id.slice(1)}`);
 const botaoRemover = (onclick) => `<button type="button" class="botaoRemover" onclick="${onclick}"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
 
@@ -867,7 +903,7 @@ function enviarCadastro() {
   
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = 'https://script.google.com/macros/s/AKfycbxmbjLjoDYKKImEkuljSGkQF0upigKWHXr1JUB9QJGjj4Oo2zz1NqNIjAqAGp1C_F6-qQ/exec';
+  form.action = 'https://script.google.com/macros/s/AKfycbyDE_SPJI4aCv8GZm28lawbneWR2zeM1YD2KxuqwKaYwzl9k8GcFoJo-N89G4RX_As6Ig/exec';
   form.target = '_blank';
   
   const input = document.createElement('input');
