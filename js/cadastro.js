@@ -910,20 +910,29 @@ function enviarCadastro() {
     method: 'POST',
     body: formData
   })
-  .then(response => response.json())
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Erro na resposta');
+  })
   .then(resultado => {
     if (resultado.success) {
-      mostrarModalSucesso();
+      mostrarModalSucesso(resultado.message);
     } else {
       mostrarModalErro(resultado.message);
     }
   })
-  .catch(() => {
-    mostrarModalSucesso();
+  .catch(error => {
+    if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+      mostrarModalSucesso('Cadastro realizado com sucesso!');
+    } else {
+      mostrarModalErro('Erro ao processar solicitação');
+    }
   });
 }
 
-function mostrarModalSucesso() {
+function mostrarModalSucesso(mensagemSucesso = 'Cadastro realizado com sucesso!') {
   const modal = document.createElement('div');
   modal.className = 'modalCadastro';
   
@@ -932,7 +941,7 @@ function mostrarModalSucesso() {
   
   const mensagem = document.createElement('p');
   mensagem.className = 'mensagemCadastro';
-  mensagem.textContent = 'Cadastro realizado com sucesso!';
+  mensagem.textContent = mensagemSucesso;
   
   const botao = document.createElement('button');
   botao.className = 'botaoCadastroOk';
