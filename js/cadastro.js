@@ -310,7 +310,7 @@ function gerarCamposAdicionais() {
   
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
   
-  <img src="svg/calendario.svg" alt="Calendário">
+  <img src="../svg/calendario.svg" alt="Calendário">
   
   </button></div>` + ` <div class="grupoDeFormulario"><label for="categoriaCnh">Categoria da CNH:</label>
   
@@ -346,7 +346,7 @@ function gerarCamposAdicionais() {
   <div class="mensagemDeErro" id="erroAnoUltimaPromocao"></div>
   </div>
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
-  <img src="svg/calendario.svg" alt="Calendário">
+  <img src="../svg/calendario.svg" alt="Calendário">
   </button></div>` + ` <div class="grupoDeFormulario"><label>Data da penúltima promoção:</label>
   <div class="grupoData">
   <div class="selecaoCustomizada">
@@ -365,7 +365,7 @@ function gerarCamposAdicionais() {
   <div class="mensagemDeErro" id="erroAnoPenultimaPromocao"></div>
   </div>
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
-  <img src="svg/calendario.svg" alt="Calendário">
+  <img src="../svg/calendario.svg" alt="Calendário">
   </button></div>` + ` <div class="grupoDeFormulario"><label for="classificacaoCfpCfo">Classificação CFP/CFO:</label>
   <input type="text" id="classificacaoCfpCfo" class="campo campoNomeCompleto" placeholder="Digite sua classificação">
   <div class="mensagemDeErro" id="erroClassificacaoCfpCfo"></div></div>` + 
@@ -887,39 +887,36 @@ function limparErro(campo) {
 
 
 function enviarCadastro() {
-  if (!validarTodosCampos()) {
-    return;
-  }
+  if (!validarTodosCampos()) return;
   
   const dados = coletarDadosFormulario();
-  
   const btnEnviar = document.getElementById('btnEnviar');
-  if (!btnEnviar) {
-    return;
-  }
   
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
   
-  const formData = new URLSearchParams();
+  const formData = new FormData();
+  formData.append('acao', 'cadastro');
   formData.append('dados', JSON.stringify(dados));
   
-  fetch('https://script.google.com/macros/s/AKfycbyDE_SPJI4aCv8GZm28lawbneWR2zeM1YD2KxuqwKaYwzl9k8GcFoJo-N89G4RX_As6Ig/exec', {
+  fetch(URL_GOOGLE_SCRIPT, {
     method: 'POST',
     body: formData
   })
   .then(response => response.json())
-  .then(result => {
-    mostrarModal(result.success ? 'Cadastro realizado com sucesso!' : 'Erro no cadastro. Tente novamente.', () => {
-      btnEnviar.textContent = 'ENVIAR';
-      btnEnviar.disabled = false;
-    });
-  })
-  .catch(error => {
-    mostrarModal('Erro de conexão. Tente novamente.', () => {
-      btnEnviar.textContent = 'ENVIAR';
-      btnEnviar.disabled = false;
-    });
+  .then(resultado => {
+    if (resultado.success) {
+      mostrarModal('Cadastro realizado com sucesso!', () => {
+        btnEnviar.textContent = 'ENVIAR';
+        btnEnviar.disabled = false;
+        document.getElementById('formularioCadastro').reset();
+      });
+    } else {
+      mostrarModal('Erro: ' + resultado.message, () => {
+        btnEnviar.textContent = 'ENVIAR';
+        btnEnviar.disabled = false;
+      });
+    }
   });
 }
 
