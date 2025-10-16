@@ -317,7 +317,7 @@ function gerarCamposAdicionais() {
   
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
   
-  <img src="../svg/calendario.svg" alt="Calendário">
+  <img src="svg/calendario.svg" alt="Calendário">
   
   </button></div>` + ` <div class="grupoDeFormulario"><label for="categoriaCnh">Categoria da CNH:</label>
   
@@ -353,7 +353,7 @@ function gerarCamposAdicionais() {
   <div class="mensagemDeErro" id="erroAnoUltimaPromocao"></div>
   </div>
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
-  <img src="../svg/calendario.svg" alt="Calendário">
+  <img src="svg/calendario.svg" alt="Calendário">
   </button></div>` + ` <div class="grupoDeFormulario"><label>Data da penúltima promoção:</label>
   <div class="grupoData">
   <div class="selecaoCustomizada">
@@ -372,7 +372,7 @@ function gerarCamposAdicionais() {
   <div class="mensagemDeErro" id="erroAnoPenultimaPromocao"></div>
   </div>
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
-  <img src="../svg/calendario.svg" alt="Calendário">
+  <img src="svg/calendario.svg" alt="Calendário">
   </button></div>` + ` <div class="grupoDeFormulario"><label for="classificacaoCfpCfo">Classificação CFP/CFO:</label>
   <input type="text" id="classificacaoCfpCfo" class="campo campoNomeCompleto" placeholder="Digite sua classificação">
   <div class="mensagemDeErro" id="erroClassificacaoCfpCfo"></div></div>` + 
