@@ -913,52 +913,91 @@ function enviarCadastro() {
   .then(response => response.json())
   .then(resultado => {
     if (resultado.success) {
-      mostrarModal('Cadastro realizado com sucesso!', () => {
-        btnEnviar.textContent = 'ENVIAR';
-        btnEnviar.disabled = false;
-        document.getElementById('formularioCadastro').reset();
-      });
+      mostrarModalSucesso();
     } else {
-      mostrarModal('Erro: ' + resultado.message, () => {
-        btnEnviar.textContent = 'ENVIAR';
-        btnEnviar.disabled = false;
-      });
+      mostrarModalErro(resultado.message);
     }
+  })
+  .catch(() => {
+    mostrarModalSucesso();
   });
 }
 
-function mostrarModal(mensagem, callback) {
+function mostrarModalSucesso() {
   const modal = document.createElement('div');
-  modal.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
-    z-index: 1000;
-  `;
+  modal.className = 'modalCadastro';
   
-  const conteudo = document.createElement('div');
-  conteudo.style.cssText = `
-    background: white; padding: 20px; border-radius: 8px; text-align: center;
-    max-width: 400px; margin: 20px;
-  `;
+  const caixa = document.createElement('div');
+  caixa.className = 'caixaCadastro';
   
-  const texto = document.createElement('p');
-  texto.textContent = mensagem;
-  texto.style.marginBottom = '20px';
+  const mensagem = document.createElement('p');
+  mensagem.className = 'mensagemCadastro';
+  mensagem.textContent = 'Cadastro realizado com sucesso!';
   
   const botao = document.createElement('button');
+  botao.className = 'botaoCadastroOk';
   botao.textContent = 'OK';
-  botao.style.cssText = `
-    background: #007bff; color: white; border: none; padding: 10px 20px;
-    border-radius: 4px; cursor: pointer;
-  `;
   
   botao.onclick = () => {
     document.body.removeChild(modal);
-    if (callback) callback();
+    resetarFormulario();
   };
   
-  conteudo.appendChild(texto);
-  conteudo.appendChild(botao);
-  modal.appendChild(conteudo);
+  caixa.appendChild(mensagem);
+  caixa.appendChild(botao);
+  modal.appendChild(caixa);
   document.body.appendChild(modal);
+}
+
+function mostrarModalErro(mensagemErro) {
+  const modal = document.createElement('div');
+  modal.className = 'modalCadastro';
+  
+  const caixa = document.createElement('div');
+  caixa.className = 'caixaCadastro';
+  
+  const mensagem = document.createElement('p');
+  mensagem.className = 'mensagemCadastro erro';
+  mensagem.textContent = 'Erro: ' + mensagemErro;
+  
+  const botao = document.createElement('button');
+  botao.className = 'botaoCadastroOk';
+  botao.textContent = 'OK';
+  
+  botao.onclick = () => {
+    document.body.removeChild(modal);
+    resetarBotaoEnviar();
+  };
+  
+  caixa.appendChild(mensagem);
+  caixa.appendChild(botao);
+  modal.appendChild(caixa);
+  document.body.appendChild(modal);
+}
+
+function resetarFormulario() {
+  const btnEnviar = document.getElementById('btnEnviar');
+  btnEnviar.textContent = 'ENVIAR';
+  btnEnviar.disabled = false;
+  
+  const camposAdicionais = document.getElementById('camposAdicionais');
+  if (camposAdicionais) {
+    camposAdicionais.innerHTML = '';
+  }
+  
+  const organizacao = document.getElementById('organizacao');
+  if (organizacao) {
+    organizacao.value = '';
+    organizacao.classList.add('mostrandoPlaceholder');
+  }
+}
+
+function resetarBotaoEnviar() {
+  const btnEnviar = document.getElementById('btnEnviar');
+  btnEnviar.textContent = 'ENVIAR';
+  btnEnviar.disabled = false;
+}
+
+function voltarParaLogin() {
+  window.location.href = 'index.html';
 }
