@@ -938,9 +938,11 @@ function enviarCadastro() {
   
   // Aguardar resposta e mostrar sucesso
   setTimeout(() => {
+    const resposta = iframe.contentDocument.body.textContent;
+    const resultado = JSON.parse(resposta);
+    mostrarModalSucesso(resultado.message);
     document.body.removeChild(form);
     document.body.removeChild(iframe);
-    mostrarModalSucesso('Cadastro realizado com sucesso!');
     resetarBotaoEnviar();
   }, 2000);
 }
