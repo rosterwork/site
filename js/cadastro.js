@@ -896,27 +896,21 @@ function limparErro(campo) {
 function enviarCadastro() {
   if (!validarTodosCampos()) return;
 
-  const dados = coletarDadosFormulario();
   const btnEnviar = document.getElementById('btnEnviar');
-
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
 
-  const formData = new FormData();
-  formData.append('acao', 'cadastro');
-  formData.append('dados', JSON.stringify(dados));
+  const dados = coletarDadosFormulario();
 
   fetch(URL_GOOGLE_SCRIPT, {
     method: 'POST',
-    body: formData
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ acao: 'cadastro', dados })
   })
-    .then(response => response.json())
-    .then(resultado => {
-      if (resultado && resultado.message) {
-        mostrarModalSucesso(resultado.message);
-      } else {
-        mostrarModalErro('Erro ao receber resposta do servidor.');
-      }
+    .then(r => r.json())
+    .then(r => {
+      if (r && r.message) mostrarModalSucesso(r.message);
+      else mostrarModalErro('Erro ao receber resposta do servidor.');
       resetarBotaoEnviar();
     })
     .catch(() => {
