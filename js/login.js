@@ -124,23 +124,12 @@ document.addEventListener('DOMContentLoaded', function () {
     btnEntrar.textContent = 'Verificando...';
     btnEntrar.disabled = true;
     
-    const formData = new FormData();
-    formData.append('acao', 'login');
-    formData.append('documento', documento);
-    formData.append('senha', senha);
-    formData.append('tipo', tipo);
-
-    fetch(URL_GOOGLE_SCRIPT, {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
+    API.login(documento, senha, tipo)
     .then(resultado => {
       if (resultado.success) {
         localStorage.setItem('tokenRosterWork', resultado.token);
         localStorage.setItem('usuarioRosterWork', JSON.stringify(resultado.usuario));
         localStorage.setItem('expiracaoToken', resultado.expiracao);
-        
         btnEntrar.textContent = 'Login realizado!';
         setTimeout(() => window.location.href = 'main.html', 1000);
       } else {
