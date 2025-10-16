@@ -904,8 +904,8 @@ function enviarCadastro() {
 
   fetch(URL_GOOGLE_SCRIPT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ acao: 'cadastro', dados })
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'acao=cadastro&dados=' + encodeURIComponent(JSON.stringify(dados))
   })
     .then(r => r.json())
     .then(r => {
