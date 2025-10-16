@@ -30,6 +30,13 @@
 // - Índices DOC com 4 valores são referências de CÉLULA (*Ex.: P1A1C1L1 = Célula B2).
 // - Para intervalos, separar dois índices DOC com ":" (*Ex.: P1A1C1L1:P1A1C3L1 = B2:D2).
 
+// ESCRITA DO ÍNDICE DOC:
+// - Identificação de planilhas são escritas como "P#" (P1, P2, P3...).
+// - Identificação de abas são escritas como "P#A#" (P1A1, P1A2, P1A3...).
+// - Identificação de colunas são escritas como "P#A#C#" (P1A1C1, P1A1C2, P1A1C3...).
+// - Identificação de linhas são escritas como "P#A#L#" (P1A1L1, P1A1L2, P1A1L3...).
+// - Identificação de células são escritas como "P#A#C#L#" (P1A1C1L1, P1A1C1L2, P1A1C1L3...).
+
 // - AS DESCRIÇÕES DAS ESTRUTURAS E MAPEAMENTOS DAS PLANILHAS ESTÃO NO ANEXO 1.
  
 */

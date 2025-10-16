@@ -1,25 +1,56 @@
 /**
- * Sistema de Proteção de Páginas - RosterWork
- * Valida tokens automaticamente e protege páginas que requerem login
- */
+// O QUE É ÍNDICE DOC:
+// - Nomenclatura exclusiva desse sistema.
+// - OS NÚMEROS ÍNDICE DOCS, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
+// - OS INDICE DOCS SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
+// - CONFORME DADOS SÃO MANIPULADOS NAS PLANILHAS, OS ÍNDICES DOCS PODEM MUDAR DE LUGAR
+// - Exclusivamente para planilhas e abas, o índice doc é o número físico do título.
+// - Tem função de MAPEAR localizações de dados nas planilhas.
+// - Pode ser usado para identificar planilhas, abas, linhas, colunas e células.
+// - C# e L# são números (#) físicos respectivamente ESCRITOS NAS PRIMEIRAS LINHAS E PRIMEIRAS COLUNAS das planilhas.
+// - P# e A# são números (#) físicos respectivamente ESCRITOS NO TITULO DAS PLANILHAS E ABAS.
+// - Os Índices Doc que sinalizam as colunas, estão escritos na primeira linha da planilha.
+// - Os Índices Doc que sinalizam as linhas, estão escritos na primeira coluna da planilha.
 
-// URLs das páginas do sistema
+// - DETALHES:
+// - Nem todas as linhas ou colunas tem Índice Doc.
+// - Linhas e colunas que não tem Índice Doc, são consideradas "dentro de uma seção".
+// - No caso do item acima, os Índices Doc servem para identificar o início e o fim dessas seções.
+// - Exclusivamente para seções de apenas uma linha, a celula pode ter dois Índices Docs escritos separados por "/" (#/#)
+// - Celulas que tenha o indice doc escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
+
+// ESTRUTURA DO ÍNDICE DOC:
+// - Forma de identificação: Planilha (P), Aba (A), Coluna (C), Linha (L).
+// - P significa Planilha; A significa Aba; C significa Coluna; L significa Linha.
+// - Os valores numéricos para C e L são números físicos (zero-based) 
+// - Os valores numéricos para P e A são números físicos no título.
+// - Sempre escritos na ordem hierárquica: P#A#C#L#
+// * PARA OS EXEMPLOS ABAIXO, CONSIDERAR QUE NA PLANILHAS AS SEGUINTES CÉLULAS CONTEM OS SEGUINTES DADOS ESCRITOS: A1=0, B1=1, C1=2, D1=3, A2=1, A3=2
+// - Índices DOC com 3 valores são referências à todas as células da COLUNA ou LINHA (*Ex.: P1A1C1 = toda a coluna B da planilha 1 e aba 1).
+// - Índices DOC com 4 valores são referências de CÉLULA (*Ex.: P1A1C1L1 = Célula B2).
+// - Para intervalos, separar dois índices DOC com ":" (*Ex.: P1A1C1L1:P1A1C3L1 = B2:D2).
+
+// ESCRITA DO ÍNDICE DOC:
+// - Identificação de planilhas são escritas como "P#" (P1, P2, P3...).
+// - Identificação de abas são escritas como "P#A#" (P1A1, P1A2, P1A3...).
+// - Identificação de colunas são escritas como "P#A#C#" (P1A1C1, P1A1C2, P1A1C3...).
+// - Identificação de linhas são escritas como "P#A#L#" (P1A1L1, P1A1L2, P1A1L3...).
+// - Identificação de células são escritas como "P#A#C#L#" (P1A1C1L1, P1A1C1L2, P1A1C1L3...).
+
+// - AS DESCRIÇÕES DAS ESTRUTURAS E MAPEAMENTOS DAS PLANILHAS ESTÃO NO ANEXO 1.
+ 
+*/
 const PAGINAS = {
   LOGIN: 'index.html',
   MAIN: 'main.html',
   CADASTRO: 'cadastro.html'
 };
 
-// Páginas que não precisam de login
 const PAGINAS_PUBLICAS = [
   'index.html',
   'cadastro.html'
 ];
 
-/**
- * Protege a página atual verificando se o usuário está logado
- * Deve ser chamada no DOMContentLoaded das páginas protegidas
- */
 function protegerPagina() {
   const paginaAtual = window.location.pathname.split('/').pop();
   
@@ -35,33 +66,22 @@ function protegerPagina() {
   return true;
 }
 
-/**
- * Extrai a parte em negrito do nome (patente + sobrenome)
- */
 function extrairNomeExibicao(nomeCompleto) {
   if (!nomeCompleto) return 'Usuário';
-  
-  // Padrões comuns de formatação de nomes militares
-  // Exemplos: "Cb SILVA, João", "Sgt SANTOS, Maria", "Ten OLIVEIRA, Pedro"
-  
-  // Se tem vírgula, pega a patente e sobrenome antes da vírgula
+
   if (nomeCompleto.includes(',')) {
     const parteAntes = nomeCompleto.split(',')[0].trim();
-    return parteAntes; // Ex: "Cb SILVA"
+    return parteAntes; 
   }
   
-  // Se não tem vírgula, tenta extrair os primeiros 2 elementos
   const palavras = nomeCompleto.trim().split(' ');
   if (palavras.length >= 2) {
-    return `${palavras[0]} ${palavras[1]}`; // Ex: "Cb SILVA"
+    return `${palavras[0]} ${palavras[1]}`; 
   }
   
   return palavras[0] || 'Usuário';
 }
 
-/**
- * Exibe os dados do usuário logado na interface
- */
 function exibirDadosUsuario() {
   const usuario = window.obterUsuarioLogado ? window.obterUsuarioLogado() : null;
   if (!usuario) return;
@@ -72,9 +92,6 @@ function exibirDadosUsuario() {
   }
 }
 
-/**
- * Configura auto-logout quando o token expira
- */
 function configurarAutoLogout() {
   const expiracao = localStorage.getItem('expiracaoToken');
   if (!expiracao) return;
@@ -90,10 +107,6 @@ function configurarAutoLogout() {
   }
 }
 
-/**
- * Função principal para inicializar a proteção da página
- * Chame esta função no DOMContentLoaded de cada página
- */
 function inicializarSeguranca() {
   if (protegerPagina()) {
     exibirDadosUsuario();
@@ -101,7 +114,6 @@ function inicializarSeguranca() {
   }
 }
 
-// Disponibilizar globalmente
 window.protegerPagina = protegerPagina;
 window.exibirDadosUsuario = exibirDadosUsuario;
 window.inicializarSeguranca = inicializarSeguranca;
