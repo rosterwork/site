@@ -902,12 +902,7 @@ function enviarCadastro() {
 
   const dados = coletarDadosFormulario();
 
-  fetch(URL_GOOGLE_SCRIPT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'acao=cadastro&dados=' + encodeURIComponent(JSON.stringify(dados))
-  })
-    .then(r => r.json())
+  API.cadastro(dados)
     .then(r => {
       if (r && r.message) mostrarModalSucesso(r.message);
       else mostrarModalErro('Erro ao receber resposta do servidor.');
