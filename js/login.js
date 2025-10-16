@@ -166,12 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
     localStorage.removeItem('expiracaoToken');
     localStorage.removeItem('loginTentativa');
     
-    const paginaAtual = window.location.pathname;
-    if (paginaAtual.includes('/html/')) {
-      window.location.href = '../index.html';
-    } else if (!paginaAtual.endsWith('index.html')) {
-      window.location.href = 'index.html';
-    }
+    window.location.href = 'index.html';
   };
 
   window.validarTokenNoServidor = function(callback) {

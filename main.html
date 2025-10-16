@@ -26,10 +26,10 @@
         </div>
         <div class="cabecalhoBotoes">
           <button class="botaoCabecalho">
-            <img src="svg/engrenagem.svg" alt="Engrenagem" width="20" height="20" style="display:block;">
+            <img src="../svg/engrenagem.svg" alt="Engrenagem" width="20" height="20" style="display:block;">
           </button>
           <button class="botaoCabecalho" onclick="mostrarConfirmacaoSairLogout()">
-            <img src="svg/logout.svg" alt="Logout" width="20" height="20" style="display:block;">
+            <img src="../svg/logout.svg" alt="Logout" width="20" height="20" style="display:block;">
           </button>
         </div>
       </div>
@@ -38,14 +38,14 @@
     <div class="layoutConteudo">
       <div class="menuLateral" id="menuLateral">
         <button class="botaoMenu" aria-label="Menu" onclick="alternarMenu()">
-          <img src="svg/menu.svg" alt="Menu" width="20" height="20" style="display:block;">
+          <img src="../svg/menu.svg" alt="Menu" width="20" height="20" style="display:block;">
         </button>
         
         <nav class="navegacaoMenu">
           <div class="itemMenu">
             <button class="botaoItemMenu" onclick="alternarSubmenu('visualizar')">
               <span>VISUALIZAR</span>
-              <img class="seta" src="svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
+              <img class="seta" src="../svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
             </button>
             <div class="submenu" id="submenu-visualizar">
               <button class="itemSubmenu" onclick="selecionarItemMenu('Escalas de serviço', 'visualizar', 'Escalas de serviço')">Escalas de serviço</button>
@@ -55,7 +55,7 @@
               <button class="itemSubmenu" onclick="selecionarItemMenu('Viaturas', 'visualizar', 'Viaturas')">Viaturas</button>
               <button class="itemSubmenu" onclick="alternarSubmenu('alteracoes')">
                 <span>Alterações</span>
-                <img class="seta" src="svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
+                <img class="seta" src="../svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
               </button>
               <div class="submenu" id="submenu-alteracoes">
                 <button class="itemSubmenu itemSubmenuNivel2" onclick="selecionarItemMenu('Trocas de serviço', 'visualizar', 'alteracoes', 'Trocas de serviço')">Trocas de serviço</button>
@@ -69,7 +69,7 @@
           <div class="itemMenu">
             <button class="botaoItemMenu" onclick="alternarSubmenu('solicitar')">
               <span>SOLICITAR</span>
-              <img class="seta" src="svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
+              <img class="seta" src="../svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
             </button>
             <div class="submenu" id="submenu-solicitar">
               <button class="itemSubmenu" onclick="selecionarItemMenu('Troca de serviço', 'solicitar', 'Troca de serviço')">Troca de serviço</button>
@@ -81,7 +81,7 @@
           <div class="itemMenu">
             <button class="botaoItemMenu" onclick="alternarSubmenu('editar')">
               <span>EDITAR</span>
-              <img class="seta" src="svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
+              <img class="seta" src="../svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
             </button>
             <div class="submenu" id="submenu-editar">
               <button class="itemSubmenu" onclick="selecionarItemMenu('Inserir militar na escala', 'editar', 'Inserir militar na escala')">Inserir militar na escala</button>
@@ -97,7 +97,7 @@
             <div class="containerTitulo">
               <div class="tituloClicavel" onclick="alternarDropdownTitulo()">
                 <h2 class="titulo" id="tituloTexto">VISUALIZAR</h2>
-                <img class="setaTitulo" src="svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
+                <img class="setaTitulo" src="../svg/seta.svg" alt="Seta" width="12" height="12" style="display:block;">
               </div>
               <div class="dropdownTitulo" id="dropdownTitulo">
                 <div class="campoBusca">
@@ -131,7 +131,15 @@
       </div>
     </div>
 
+    <script src="../js/URLGoogleScript.js"></script>
+    <script src="../js/login.js"></script>
+    <script src="../js/seguranca.js"></script>
     <script>
+      // Proteger página e inicializar sistema de segurança
+      document.addEventListener('DOMContentLoaded', function() {
+        inicializarSeguranca();
+      });
+
       function mostrarConfirmacaoSairLogout() {
         document.getElementById('confirmacaoSairLogout').style.display = 'flex';
       }
@@ -141,7 +149,7 @@
       }
 
       function confirmarLogout() {
-        window.location.href = 'index.html';
+        fazerLogout();
       }
 
       function alternarMenu() {

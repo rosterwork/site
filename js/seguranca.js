@@ -5,7 +5,7 @@
 
 // URLs das páginas do sistema
 const PAGINAS = {
-  LOGIN: '../index.html',
+  LOGIN: 'index.html',
   MAIN: 'main.html',
   CADASTRO: 'cadastro.html'
 };
