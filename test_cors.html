@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teste CORS - RosterWork</title>
+  <style>
+    body{font-family: Arial, Helvetica, sans-serif; margin:20px}
+    input,button,textarea{font-size:14px}
+    textarea{width:100%;height:220px}
+    .row{margin:8px 0}
+  </style>
+</head>
+<body>
+  <h2>Teste CORS - RosterWork</h2>
+  <p>Use esta página para testar diferentes formas de enviar dados ao endpoint do Google Apps Script.</p>
+
+  <div class="row">
+    <label>Endpoint (cole a URL do seu web app do Apps Script):</label><br>
+    <input id="endpoint" style="width:100%" value="https://script.google.com/macros/s/AKfycbzn9tIGDTdecWn3Tx0BF5CWKR1Lpvs68IfY1wZOnM9V76wcrILYCv9KkcgOcyKugk7J/exec">
+  </div>
+
+  <div class="row">
+  <button onclick="sendWithoutHeaders()">Enviar - sem headers (deixe o browser definir)</button>
+    <button onclick="sendFormUrlencoded()">Enviar - Content-Type: application/x-www-form-urlencoded</button>
+    <button onclick="sendFormData()">Enviar - FormData (multipart/form-data)</button>
+    <button onclick="sendOptions()">Enviar - OPTIONS (preflight)</button>
+  <button onclick="sendJsonp()">Enviar - JSONP (GET com callback)</button>
+  </div>
+
+  <div class="row">
+    <label>Payload a enviar (JSON):</label><br>
+    <textarea id="payload">{"idrwPlanilha":"teste","msg":"hello from test page"}</textarea>
+  </div>
+
+  <div class="row">
+    <label>Resultado:</label>
+    <textarea id="result" readonly></textarea>
+  </div>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    function show(text){
+      const t = $('result');
+      t.value = (new Date()).toISOString() + ' - ' + text + '\n\n' + t.value;
+    }
+
+    async function sendWithoutHeaders(){
+      const url = $('endpoint').value.trim();
+      const payload = JSON.parse($('payload').value || '{}');
+      try{
+        const body = new URLSearchParams();
+        body.append('acao','cadastro');
+        body.append('dados', JSON.stringify(payload));
+        const res = await fetch(url, { method: 'POST', body: body });
+        showResponse(res);
+      }catch(e){ show('Erro: ' + e.message); }
+    }
+
+    async function sendFormUrlencoded(){
+      const url = $('endpoint').value.trim();
+      const payload = $('payload').value || '';
+      try{
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'acao=cadastro&dados=' + encodeURIComponent(payload)
+        });
+        showResponse(res);
+      }catch(e){ show('Erro: ' + e.message); }
+    }
+
+    async function sendFormData(){
+      const url = $('endpoint').value.trim();
+      const payload = $('payload').value || '';
+      try{
+        const fd = new FormData();
+        fd.append('acao','cadastro');
+        fd.append('dados', payload);
+        const res = await fetch(url, { method: 'POST', body: fd });
+        showResponse(res);
+      }catch(e){ show('Erro: ' + e.message); }
+    }
+
+    async function sendOptions(){
+      const url = $('endpoint').value.trim();
+      try{
+        const res = await fetch(url, { method: 'OPTIONS' });
+        showResponse(res);
+      }catch(e){ show('Erro: ' + e.message); }
+    }
+
+    async function showResponse(res){
+      if (!res) { show('Resposta vazia'); return; }
+      let headers = '';
+      try{ res.headers.forEach((v,k)=> headers += k+': '+v+'\n'); } catch(e){ headers = 'Não foi possível ler headers: ' + e.message; }
+      let text = '';
+      try{ text = await res.text(); } catch(e){ text = 'Não foi possível ler body: ' + e.message; }
+      show('Status: ' + res.status + '\n\nHeaders:\n' + headers + '\nBody:\n' + text);
+    }
+
+    function sendJsonp(){
+      const url = $('endpoint').value.trim();
+      const payload = encodeURIComponent($('payload').value || '{}');
+      const cbName = 'cb_' + Date.now();
+      window[cbName] = function(data){
+        show('JSONP Callback: ' + JSON.stringify(data));
+        delete window[cbName];
+      };
+      const script = document.createElement('script');
+      script.src = url + '?callback=' + cbName + '&dados=' + payload;
+      script.onerror = function(e){ show('JSONP failed to load script'); delete window[cbName]; };
+      document.body.appendChild(script);
+      setTimeout(()=> document.body.removeChild(script), 10000);
+    }
+  </script>
+</body>
+</html>
