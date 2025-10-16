@@ -895,56 +895,34 @@ function limparErro(campo) {
 
 function enviarCadastro() {
   if (!validarTodosCampos()) return;
-  
+
   const dados = coletarDadosFormulario();
   const btnEnviar = document.getElementById('btnEnviar');
-  
+
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
-  
+
   const formData = new FormData();
   formData.append('acao', 'cadastro');
   formData.append('dados', JSON.stringify(dados));
-  
-  // Criar um formulário oculto e submeter (método que sempre funciona com Google Apps Script)
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = URL_GOOGLE_SCRIPT;
-  form.style.display = 'none';
-  
-  const inputAcao = document.createElement('input');
-  inputAcao.type = 'hidden';
-  inputAcao.name = 'acao';
-  inputAcao.value = 'cadastro';
-  form.appendChild(inputAcao);
-  
-  const inputDados = document.createElement('input');
-  inputDados.type = 'hidden';
-  inputDados.name = 'dados';
-  inputDados.value = JSON.stringify(dados);
-  form.appendChild(inputDados);
-  
-  // Criar iframe oculto para capturar resposta
-  const iframe = document.createElement('iframe');
-  iframe.name = 'cadastro-response';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  
-  form.target = 'cadastro-response';
-  document.body.appendChild(form);
-  
-  // Submeter formulário
-  form.submit();
-  
-  // Aguardar resposta e mostrar sucesso
-  setTimeout(() => {
-    const resposta = iframe.contentDocument.body.textContent;
-    const resultado = JSON.parse(resposta);
-    mostrarModalSucesso(resultado.message);
-    document.body.removeChild(form);
-    document.body.removeChild(iframe);
-    resetarBotaoEnviar();
-  }, 2000);
+
+  fetch(URL_GOOGLE_SCRIPT, {
+    method: 'POST',
+    body: formData
+  })
+    .then(response => response.json())
+    .then(resultado => {
+      if (resultado && resultado.message) {
+        mostrarModalSucesso(resultado.message);
+      } else {
+        mostrarModalErro('Erro ao receber resposta do servidor.');
+      }
+      resetarBotaoEnviar();
+    })
+    .catch(() => {
+      mostrarModalErro('Erro ao receber resposta do servidor.');
+      resetarBotaoEnviar();
+    });
 }
 
 function mostrarModalSucesso(mensagemSucesso = 'Cadastro realizado com sucesso!') {
