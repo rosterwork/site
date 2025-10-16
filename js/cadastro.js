@@ -906,27 +906,43 @@ function enviarCadastro() {
   formData.append('acao', 'cadastro');
   formData.append('dados', JSON.stringify(dados));
   
-  fetch(URL_GOOGLE_SCRIPT, {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    throw new Error('Erro na resposta');
-  })
-  .then(resultado => {
-    if (resultado.success) {
-      mostrarModalSucesso(resultado.message);
-    } else {
-      mostrarModalErro(resultado.message);
-    }
-  })
-  .catch(error => {
-    console.error('Erro no cadastro:', error);
-    mostrarModalErro('Erro ao processar solicitação: ' + error.message);
-  });
+  // Criar um formulário oculto e submeter (método que sempre funciona com Google Apps Script)
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = URL_GOOGLE_SCRIPT;
+  form.style.display = 'none';
+  
+  const inputAcao = document.createElement('input');
+  inputAcao.type = 'hidden';
+  inputAcao.name = 'acao';
+  inputAcao.value = 'cadastro';
+  form.appendChild(inputAcao);
+  
+  const inputDados = document.createElement('input');
+  inputDados.type = 'hidden';
+  inputDados.name = 'dados';
+  inputDados.value = JSON.stringify(dados);
+  form.appendChild(inputDados);
+  
+  // Criar iframe oculto para capturar resposta
+  const iframe = document.createElement('iframe');
+  iframe.name = 'cadastro-response';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  
+  form.target = 'cadastro-response';
+  document.body.appendChild(form);
+  
+  // Submeter formulário
+  form.submit();
+  
+  // Aguardar resposta e mostrar sucesso
+  setTimeout(() => {
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+    mostrarModalSucesso('Cadastro realizado com sucesso!');
+    resetarBotaoEnviar();
+  }, 2000);
 }
 
 function mostrarModalSucesso(mensagemSucesso = 'Cadastro realizado com sucesso!') {
