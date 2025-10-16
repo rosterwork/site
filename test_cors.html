@@ -22,9 +22,10 @@
 
   <div class="row">
   <button onclick="sendWithoutHeaders()">Enviar - sem headers (deixe o browser definir)</button>
-    <button onclick="sendFormUrlencoded()">Enviar - Content-Type: application/x-www-form-urlencoded</button>
-    <button onclick="sendFormData()">Enviar - FormData (multipart/form-data)</button>
-    <button onclick="sendOptions()">Enviar - OPTIONS (preflight)</button>
+  <button onclick="sendFormUrlencoded()">Enviar - Content-Type: application/x-www-form-urlencoded (com header)</button>
+  <button onclick="sendUrlSearchParams()">Enviar - URLSearchParams (sem header, evita preflight)</button>
+  <button onclick="sendFormData()">Enviar - FormData (multipart/form-data)</button>
+  <button onclick="sendOptions()">Enviar - OPTIONS (preflight)</button>
   <button onclick="sendJsonp()">Enviar - JSONP (GET com callback)</button>
   </div>
 
@@ -67,6 +68,18 @@
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: 'acao=cadastro&dados=' + encodeURIComponent(payload)
         });
+        showResponse(res);
+      }catch(e){ show('Erro: ' + e.message); }
+    }
+
+    async function sendUrlSearchParams(){
+      const url = $('endpoint').value.trim();
+      const payload = $('payload').value || '{}';
+      try{
+        const params = new URLSearchParams();
+        params.append('acao', 'cadastro');
+        params.append('dados', payload);
+        const res = await fetch(url, { method: 'POST', body: params });
         showResponse(res);
       }catch(e){ show('Erro: ' + e.message); }
     }
