@@ -924,11 +924,8 @@ function enviarCadastro() {
     }
   })
   .catch(error => {
-    if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-      mostrarModalSucesso('Cadastro realizado com sucesso!');
-    } else {
-      mostrarModalErro('Erro ao processar solicitação');
-    }
+    console.error('Erro no cadastro:', error);
+    mostrarModalErro('Erro ao processar solicitação: ' + error.message);
   });
 }
 
