@@ -1,36 +1,36 @@
 /**
-// O QUE É ÍNDICE DOC:
+// O QUE É idrw:
 // - Nomenclatura exclusiva desse sistema.
-// - OS NÚMEROS ÍNDICE DOCS, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
-// - OS INDICE DOCS SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
-// - CONFORME DADOS SÃO MANIPULADOS NAS PLANILHAS, OS ÍNDICES DOCS PODEM MUDAR DE LUGAR
-// - Exclusivamente para planilhas e abas, o índice doc é o número físico do título.
+// - OS NÚMEROS idrw, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
+// - OS idrw SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
+// - CONFORME DADOS SÃO MANIPULADOS NAS PLANILHAS, OS idrw PODEM MUDAR DE LUGAR
+// - Exclusivamente para planilhas e abas, o idrw é o número físico do título.
 // - Tem função de MAPEAR localizações de dados nas planilhas.
 // - Pode ser usado para identificar planilhas, abas, linhas, colunas e células.
 // - C# e L# são números (#) físicos respectivamente ESCRITOS NAS PRIMEIRAS LINHAS E PRIMEIRAS COLUNAS das planilhas.
 // - P# e A# são números (#) físicos respectivamente ESCRITOS NO TITULO DAS PLANILHAS E ABAS.
-// - Os Índices Doc que sinalizam as colunas, estão escritos na primeira linha da planilha.
-// - Os Índices Doc que sinalizam as linhas, estão escritos na primeira coluna da planilha.
+// - Os idrw que sinalizam as colunas, estão escritos na primeira linha da planilha.
+// - Os idrw que sinalizam as linhas, estão escritos na primeira coluna da planilha.
 
 // - DETALHES:
-// - Nem todas as linhas ou colunas tem Índice Doc.
-// - Linhas e colunas que não tem Índice Doc, são consideradas "dentro de uma seção".
-// - No caso do item acima, os Índices Doc servem para identificar o início e o fim dessas seções.
-// - Exclusivamente para seções de apenas uma linha, a celula pode ter dois Índices Docs escritos separados por "/" (#/#)
-// - Celulas que tenha o indice doc escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
+// - Nem todas as linhas ou colunas tem idrw.
+// - Linhas e colunas que não tem idrw, são consideradas "dentro de uma seção".
+// - No caso do item acima, os idrw servem para identificar o início e o fim dessas seções.
+// - Exclusivamente para seções de apenas uma linha, a celula pode ter dois idrw escritos separados por "/" (#/#)
+// - Celulas que tenha o idrw escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
 
-// ESTRUTURA DO ÍNDICE DOC:
+// ESTRUTURA DO idrw:
 // - Forma de identificação: Planilha (P), Aba (A), Coluna (C), Linha (L).
 // - P significa Planilha; A significa Aba; C significa Coluna; L significa Linha.
 // - Os valores numéricos para C e L são números físicos (zero-based) 
 // - Os valores numéricos para P e A são números físicos no título.
 // - Sempre escritos na ordem hierárquica: P#A#C#L#
 // * PARA OS EXEMPLOS ABAIXO, CONSIDERAR QUE NA PLANILHAS AS SEGUINTES CÉLULAS CONTEM OS SEGUINTES DADOS ESCRITOS: A1=0, B1=1, C1=2, D1=3, A2=1, A3=2
-// - Índices DOC com 3 valores são referências à todas as células da COLUNA ou LINHA (*Ex.: P1A1C1 = toda a coluna B da planilha 1 e aba 1).
-// - Índices DOC com 4 valores são referências de CÉLULA (*Ex.: P1A1C1L1 = Célula B2).
-// - Para intervalos, separar dois índices DOC com ":" (*Ex.: P1A1C1L1:P1A1C3L1 = B2:D2).
+// - idrw com 3 valores são referências à todas as células da COLUNA ou LINHA (*Ex.: P1A1C1 = toda a coluna B da planilha 1 e aba 1).
+// - idrw com 4 valores são referências de CÉLULA (*Ex.: P1A1C1L1 = Célula B2).
+// - Para intervalos, separar dois idrw com ":" (*Ex.: P1A1C1L1:P1A1C3L1 = B2:D2).
 
-// ESCRITA DO ÍNDICE DOC:
+// ESCRITA DO idrw:
 // - Identificação de planilhas são escritas como "P#" (P1, P2, P3...).
 // - Identificação de abas são escritas como "P#A#" (P1A1, P1A2, P1A3...).
 // - Identificação de colunas são escritas como "P#A#C#" (P1A1C1, P1A1C2, P1A1C3...).
@@ -380,30 +380,30 @@ function gerarCamposAdicionais() {
   campo('confirmeSenha', 'Confirme a senha', 'input', 'Confirme sua senha', 'type="password"');
 }
 
-const IndiceDocP1A1 = 'cbmpr';
+const idrwP1A1 = 'cbmpr';
 
-const IndiceDocP1A1L8 = '8';
-const IndiceDocP1A1L9 = '9';
-const IndiceDocP1A1L11 = '11';
-const IndiceDocP1A1L12 = '12';
-const IndiceDocP1A1L15 = '15';
-const IndiceDocP1A1L16 = '16';
-const IndiceDocP1A1L18 = '18';
-const IndiceDocP1A1L19 = '19';
-const IndiceDocP1A1L22 = '22';
-const IndiceDocP1A1L23 = '23';
-const IndiceDocP1A1L25 = '25';
-const IndiceDocP1A1L26 = '26';
-const IndiceDocP1A1L29 = '29';
-const IndiceDocP1A1L30 = '30';
-const IndiceDocP1A1L32 = '32';
-const IndiceDocP1A1L33 = '33';
+const idrwP1A1L8 = '8';
+const idrwP1A1L9 = '9';
+const idrwP1A1L11 = '11';
+const idrwP1A1L12 = '12';
+const idrwP1A1L15 = '15';
+const idrwP1A1L16 = '16';
+const idrwP1A1L18 = '18';
+const idrwP1A1L19 = '19';
+const idrwP1A1L22 = '22';
+const idrwP1A1L23 = '23';
+const idrwP1A1L25 = '25';
+const idrwP1A1L26 = '26';
+const idrwP1A1L29 = '29';
+const idrwP1A1L30 = '30';
+const idrwP1A1L32 = '32';
+const idrwP1A1L33 = '33';
 
 const LOCAIS_TRABALHO = [
-  { texto: '2ª CIBM - Umuarama', nivel: 3, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L8, fim: IndiceDocP1A1L9}, pracas: {inicio: IndiceDocP1A1L11, fim: IndiceDocP1A1L12}} },
-  { texto: '1º Pel - Umuarama', nivel: 4, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L15, fim: IndiceDocP1A1L16}, pracas: {inicio: IndiceDocP1A1L18, fim: IndiceDocP1A1L19}} },
-  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 4, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L22, fim: IndiceDocP1A1L23}, pracas: {inicio: IndiceDocP1A1L25, fim: IndiceDocP1A1L26}} },
-  { texto: '3º Pel - Altônia', nivel: 4, indiceDoc: {oficiais: {inicio: IndiceDocP1A1L29, fim: IndiceDocP1A1L30}, pracas: {inicio: IndiceDocP1A1L32, fim: IndiceDocP1A1L33}} }
+  { texto: '2ª CIBM - Umuarama', nivel: 3, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} },
+  { texto: '1º Pel - Umuarama', nivel: 4, idrw: {oficiais: {inicio: idrwP1A1L15, fim: idrwP1A1L16}, pracas: {inicio: idrwP1A1L18, fim: idrwP1A1L19}} },
+  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 4, idrw: {oficiais: {inicio: idrwP1A1L22, fim: idrwP1A1L23}, pracas: {inicio: idrwP1A1L25, fim: idrwP1A1L26}} },
+  { texto: '3º Pel - Altônia', nivel: 4, idrw: {oficiais: {inicio: idrwP1A1L29, fim: idrwP1A1L30}, pracas: {inicio: idrwP1A1L32, fim: idrwP1A1L33}} }
 ];
 let locaisSelecionados = [];
 
@@ -629,7 +629,7 @@ function preloadCalendario() {
 function mostrarCamposAdicionais(org) {
   const c = document.getElementById('camposAdicionais');
   const btn = document.getElementById('btnEnviar');
-  if (org !== IndiceDocP1A1) {
+  if (org !== idrwP1A1) {
     if (btn) btn.style.display = 'none';
     return c.style.display = 'none';
   }
@@ -838,7 +838,7 @@ function validarTodosCampos() {
 
 function coletarDadosFormulario() {
   return {
-    indiceDocPlanilha: IndiceDocP1A1,
+    idrwPlanilha: idrwP1A1,
     organizacao: document.getElementById('organizacao')?.value.trim(),
     nomeCompleto: document.getElementById('nomeCompleto')?.value.trim(),
     nomeGuerra: document.getElementById('nomeGuerra')?.value.trim(),

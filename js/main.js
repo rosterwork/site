@@ -2,7 +2,7 @@
 // O QUE É ÍNDICE DOC:
 // - Nomenclatura exclusiva desse sistema.
 // - OS NÚMEROS ÍNDICE DOCS, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
-// - OS INDICE DOCS SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
+// - OS idrw SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
 // - CONFORME DADOS SÃO MANIPULADOS NAS PLANILHAS, OS ÍNDICES DOCS PODEM MUDAR DE LUGAR
 // - Exclusivamente para planilhas e abas, o índice doc é o número físico do título.
 // - Tem função de MAPEAR localizações de dados nas planilhas.
@@ -17,7 +17,7 @@
 // - Linhas e colunas que não tem Índice Doc, são consideradas "dentro de uma seção".
 // - No caso do item acima, os Índices Doc servem para identificar o início e o fim dessas seções.
 // - Exclusivamente para seções de apenas uma linha, a celula pode ter dois Índices Docs escritos separados por "/" (#/#)
-// - Celulas que tenha o indice doc escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
+// - Celulas que tenha o idrw escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
 
 // ESTRUTURA DO ÍNDICE DOC:
 // - Forma de identificação: Planilha (P), Aba (A), Coluna (C), Linha (L).

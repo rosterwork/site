@@ -1,10 +1,10 @@
 /**
-// O QUE É ÍNDICE DOC:
+// O QUE É idrw:
 // - Nomenclatura exclusiva desse sistema.
-// - OS NÚMEROS ÍNDICE DOCS, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
-// - OS INDICE DOCS SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
+// - OS NÚMEROS idrw, NÃO SÃO OS MESMOS NUMEROS ORIGINAIS DE LINHAS E COLUNAS DAS PLANILHAS
+// - OS idrw SÃO REFERÊNCIAS FÍSICAS PARA LOCALIZAÇÃO DE DADOS NAS PLANILHAS
 // - CONFORME DADOS SÃO MANIPULADOS NAS PLANILHAS, OS ÍNDICES DOCS PODEM MUDAR DE LUGAR
-// - Exclusivamente para planilhas e abas, o índice doc é o número físico do título.
+// - Exclusivamente para planilhas e abas, o idrw é o número físico do título.
 // - Tem função de MAPEAR localizações de dados nas planilhas.
 // - Pode ser usado para identificar planilhas, abas, linhas, colunas e células.
 // - C# e L# são números (#) físicos respectivamente ESCRITOS NAS PRIMEIRAS LINHAS E PRIMEIRAS COLUNAS das planilhas.
@@ -13,13 +13,13 @@
 // - Os Índices Doc que sinalizam as linhas, estão escritos na primeira coluna da planilha.
 
 // - DETALHES:
-// - Nem todas as linhas ou colunas tem Índice Doc.
-// - Linhas e colunas que não tem Índice Doc, são consideradas "dentro de uma seção".
+// - Nem todas as linhas ou colunas tem idrw.
+// - Linhas e colunas que não tem idrw, são consideradas "dentro de uma seção".
 // - No caso do item acima, os Índices Doc servem para identificar o início e o fim dessas seções.
 // - Exclusivamente para seções de apenas uma linha, a celula pode ter dois Índices Docs escritos separados por "/" (#/#)
-// - Celulas que tenha o indice doc escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
+// - Celulas que tenha o idrw escrito #/#, sinalizam que o inicio e o fim da seção está em uma unica linha.
 
-// ESTRUTURA DO ÍNDICE DOC:
+// ESTRUTURA DO idrw:
 // - Forma de identificação: Planilha (P), Aba (A), Coluna (C), Linha (L).
 // - P significa Planilha; A significa Aba; C significa Coluna; L significa Linha.
 // - Os valores numéricos para C e L são números físicos (zero-based) 
@@ -30,7 +30,7 @@
 // - Índices DOC com 4 valores são referências de CÉLULA (*Ex.: P1A1C1L1 = Célula B2).
 // - Para intervalos, separar dois índices DOC com ":" (*Ex.: P1A1C1L1:P1A1C3L1 = B2:D2).
 
-// ESCRITA DO ÍNDICE DOC:
+// ESCRITA DO idrw:
 // - Identificação de planilhas são escritas como "P#" (P1, P2, P3...).
 // - Identificação de abas são escritas como "P#A#" (P1A1, P1A2, P1A3...).
 // - Identificação de colunas são escritas como "P#A#C#" (P1A1C1, P1A1C2, P1A1C3...).
