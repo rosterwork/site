@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="css/cadastro.css">
     <link rel="stylesheet" href="css/calendario.css">
     <link rel="stylesheet" href="css/confirmacaoCadastro.css">
+    <script>
+    (function(){
+      var token = localStorage.getItem('tokenRosterWork');
+      var expiracao = localStorage.getItem('expiracaoToken');
+      if (token && expiracao && new Date() < new Date(expiracao)) {
+        window.location.href = 'main.html';
+      }
+    })();
+    </script>
   </head>
   <body>
     <div class="containerLogo">
