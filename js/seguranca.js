@@ -45,17 +45,6 @@
 // * AS DESCRIÇÕES DAS ESTRUTURAS E MAPEAMENTOS DAS PLANILHAS ESTÃO NO ANEXO 1.
 */
 
-(function(){
-  var paginaAtual = window.location.pathname.split('/').pop();
-  if (paginaAtual === '') paginaAtual = 'index.html';
-  if (['index.html','cadastro.html'].indexOf(paginaAtual) !== -1) return;
-  var token = localStorage.getItem('tokenRosterWork');
-  var expiracao = localStorage.getItem('expiracaoToken');
-  if (!token || !expiracao || new Date() >= new Date(expiracao)) {
-    window.location.href = 'index.html';
-  }
-})();
-
 const PAGINAS = {
   LOGIN: 'index.html',
   MAIN: 'main.html',

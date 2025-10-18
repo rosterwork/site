@@ -4,4 +4,3 @@ const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbzO2Y2GpgNLlQ
 
 
 
-
