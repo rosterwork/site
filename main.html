@@ -19,6 +19,17 @@
       var expiracao = localStorage.getItem('expiracaoToken');
       if (!token || !expiracao || new Date() >= new Date(expiracao)) {
         window.location.href = 'index.html';
+      }
+    })();
+    /*
+    (function(){
+      var paginaAtual = window.location.pathname.split('/').pop();
+      if (paginaAtual === '') paginaAtual = 'index.html';
+      if (['index.html','cadastro.html'].indexOf(paginaAtual) !== -1) return;
+      var token = localStorage.getItem('tokenRosterWork');
+      var expiracao = localStorage.getItem('expiracaoToken');
+      if (!token || !expiracao || new Date() >= new Date(expiracao)) {
+        window.location.href = 'index.html';
         return;
       }
       setTimeout(function() {
@@ -37,6 +48,7 @@
         }
       }, 100);
     })();
+    */
     </script>
     <script src="js/seguranca.js"></script>
   </head>

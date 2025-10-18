@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(resultado => callback(resultado.valido === true));
   };
 
+  /*
   window.requisicaoSegura = function(params) {
     const token = localStorage.getItem('tokenRosterWork');
     if (!token) {
@@ -228,4 +229,5 @@ document.addEventListener('DOMContentLoaded', function () {
       return resultado;
     });
   };
+  */
 });
