@@ -21,21 +21,21 @@
         window.location.href = 'index.html';
         return;
       }
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', URL_GOOGLE_SCRIPT, false);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.send('acao=validarToken&token=' + encodeURIComponent(token));
-      if (xhr.status === 200) {
-        var resultado = JSON.parse(xhr.responseText);
-        if (!resultado.valido) {
-          localStorage.removeItem('tokenRosterWork');
-          localStorage.removeItem('usuarioRosterWork');
-          localStorage.removeItem('expiracaoToken');
-          window.location.href = 'index.html';
+      setTimeout(function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', URL_GOOGLE_SCRIPT, false);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send('acao=validarToken&token=' + encodeURIComponent(token));
+        if (xhr.status === 200) {
+          var resultado = JSON.parse(xhr.responseText);
+          if (!resultado.valido) {
+            localStorage.removeItem('tokenRosterWork');
+            localStorage.removeItem('usuarioRosterWork');
+            localStorage.removeItem('expiracaoToken');
+            window.location.href = 'index.html';
+          }
         }
-      } else {
-        window.location.href = 'index.html';
-      }
+      }, 100);
     })();
     </script>
     <script src="js/seguranca.js"></script>
