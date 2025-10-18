@@ -47,17 +47,6 @@
 
 const API = {
   request: function(params) {
-    const p = new URLSearchParams();
-    if (params.acao) p.append('acao', params.acao);
-    if (params.dados) p.append('dados', JSON.stringify(params.dados));
-    if (params.documento) p.append('documento', params.documento);
-    if (params.senha) p.append('senha', params.senha);
-    if (params.tipo) p.append('tipo', params.tipo);
-    if (params.token) p.append('token', params.token);
-    return fetch(URL_GOOGLE_SCRIPT, { method: 'POST', body: p }).then(r => r.json());
-  },
-  /*
-  request: function(params) {
     if (params.acao === 'login' || params.acao === 'cadastro') {
       const p = new URLSearchParams();
       if (params.acao) p.append('acao', params.acao);
@@ -70,7 +59,6 @@ const API = {
     }
     return window.requisicaoSegura(params);
   },
-  */
   login: function(documento, senha, tipo) { return this.request({acao: 'login', documento: documento, senha: senha, tipo: tipo}); },
   cadastro: function(dados) { return this.request({acao: 'cadastro', dados: dados}); },
   validarToken: function(token) { return this.request({acao: 'validarToken', token: token}); }
