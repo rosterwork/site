@@ -198,4 +198,34 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(response => response.json())
     .then(resultado => callback(resultado.valido === true));
   };
+
+  window.requisicaoSegura = function(params) {
+    const token = localStorage.getItem('tokenRosterWork');
+    if (!token) {
+      return Promise.reject('Token não encontrado');
+    }
+    
+    const validarToken = fetch(URL_GOOGLE_SCRIPT, {
+      method: 'POST',
+      body: new URLSearchParams([['acao', 'validarToken'], ['token', token]])
+    }).then(r => r.json());
+    
+    const p = new URLSearchParams();
+    if (params.acao) p.append('acao', params.acao);
+    if (params.dados) p.append('dados', JSON.stringify(params.dados));
+    if (params.documento) p.append('documento', params.documento);
+    if (params.senha) p.append('senha', params.senha);
+    if (params.tipo) p.append('tipo', params.tipo);
+    if (params.token) p.append('token', params.token);
+    
+    const executarOperacao = fetch(URL_GOOGLE_SCRIPT, { method: 'POST', body: p }).then(r => r.json());
+    
+    return Promise.all([validarToken, executarOperacao]).then(([validacao, resultado]) => {
+      if (!validacao.valido) {
+        window.fazerLogout();
+        return Promise.reject('Token inválido');
+      }
+      return resultado;
+    });
+  };
 });
