@@ -327,8 +327,11 @@
           if (campos.length >= 3) {
             var firstFieldId = campos[0].id;
             if (firstFieldId === 'diaData') return 'Data';
-            if (firstFieldId === 'diaUltimaPromocao') return 'UltimaPromocao';
-            if (firstFieldId === 'diaPenultimaPromocao') return 'PenultimaPromocao';
+            if (firstFieldId === 'diaInclusao') return 'Inclusao';
+            if (firstFieldId && firstFieldId.startsWith('diaPromocao')) {
+              var suffix = firstFieldId.replace('diaPromocao', '');
+              return 'Promocao' + suffix;
+            }
           }
           return null;
         },
@@ -362,20 +365,21 @@
             erroDia = document.getElementById('erroDiaData');
             erroMes = document.getElementById('erroMesData');
             erroAno = document.getElementById('erroAnoData');
-          } else if (groupId === 'UltimaPromocao') {
-            diaField = document.getElementById('diaUltimaPromocao');
-            mesField = document.getElementById('mesUltimaPromocao');
-            anoField = document.getElementById('anoUltimaPromocao');
-            erroDia = document.getElementById('erroDiaUltimaPromocao');
-            erroMes = document.getElementById('erroMesUltimaPromocao');
-            erroAno = document.getElementById('erroAnoUltimaPromocao');
-          } else if (groupId === 'PenultimaPromocao') {
-            diaField = document.getElementById('diaPenultimaPromocao');
-            mesField = document.getElementById('mesPenultimaPromocao');
-            anoField = document.getElementById('anoPenultimaPromocao');
-            erroDia = document.getElementById('erroDiaPenultimaPromocao');
-            erroMes = document.getElementById('erroMesPenultimaPromocao');
-            erroAno = document.getElementById('erroAnoPenultimaPromocao');
+          } else if (groupId === 'Inclusao') {
+            diaField = document.getElementById('diaInclusao');
+            mesField = document.getElementById('mesInclusao');
+            anoField = document.getElementById('anoInclusao');
+            erroDia = document.getElementById('erroDiaInclusao');
+            erroMes = document.getElementById('erroMesInclusao');
+            erroAno = document.getElementById('erroAnoInclusao');
+          } else if (groupId.startsWith('Promocao')) {
+            var suffix = groupId.replace('Promocao', '');
+            diaField = document.getElementById('diaPromocao' + suffix);
+            mesField = document.getElementById('mesPromocao' + suffix);
+            anoField = document.getElementById('anoPromocao' + suffix);
+            erroDia = document.getElementById('erroDiaPromocao' + suffix);
+            erroMes = document.getElementById('erroMesPromocao' + suffix);
+            erroAno = document.getElementById('erroAnoPromocao' + suffix);
           }
           
           if (diaField) {

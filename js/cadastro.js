@@ -48,6 +48,9 @@
 const erro = id => document.getElementById(`erro${id[0].toUpperCase() + id.slice(1)}`);
 const botaoRemover = (onclick) => `<button type="button" class="botaoRemover" onclick="${onclick}"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
 
+const POSTOS_OFICIAIS = ['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial','Cadete'];
+const POSTOS_PRACAS = ['Subtenente','1º Sargento','2º Sargento','3º Sargento','Cabo','Soldado'];
+
 const ajustarPosicao = (campo, lista) => {
   lista.classList.remove('paraCima');
   const rect = campo.getBoundingClientRect();
@@ -139,7 +142,7 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
     prevLabel = campo.value;
     if (callback) callback(valor);
     campo.blur();
-    if (campo.id && (campo.id.includes('Data') || campo.id.includes('UltimaPromocao') || campo.id.includes('PenultimaPromocao'))) {
+    if (campo.id && (campo.id.includes('Data') || campo.id.includes('Inclusao') || campo.id.includes('Promocao'))) {
       validarData(campo.id);
     }
   };
@@ -169,14 +172,14 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
         }
       }
       if (!campo.value || campo.classList.contains('mostrandoPlaceholder')) {
-        if (campo.id && (campo.id.includes('Data') || campo.id.includes('UltimaPromocao') || campo.id.includes('PenultimaPromocao'))) {
+        if (campo.id && (campo.id.includes('Data') || campo.id.includes('Inclusao') || campo.id.includes('Promocao'))) {
           try { validarData(campo.id); } catch (e) {}
         } else {
           campo.classList.add('erro');
           if (erroEl) erroEl.textContent = erroElCustom ? 'Selecione ou exclua o campo' : 'Selecione uma opção';
         }
         } else {
-        if (campo.id && (campo.id.includes('Data') || campo.id.includes('UltimaPromocao') || campo.id.includes('PenultimaPromocao'))) {
+        if (campo.id && (campo.id.includes('Data') || campo.id.includes('Inclusao') || campo.id.includes('Promocao'))) {
           try { validarData(campo.id); } catch (e) {}
         } else {
           campo.classList.remove('erro');
@@ -308,51 +311,32 @@ function gerarCamposAdicionais() {
   <div class="itensSelecao">${['A','B','C','D','E','AB','AC','AD','AE'].map(v => `<div data-value="${v}">${v}</div>`).join('')}</div></div>
   <div class="mensagemDeErro" id="erroCategoriaCnh"></div></div>` + ` <div class="grupoDeFormulario"><label for="postoPatente">Posto/Patente:</label>
   <div class="selecaoCustomizada"><input type="text" id="postoPatente" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Selecione">
-  <div class="itensSelecao">${['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial','Cadete','Subtenente','1º Sargento','2º Sargento','3º Sargento','Cabo','Soldado','Soldado 2ª Classe'].map(v => `
+  <div class="itensSelecao">${[...POSTOS_OFICIAIS, ...POSTOS_PRACAS].map(v => `
   <div data-value="${v}">${v}</div>`).join('')}</div></div>
   <div class="mensagemDeErro" id="erroPostoPatente"></div></div>` + ` <div class="grupoDeFormulario"><label for="localTrabalho">Local de trabalho:</label>
   <div id="containerLocaisTrabalho"></div></div>` + ` <div class="grupoDeFormulario"><label for="funcaoSetor">Função/Setor:</label>
-  <div id="containerFuncaoSetor"></div></div>` + ` <div class="grupoDeFormulario"><label>Data da última promoção:</label>
+  <div id="containerFuncaoSetor"></div></div>` + ` <div class="grupoDeFormulario"><label>Data de inclusão:</label>
   <div class="grupoData">
   <div class="selecaoCustomizada">
-  <input type="number" id="diaUltimaPromocao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
+  <input type="number" id="diaInclusao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
   <div class="itensSelecao">${Array.from({length:31},(v,i)=>`<div data-value="${i+1}">${String(i+1).padStart(2,'0')}</div>`).join('')}</div>
-  <div class="mensagemDeErro" id="erroDiaUltimaPromocao"></div>
+  <div class="mensagemDeErro" id="erroDiaInclusao"></div>
   </div>
   <div class="selecaoCustomizada">
-  <input type="text" id="mesUltimaPromocao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
+  <input type="text" id="mesInclusao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
   <div class="itensSelecao">${['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'].map((v,i) => `<div data-value="${i+1}">${v}</div>`).join('')}</div>
-  <div class="mensagemDeErro" id="erroMesUltimaPromocao"></div>
+  <div class="mensagemDeErro" id="erroMesInclusao"></div>
   </div>
   <div class="selecaoCustomizada">
-  <input type="number" id="anoUltimaPromocao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
+  <input type="number" id="anoInclusao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
   <div class="itensSelecao">${Array.from({length:81},(v,i)=>`<div data-value="${new Date().getFullYear()-i}">${new Date().getFullYear()-i}</div>`).join('')}</div>
-  <div class="mensagemDeErro" id="erroAnoUltimaPromocao"></div>
-  </div>
-  <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
-  <img src="svg/calendario.svg" alt="Calendário">
-  </button></div>` + ` <div class="grupoDeFormulario"><label>Data da penúltima promoção:</label>
-  <div class="grupoData">
-  <div class="selecaoCustomizada">
-  <input type="number" id="diaPenultimaPromocao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
-  <div class="itensSelecao">${Array.from({length:31},(v,i)=>`<div data-value="${i+1}">${String(i+1).padStart(2,'0')}</div>`).join('')}</div>
-  <div class="mensagemDeErro" id="erroDiaPenultimaPromocao"></div>
-  </div>
-  <div class="selecaoCustomizada">
-  <input type="text" id="mesPenultimaPromocao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
-  <div class="itensSelecao">${['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'].map((v,i) => `<div data-value="${i+1}">${v}</div>`).join('')}</div>
-  <div class="mensagemDeErro" id="erroMesPenultimaPromocao"></div>
-  </div>
-  <div class="selecaoCustomizada">
-  <input type="number" id="anoPenultimaPromocao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
-  <div class="itensSelecao">${Array.from({length:81},(v,i)=>`<div data-value="${new Date().getFullYear()-i}">${new Date().getFullYear()-i}</div>`).join('')}</div>
-  <div class="mensagemDeErro" id="erroAnoPenultimaPromocao"></div>
+  <div class="mensagemDeErro" id="erroAnoInclusao"></div>
   </div>
   <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
   <img src="svg/calendario.svg" alt="Calendário">
   </button></div>` + ` <div class="grupoDeFormulario"><label for="classificacaoCfpCfo">Classificação CFP/CFO:</label>
   <input type="text" id="classificacaoCfpCfo" class="campo campoNomeCompleto" placeholder="Digite sua classificação">
-  <div class="mensagemDeErro" id="erroClassificacaoCfpCfo"></div></div>` + 
+  <div class="mensagemDeErro" id="erroClassificacaoCfpCfo"></div></div>` + ` <div id="containerPromocoes"></div>` + 
   campo('senha', 'Senha', 'input', 'Digite sua senha', 'type="password"') +
   campo('confirmeSenha', 'Confirme a senha', 'input', 'Confirme sua senha', 'type="password"');
 }
@@ -375,6 +359,8 @@ const idrwP1A1L29 = '29';
 const idrwP1A1L30 = '30';
 const idrwP1A1L32 = '32';
 const idrwP1A1L33 = '33';
+
+const idrwP1A1C20 = '20'; 
 
 const LOCAIS_TRABALHO = [
   { texto: '2ª CIBM - Umuarama', nivel: 3, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} },
@@ -566,6 +552,117 @@ function mostrarCampoNovoFuncaoSetor() {
   criarSelecaoCustomizada(selecao, adicionarFuncaoSetor, erroEl);
 }
 
+function atualizarPromocoes(posto) {
+  const container = document.getElementById('containerPromocoes');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  
+  if (!posto) return;
+  
+  const preload = document.getElementById('preloadPromocoes');
+  if (preload) {
+    const preloadContainer = preload.querySelector(`[data-posto="${posto}"]`);
+    if (preloadContainer) {
+      container.innerHTML = preloadContainer.innerHTML;
+      container.querySelectorAll('.selecaoCustomizada').forEach(s => {
+        const campo = s.querySelector('.campoSelecionado');
+        const callback = (campo && campo.id && campo.id.includes('Promocao')) ? () => validarData(campo.id) : null;
+        criarSelecaoCustomizada(s, callback);
+      });
+      return;
+    }
+  }
+  
+  let postos = [];
+  if (POSTOS_OFICIAIS.includes(posto)) {
+    const indice = POSTOS_OFICIAIS.indexOf(posto);
+    postos = POSTOS_OFICIAIS.slice(indice).reverse();
+  } else if (POSTOS_PRACAS.includes(posto)) {
+    const indice = POSTOS_PRACAS.indexOf(posto);
+    postos = POSTOS_PRACAS.slice(indice).reverse();
+  }
+  
+  postos.forEach(p => {
+    const slug = p.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+    const html = `<div class="grupoDeFormulario"><label>Data de promoção à ${p}:</label>
+    <div class="grupoData">
+    <div class="selecaoCustomizada">
+    <input type="number" id="diaPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
+    <div class="itensSelecao">${Array.from({length:31},(v,i)=>`<div data-value="${i+1}">${String(i+1).padStart(2,'0')}</div>`).join('')}</div>
+    <div class="mensagemDeErro" id="erroDiaPromocao${slug}"></div>
+    </div>
+    <div class="selecaoCustomizada">
+    <input type="text" id="mesPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
+    <div class="itensSelecao">${['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'].map((v,i) => `<div data-value="${i+1}">${v}</div>`).join('')}</div>
+    <div class="mensagemDeErro" id="erroMesPromocao${slug}"></div>
+    </div>
+    <div class="selecaoCustomizada">
+    <input type="number" id="anoPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
+    <div class="itensSelecao">${Array.from({length:81},(v,i)=>`<div data-value="${new Date().getFullYear()-i}">${new Date().getFullYear()-i}</div>`).join('')}</div>
+    <div class="mensagemDeErro" id="erroAnoPromocao${slug}"></div>
+    </div>
+    <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
+    <img src="svg/calendario.svg" alt="Calendário">
+    </button></div></div>`;
+    container.insertAdjacentHTML('beforeend', html);
+  });
+  
+  container.querySelectorAll('.selecaoCustomizada').forEach(s => {
+    const campo = s.querySelector('.campoSelecionado');
+    const callback = (campo && campo.id && campo.id.includes('Promocao')) ? () => validarData(campo.id) : null;
+    criarSelecaoCustomizada(s, callback);
+  });
+}
+
+function preloadPromocoes() {
+  if (document.getElementById('preloadPromocoes')) return;
+  const pre = document.createElement('div');
+  pre.id = 'preloadPromocoes';
+  pre.style.display = 'none';
+  document.body.appendChild(pre);
+  
+  [...POSTOS_OFICIAIS, ...POSTOS_PRACAS].forEach(posto => {
+    const container = document.createElement('div');
+    container.dataset.posto = posto;
+    pre.appendChild(container);
+    
+    let postos = [];
+    if (POSTOS_OFICIAIS.includes(posto)) {
+      const indice = POSTOS_OFICIAIS.indexOf(posto);
+      postos = POSTOS_OFICIAIS.slice(indice).reverse();
+    } else if (POSTOS_PRACAS.includes(posto)) {
+      const indice = POSTOS_PRACAS.indexOf(posto);
+      postos = POSTOS_PRACAS.slice(indice).reverse();
+    }
+    
+    postos.forEach(p => {
+      const slug = p.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      const html = `<div class="grupoDeFormulario"><label>Data de promoção à ${p}:</label>
+      <div class="grupoData">
+      <div class="selecaoCustomizada">
+      <input type="number" id="diaPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
+      <div class="itensSelecao">${Array.from({length:31},(v,i)=>`<div data-value="${i+1}">${String(i+1).padStart(2,'0')}</div>`).join('')}</div>
+      <div class="mensagemDeErro" id="erroDiaPromocao${slug}"></div>
+      </div>
+      <div class="selecaoCustomizada">
+      <input type="text" id="mesPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
+      <div class="itensSelecao">${['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'].map((v,i) => `<div data-value="${i+1}">${v}</div>`).join('')}</div>
+      <div class="mensagemDeErro" id="erroMesPromocao${slug}"></div>
+      </div>
+      <div class="selecaoCustomizada">
+      <input type="number" id="anoPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
+      <div class="itensSelecao">${Array.from({length:81},(v,i)=>`<div data-value="${new Date().getFullYear()-i}">${new Date().getFullYear()-i}</div>`).join('')}</div>
+      <div class="mensagemDeErro" id="erroAnoPromocao${slug}"></div>
+      </div>
+      <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
+      <img src="svg/calendario.svg" alt="Calendário">
+      </button></div></div>`;
+      container.insertAdjacentHTML('beforeend', html);
+    });
+  });
+}
+
 function preloadCamposAdicionais() {
   if (document.getElementById('preloadCamposAdicionais')) return;
   const pre = document.createElement('div');
@@ -573,6 +670,8 @@ function preloadCamposAdicionais() {
   pre.style.display = 'none';
   pre.innerHTML = gerarCamposAdicionais();
   document.body.appendChild(pre);
+  
+  preloadPromocoes();
 }
 
 function preloadCalendario() {
@@ -625,9 +724,15 @@ function mostrarCamposAdicionais(org) {
     configurarCamposTexto(c);
     c.querySelectorAll('.selecaoCustomizada').forEach(container => {
       const campo = container.querySelector('.campoSelecionado');
-      criarSelecaoCustomizada(container, (campo.id.includes('Data') || campo.id.includes('UltimaPromocao') || campo.id.includes('PenultimaPromocao')) ? validarData : null);
+      let callback = null;
+      if (campo.id === 'postoPatente') {
+        callback = atualizarPromocoes;
+      } else if (campo.id.includes('Data') || campo.id.includes('Inclusao')) {
+        callback = () => validarData(campo.id);
+      }
+      criarSelecaoCustomizada(container, callback);
     });
-    ['diaData','mesData','anoData','diaUltimaPromocao','mesUltimaPromocao','anoUltimaPromocao','diaPenultimaPromocao','mesPenultimaPromocao','anoPenultimaPromocao'].forEach(function(id){
+    ['diaData','mesData','anoData','diaInclusao','mesInclusao','anoInclusao'].forEach(function(id){
       const el = c.querySelector('#' + id);
       if (!el) return;
       el.addEventListener('input', function(){ validarData(id); });
@@ -655,9 +760,15 @@ function mostrarCamposAdicionais(org) {
   }
   c.querySelectorAll('.selecaoCustomizada').forEach(container => {
     const campo = container.querySelector('.campoSelecionado');
-    criarSelecaoCustomizada(container, (campo.id.includes('Data') || campo.id.includes('UltimaPromocao') || campo.id.includes('PenultimaPromocao')) ? validarData : null);
+    let callback = null;
+    if (campo.id === 'postoPatente') {
+      callback = atualizarPromocoes;
+    } else if (campo.id.includes('Data') || campo.id.includes('Inclusao')) {
+      callback = () => validarData(campo.id);
+    }
+    criarSelecaoCustomizada(container, callback);
   });
-  ['diaData','mesData','anoData','diaUltimaPromocao','mesUltimaPromocao','anoUltimaPromocao','diaPenultimaPromocao','mesPenultimaPromocao','anoPenultimaPromocao'].forEach(function(id){
+  ['diaData','mesData','anoData','diaInclusao','mesInclusao','anoInclusao'].forEach(function(id){
     const el = c.querySelector('#' + id);
     if (!el) return;
     el.addEventListener('input', function(){ validarData(id); });
@@ -765,18 +876,14 @@ function validarTodosCampos() {
     }
   });
   
-  ['diaData', 'mesData', 'anoData', 'categoriaCnh', 'postoPatente',
-   'diaUltimaPromocao', 'mesUltimaPromocao', 'anoUltimaPromocao',
-   'diaPenultimaPromocao', 'mesPenultimaPromocao', 'anoPenultimaPromocao'].forEach(id => {
+  ['diaData', 'mesData', 'anoData', 'categoriaCnh', 'postoPatente'].forEach(id => {
     const campo = document.getElementById(id);
     if (campo && (campo.classList.contains('mostrandoPlaceholder') || !campo.value.trim())) {
       campo.classList.add('erro');
       const erroEl = document.getElementById('erro' + id[0].toUpperCase() + id.slice(1));
       if (erroEl && id.includes('Data')) {
         const msgs = {
-          'diaData': 'Insira o dia', 'mesData': 'Insira o mês', 'anoData': 'Insira o ano',
-          'diaUltimaPromocao': 'Insira o dia', 'mesUltimaPromocao': 'Insira o mês', 'anoUltimaPromocao': 'Insira o ano',
-          'diaPenultimaPromocao': 'Insira o dia', 'mesPenultimaPromocao': 'Insira o mês', 'anoPenultimaPromocao': 'Insira o ano'
+          'diaData': 'Insira o dia', 'mesData': 'Insira o mês', 'anoData': 'Insira o ano'
         };
         erroEl.textContent = msgs[id] || 'Campo inválido';
       } else if (erroEl) {
@@ -814,6 +921,38 @@ function validarTodosCampos() {
 }
 
 function coletarDadosFormulario() {
+  const promocoes = [];
+  const postoSelecionado = document.getElementById('postoPatente')?.value.trim();
+  
+  if (postoSelecionado) {
+    let postos = [];
+    if (POSTOS_OFICIAIS.includes(postoSelecionado)) {
+      const indice = POSTOS_OFICIAIS.indexOf(postoSelecionado);
+      postos = POSTOS_OFICIAIS.slice(indice).reverse();
+    } else if (POSTOS_PRACAS.includes(postoSelecionado)) {
+      const indice = POSTOS_PRACAS.indexOf(postoSelecionado);
+      postos = POSTOS_PRACAS.slice(indice).reverse();
+    }
+    
+    postos.forEach(posto => {
+      const slug = posto.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      const dia = document.getElementById(`diaPromocao${slug}`)?.value;
+      const mes = document.getElementById(`mesPromocao${slug}`)?.value;
+      const ano = document.getElementById(`anoPromocao${slug}`)?.value;
+      
+      if (dia && mes && ano) {
+        promocoes.push({
+          posto: posto,
+          data: {
+            dia: dia,
+            mes: converterMesParaNumero(mes),
+            ano: ano
+          }
+        });
+      }
+    });
+  }
+
   return {
     idrwPlanilha: idrwP1A1,
     organizacao: document.getElementById('organizacao')?.value.trim(),
@@ -827,21 +966,20 @@ function coletarDadosFormulario() {
       ano: document.getElementById('anoData')?.value
     },
     categoriaCnh: document.getElementById('categoriaCnh')?.value.trim(),
-    postoPatente: document.getElementById('postoPatente')?.value.trim(),
+    postoPatente: postoSelecionado,
     locaisTrabalho: [...locaisSelecionados],
     funcoes: [...funcoesSetorSelecionadas],
-    ultimaPromocao: {
-      dia: document.getElementById('diaUltimaPromocao')?.value,
-      mes: converterMesParaNumero(document.getElementById('mesUltimaPromocao')?.value),
-      ano: document.getElementById('anoUltimaPromocao')?.value
-    },
-    penultimaPromocao: {
-      dia: document.getElementById('diaPenultimaPromocao')?.value,
-      mes: converterMesParaNumero(document.getElementById('mesPenultimaPromocao')?.value),
-      ano: document.getElementById('anoPenultimaPromocao')?.value
+    dataInclusao: {
+      dia: document.getElementById('diaInclusao')?.value,
+      mes: converterMesParaNumero(document.getElementById('mesInclusao')?.value),
+      ano: document.getElementById('anoInclusao')?.value
     },
     classificacaoCfpCfo: document.getElementById('classificacaoCfpCfo')?.value.trim(),
-    senha: document.getElementById('senha')?.value.trim()
+    promocoes: promocoes,
+    senha: {
+      valor: document.getElementById('senha')?.value.trim(),
+      idrw: idrwP1A1C20
+    }
   };
 }
 
