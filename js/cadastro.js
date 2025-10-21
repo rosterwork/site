@@ -622,6 +622,8 @@ function preloadPromocoes() {
   pre.style.display = 'none';
   document.body.appendChild(pre);
   
+  const slugsCriados = new Set();
+  
   [...POSTOS_OFICIAIS, ...POSTOS_PRACAS].forEach(posto => {
     const container = document.createElement('div');
     container.dataset.posto = posto;
@@ -638,27 +640,31 @@ function preloadPromocoes() {
     
     postos.forEach(p => {
       const slug = p.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-      const html = `<div class="grupoDeFormulario"><label>Data de promoção à ${p}:</label>
-      <div class="grupoData">
-      <div class="selecaoCustomizada">
-      <input type="number" id="diaPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
-      <div class="itensSelecao">${Array.from({length:31},(v,i)=>`<div data-value="${i+1}">${String(i+1).padStart(2,'0')}</div>`).join('')}</div>
-      <div class="mensagemDeErro" id="erroDiaPromocao${slug}"></div>
-      </div>
-      <div class="selecaoCustomizada">
-      <input type="text" id="mesPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
-      <div class="itensSelecao">${['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'].map((v,i) => `<div data-value="${i+1}">${v}</div>`).join('')}</div>
-      <div class="mensagemDeErro" id="erroMesPromocao${slug}"></div>
-      </div>
-      <div class="selecaoCustomizada">
-      <input type="number" id="anoPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
-      <div class="itensSelecao">${Array.from({length:81},(v,i)=>`<div data-value="${new Date().getFullYear()-i}">${new Date().getFullYear()-i}</div>`).join('')}</div>
-      <div class="mensagemDeErro" id="erroAnoPromocao${slug}"></div>
-      </div>
-      <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
-      <img src="svg/calendario.svg" alt="Calendário">
-      </button></div></div>`;
-      container.insertAdjacentHTML('beforeend', html);
+      
+      if (!slugsCriados.has(slug)) {
+        slugsCriados.add(slug);
+        const html = `<div class="grupoDeFormulario"><label>Data de promoção à ${p}:</label>
+        <div class="grupoData">
+        <div class="selecaoCustomizada">
+        <input type="number" id="diaPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
+        <div class="itensSelecao">${Array.from({length:31},(v,i)=>`<div data-value="${i+1}">${String(i+1).padStart(2,'0')}</div>`).join('')}</div>
+        <div class="mensagemDeErro" id="erroDiaPromocao${slug}"></div>
+        </div>
+        <div class="selecaoCustomizada">
+        <input type="text" id="mesPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Mês">
+        <div class="itensSelecao">${['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'].map((v,i) => `<div data-value="${i+1}">${v}</div>`).join('')}</div>
+        <div class="mensagemDeErro" id="erroMesPromocao${slug}"></div>
+        </div>
+        <div class="selecaoCustomizada">
+        <input type="number" id="anoPromocao${slug}" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Ano" min="1900" max="2100" inputmode="numeric" step="1">
+        <div class="itensSelecao">${Array.from({length:81},(v,i)=>`<div data-value="${new Date().getFullYear()-i}">${new Date().getFullYear()-i}</div>`).join('')}</div>
+        <div class="mensagemDeErro" id="erroAnoPromocao${slug}"></div>
+        </div>
+        <button type="button" class="botaoCalendario" onclick="abrirCalendario(event)">
+        <img src="svg/calendario.svg" alt="Calendário">
+        </button></div></div>`;
+        container.insertAdjacentHTML('beforeend', html);
+      }
     });
   });
 }
