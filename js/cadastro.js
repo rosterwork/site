@@ -564,6 +564,7 @@ function atualizarPromocoes(posto) {
   if (preload) {
     const preloadContainer = preload.querySelector(`[data-posto="${posto}"]`);
     if (preloadContainer) {
+      console.log('Preload encontrado para:', posto, 'HTML:', preloadContainer.innerHTML.length);
       const clonedHTML = preloadContainer.innerHTML;
       container.innerHTML = clonedHTML;
       
@@ -584,6 +585,8 @@ function atualizarPromocoes(posto) {
         criarSelecaoCustomizada(s, callback);
       });
       return;
+    } else {
+      console.log('Preload NÃO encontrado para:', posto);
     }
   }
   
@@ -648,6 +651,8 @@ function preloadPromocoes() {
       const indice = POSTOS_PRACAS.indexOf(posto);
       postos = POSTOS_PRACAS.slice(indice).reverse();
     }
+    
+    console.log('Criando preload para:', posto, 'Postos:', postos.length);
     
     postos.forEach(p => {
       const slug = p.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
