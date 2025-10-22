@@ -360,7 +360,7 @@ const idrwP1A1L30 = '30';
 const idrwP1A1L32 = '32';
 const idrwP1A1L33 = '33';
 
-const idrwP1A1C22 = '22'; 
+const idrwP1A1C23 = '23'; 
 
 const LOCAIS_TRABALHO = [
   { texto: '2ª CIBM - Umuarama', nivel: 3, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} },
@@ -991,7 +991,7 @@ function coletarDadosFormulario() {
     promocoes: promocoes,
     senha: {
       valor: document.getElementById('senha')?.value.trim(),
-      idrw: idrwP1A1C22
+      idrw: idrwP1A1C23
     }
   };
 }
