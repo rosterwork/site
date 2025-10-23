@@ -351,11 +351,19 @@ const idrwP1A1L12 = '12';
 const idrwP1A1C23 = '23'; 
 
 const LOCAIS_TRABALHO = [
-  { texto: '2ª CIBM - Umuarama', nivel: 3, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} }
+  { texto: '2ª CIBM - Umuarama', nivel: 1, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} },
+  { texto: '3º PEL', nivel: 1 },
+  { texto: '2º PEL', nivel: 1 },
+  { texto: '1º PEL', nivel: 1 }
 ];
 let locaisSelecionados = [];
 
 function renderizarListaGenerica(LISTA, selecionados, containerId, adicionarFn, removerFnName, mostrarNovoFnName) {
+  // Para locais de trabalho, usar lógica simplificada
+  if (containerId === 'containerLocaisTrabalho') {
+    return renderizarLocaisTrabalhoSimplificado();
+  }
+  
   const container = document.getElementById(containerId);
   if (!container) return;
   selecionados.sort((a, b) => LISTA.findIndex(l => l.texto === a) - LISTA.findIndex(l => l.texto === b));
@@ -400,38 +408,98 @@ function renderizarListaGenerica(LISTA, selecionados, containerId, adicionarFn, 
   });
 }
 
-function adicionarLocal(valor) {
-  const selecionado = LOCAIS_TRABALHO.find(l => l.texto === valor);
-  if (!selecionado) return;
-  LOCAIS_TRABALHO.filter(l => l.nivel < selecionado.nivel).forEach(l => {
-    if (!locaisSelecionados.includes(l.texto)) locaisSelecionados.push(l.texto);
+function renderizarLocaisTrabalhoSimplificado() {
+  const container = document.getElementById('containerLocaisTrabalho');
+  if (!container) return;
+  
+  // Sempre garantir que 2ª CIBM está selecionada
+  if (!locaisSelecionados.includes('2ª CIBM - Umuarama')) {
+    locaisSelecionados = ['2ª CIBM - Umuarama'];
+  }
+  
+  // Obter apenas pelotões disponíveis
+  const pelotoesDisponiveis = LOCAIS_TRABALHO.filter(l => l.texto.includes('PEL') && !locaisSelecionados.includes(l.texto));
+  
+  container.innerHTML = `
+    <div class="linhaLocalTrabalho">
+      <div class="campoComBotao">
+        <div class="selecaoCustomizada">
+          <input type="text" class="campo campoSelecionado" value="2ª CIBM - Umuarama" readonly>
+          <div class="itensSelecao"></div>
+        </div>
+      </div>
+      <div class="mensagemDeErro"></div>
+    </div>
+    ${locaisSelecionados.filter(l => l.includes('PEL')).map((pelotao, i) => `
+      <div class="linhaLocalTrabalho">
+        <div class="campoComBotao">
+          <div class="selecaoCustomizada">
+            <input type="text" class="campo campoSelecionado" value="${pelotao}" data-index="${i + 1}">
+            <div class="itensSelecao">${[...pelotoesDisponiveis, {texto: pelotao}].map(p => `<div data-value="${p.texto || p}">${p.texto || p}</div>`).join('')}</div>
+          </div>
+          ${botaoRemover(`removerLocalTrabalho(${i + 1})`)}
+        </div>
+        <div class="mensagemDeErro"></div>
+      </div>
+    `).join('')}
+    ${pelotoesDisponiveis.length > 0 ? `
+      <div class="linhaLocalTrabalho">
+        <button type="button" class="botaoAdicionar" onclick="mostrarCampoNovo()">
+          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <line x1="8" y1="3" x2="8" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="3" y1="8" x2="13" y2="8" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    ` : ''}
+  `;
+  
+  // Configurar seleções customizadas para pelotões editáveis
+  container.querySelectorAll('.linhaLocalTrabalho').forEach(linha => {
+    const selecao = linha.querySelector('.selecaoCustomizada');
+    const campo = selecao?.querySelector('.campoSelecionado');
+    if (!campo || campo.hasAttribute('readonly')) return;
+    
+    const erroEl = linha.querySelector('.mensagemDeErro');
+    const idx = campo.dataset.index;
+    
+    criarSelecaoCustomizada(selecao, valor => {
+      if (idx !== undefined) {
+        const indexReal = parseInt(idx) - 1;
+        const pelotonAtual = locaisSelecionados.filter(l => l.includes('PEL'));
+        pelotonAtual[indexReal] = valor;
+        locaisSelecionados = ['2ª CIBM - Umuarama', ...pelotonAtual];
+        renderizarLocaisTrabalho();
+      }
+    }, erroEl);
   });
-  locaisSelecionados.push(valor);
-  renderizarLocaisTrabalho();
+}
+
+function adicionarLocal(valor) {
+  if (valor === '2ª CIBM - Umuarama') {
+    // 2ª CIBM sempre obrigatória, não adicionar duplicata
+    return;
+  }
+  if (valor.includes('PEL') && !locaisSelecionados.includes(valor)) {
+    locaisSelecionados.push(valor);
+    renderizarLocaisTrabalho();
+  }
 }
 
 function removerLocalTrabalho(index) {
-  const localRemovido = LOCAIS_TRABALHO.find(l => l.texto === locaisSelecionados[index]);
-  if (!localRemovido) return;
-  locaisSelecionados = locaisSelecionados.filter((texto, i) => {
-    if (i < index) return true;
-    const loc = LOCAIS_TRABALHO.find(l => l.texto === texto);
-    return loc && loc.nivel < localRemovido.nivel;
-  });
-  const voltaAoPlaceholder = locaisSelecionados.length === 0;
-  renderizarLocaisTrabalho();
-  if (voltaAoPlaceholder) {
-    setTimeout(() => {
-      const container = document.getElementById('containerLocaisTrabalho');
-      const primeiraLinha = container?.querySelector('.linhaLocalTrabalho');
-      const campo = primeiraLinha?.querySelector('.campoSelecionado');
-      const erroEl = primeiraLinha?.querySelector('.mensagemDeErro');
-      if (campo && erroEl) {
-        campo.classList.add('erro');
-        erroEl.textContent = 'Selecione uma opção';
-        campo.dataset.abriu = '1';
-      }
-    }, 0);
+  if (index === 0) {
+    // Não permitir remoção da 2ª CIBM
+    return;
+  }
+  
+  // Remover pelotão específico
+  const pelotonAtual = locaisSelecionados.filter(l => l.includes('PEL'));
+  const indexPelotao = index - 1;
+  
+  if (indexPelotao >= 0 && indexPelotao < pelotonAtual.length) {
+    pelotonAtual.splice(indexPelotao, 1);
+    locaisSelecionados = ['2ª CIBM - Umuarama', ...pelotonAtual];
+    renderizarLocaisTrabalho();
   }
 }
 
@@ -442,20 +510,31 @@ function renderizarLocaisTrabalho() {
 function mostrarCampoNovo() {
   const container = document.getElementById('containerLocaisTrabalho');
   if (!container) return;
+  
   const usados = new Set(locaisSelecionados);
-  const opcoes = LOCAIS_TRABALHO.filter(l => !usados.has(l.texto)).map(l => `<div data-value="${l.texto}">${l.texto}</div>`).join('');
+  const pelotoesDisponiveis = LOCAIS_TRABALHO.filter(l => l.texto.includes('PEL') && !usados.has(l.texto));
+  
+  if (pelotoesDisponiveis.length === 0) return;
+  
+  const opcoes = pelotoesDisponiveis.map(l => `<div data-value="${l.texto}">${l.texto}</div>`).join('');
+  
+  // Remover botão adicionar
   container.querySelector('.linhaLocalTrabalho:last-child')?.remove();
+  
+  // Adicionar nova linha de seleção
   const linha = document.createElement('div');
   linha.className = 'linhaLocalTrabalho';
   linha.innerHTML = `<div class="campoComBotao">
     <div class="selecaoCustomizada" style="flex: 1;">
-      <input type="text" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Selecione">
+      <input type="text" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Selecione um pelotão">
       <div class="itensSelecao">${opcoes}</div>
     </div>
     <button type="button" class="botaoRemover" onclick="renderizarLocaisTrabalho()"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>
   </div>
   <div class="mensagemDeErro"></div>`;
+  
   container.appendChild(linha);
+  
   const selecao = linha.querySelector('.selecaoCustomizada');
   const erroEl = linha.querySelector('.mensagemDeErro');
   criarSelecaoCustomizada(selecao, adicionarLocal, erroEl);
@@ -951,6 +1030,17 @@ function coletarDadosFormulario() {
     });
   }
 
+  // Determinar subunidade baseada na seleção de pelotões para praças
+  let subunidade = '';
+  const ehPraca = POSTOS_PRACAS.includes(postoSelecionado);
+  if (ehPraca) {
+    // Para praças, pegar apenas pelotões selecionados (excluindo "2ª CIBM - Umuarama")
+    const pelotonsSelecionados = locaisSelecionados.filter(local => local.includes('PEL'));
+    if (pelotonsSelecionados.length > 0) {
+      subunidade = pelotonsSelecionados.join(' / ');
+    }
+  }
+
   return {
     idrwPlanilha: idrwP1A1,
     organizacao: document.getElementById('organizacao')?.value.trim(),
@@ -966,6 +1056,7 @@ function coletarDadosFormulario() {
     categoriaCnh: document.getElementById('categoriaCnh')?.value.trim(),
     postoPatente: postoSelecionado,
     locaisTrabalho: [...locaisSelecionados],
+    subunidade: subunidade,
     funcoes: [...funcoesSetorSelecionadas],
     dataInclusao: {
       dia: document.getElementById('diaInclusao')?.value,
