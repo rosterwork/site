@@ -347,26 +347,11 @@ const idrwP1A1L8 = '8';
 const idrwP1A1L9 = '9';
 const idrwP1A1L11 = '11';
 const idrwP1A1L12 = '12';
-const idrwP1A1L15 = '15';
-const idrwP1A1L16 = '16';
-const idrwP1A1L18 = '18';
-const idrwP1A1L19 = '19';
-const idrwP1A1L22 = '22';
-const idrwP1A1L23 = '23';
-const idrwP1A1L25 = '25';
-const idrwP1A1L26 = '26';
-const idrwP1A1L29 = '29';
-const idrwP1A1L30 = '30';
-const idrwP1A1L32 = '32';
-const idrwP1A1L33 = '33';
 
 const idrwP1A1C23 = '23'; 
 
 const LOCAIS_TRABALHO = [
-  { texto: '2ª CIBM - Umuarama', nivel: 3, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} },
-  { texto: '1º Pel - Umuarama', nivel: 4, idrw: {oficiais: {inicio: idrwP1A1L15, fim: idrwP1A1L16}, pracas: {inicio: idrwP1A1L18, fim: idrwP1A1L19}} },
-  { texto: '2º Pel - Cruzeiro do Oeste', nivel: 4, idrw: {oficiais: {inicio: idrwP1A1L22, fim: idrwP1A1L23}, pracas: {inicio: idrwP1A1L25, fim: idrwP1A1L26}} },
-  { texto: '3º Pel - Altônia', nivel: 4, idrw: {oficiais: {inicio: idrwP1A1L29, fim: idrwP1A1L30}, pracas: {inicio: idrwP1A1L32, fim: idrwP1A1L33}} }
+  { texto: '2ª CIBM - Umuarama', nivel: 3, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} }
 ];
 let locaisSelecionados = [];
 
