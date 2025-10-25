@@ -314,8 +314,8 @@ function gerarCamposAdicionais() {
   <div class="itensSelecao">${[...POSTOS_OFICIAIS, ...POSTOS_PRACAS].map(v => `
   <div data-value="${v}">${v}</div>`).join('')}</div></div>
   <div class="mensagemDeErro" id="erroPostoPatente"></div></div>` + ` <div class="grupoDeFormulario"><label for="localTrabalho">Local de trabalho:</label>
-  <div id="containerLocaisTrabalho"></div></div>` + ` <div class="grupoDeFormulario"><label for="funcaoSetor">Função/Setor:</label>
-  <div id="containerFuncaoSetor"></div></div>` + ` <div class="grupoDeFormulario"><label>Data de inclusão:</label>
+  <div id="containerLocaisTrabalho"></div></div>` + ` <div class="grupoDeFormulario"><label for="setor">Setor:</label>
+  <div id="containerSetor"></div></div>` + ` <div class="grupoDeFormulario"><label>Data de inclusão:</label>
   <div class="grupoData">
   <div class="selecaoCustomizada">
   <input type="number" id="diaInclusao" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Dia" min="1" max="31" inputmode="numeric" step="1">
@@ -540,80 +540,81 @@ function mostrarCampoNovo() {
   criarSelecaoCustomizada(selecao, adicionarLocal, erroEl);
 }
 
-const FUNCOES_SETOR = [
-  { texto: 'Combatente', nivel: 1 },
-  { texto: 'Comandante de unidade', nivel: 1 },
-  { texto: 'Subcomandante de unidade', nivel: 1 },
-  { texto: 'Comandante de subunidade', nivel: 1 },
-  { texto: 'B1', nivel: 1 },
-  { texto: 'B2', nivel: 1 },
-  { texto: 'B3', nivel: 1 },
-  { texto: 'B4', nivel: 1 },
-  { texto: 'B5', nivel: 1 },
-  { texto: 'B6', nivel: 1 },
-  { texto: 'B7', nivel: 1 }
-];
-let funcoesSetorSelecionadas = [];
+const SETORES = ['Administrativo', 'Operacional'];
+let setorSelecionado = '';
 
-function adicionarFuncaoSetor(valor) {
-  const selecionado = FUNCOES_SETOR.find(l => l.texto === valor);
-  if (!selecionado) return;
-  FUNCOES_SETOR.filter(l => l.nivel < selecionado.nivel).forEach(l => {
-    if (!funcoesSetorSelecionadas.includes(l.texto)) funcoesSetorSelecionadas.push(l.texto);
-  });
-  funcoesSetorSelecionadas.push(valor);
-  renderizarFuncoesSetor();
+function selecionarSetor(valor) {
+  if (!SETORES.includes(valor)) return;
+  setorSelecionado = valor;
+  renderizarSetor();
 }
 
-function removerFuncaoSetor(index) {
-  const itemRemovido = FUNCOES_SETOR.find(l => l.texto === funcoesSetorSelecionadas[index]);
-  if (!itemRemovido) return;
-  funcoesSetorSelecionadas = funcoesSetorSelecionadas.filter((texto, i) => {
-    if (i < index) return true;
-    const loc = FUNCOES_SETOR.find(l => l.texto === texto);
-    return loc && loc.nivel < itemRemovido.nivel;
-  });
-  const voltaAoPlaceholder = funcoesSetorSelecionadas.length === 0;
-  renderizarFuncoesSetor();
-  if (voltaAoPlaceholder) {
-    setTimeout(() => {
-      const container = document.getElementById('containerFuncaoSetor');
-      const primeiraLinha = container?.querySelector('.linhaLocalTrabalho');
-      const campo = primeiraLinha?.querySelector('.campoSelecionado');
-      const erroEl = primeiraLinha?.querySelector('.mensagemDeErro');
-      if (campo && erroEl) {
-        campo.classList.add('erro');
-        erroEl.textContent = 'Selecione uma opção';
-        campo.dataset.abriu = '1';
-      }
-    }, 0);
+function removerSetor() {
+  setorSelecionado = '';
+  renderizarSetor();
+  setTimeout(() => {
+    const container = document.getElementById('containerSetor');
+    const campo = container?.querySelector('.campoSelecionado');
+    const erroEl = container?.querySelector('.mensagemDeErro');
+    if (campo && erroEl) {
+      campo.classList.add('erro');
+      erroEl.textContent = 'Selecione uma opção';
+      campo.dataset.abriu = '1';
+    }
+  }, 0);
+}
+
+function renderizarSetor() {
+  const container = document.getElementById('containerSetor');
+  if (!container) return;
+  
+  const postoAtual = document.getElementById('postoPatente')?.value.trim();
+  const ehPraca = POSTOS_PRACAS.includes(postoAtual);
+  
+  if (!ehPraca) {
+    container.innerHTML = '';
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'block';
+  
+  if (setorSelecionado) {
+    container.innerHTML = `
+      <div class="linhaLocalTrabalho">
+        <div class="campoComBotao">
+          <div class="selecaoCustomizada">
+            <input type="text" class="campo campoSelecionado" value="${setorSelecionado}">
+            <div class="itensSelecao">${SETORES.map(s => `<div data-value="${s}">${s}</div>`).join('')}</div>
+          </div>
+          ${botaoRemover('removerSetor()')}
+        </div>
+        <div class="mensagemDeErro"></div>
+      </div>
+    `;
+    
+    const selecao = container.querySelector('.selecaoCustomizada');
+    const erro = container.querySelector('.mensagemDeErro');
+    criarSelecaoCustomizada(selecao, selecionarSetor, erro);
+  } else {
+    container.innerHTML = `
+      <div class="linhaLocalTrabalho">
+        <div class="selecaoCustomizada">
+          <input type="text" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Selecione">
+          <div class="itensSelecao">${SETORES.map(s => `<div data-value="${s}">${s}</div>`).join('')}</div>
+        </div>
+        <div class="mensagemDeErro"></div>
+      </div>
+    `;
+    
+    const selecao = container.querySelector('.selecaoCustomizada');
+    const erro = container.querySelector('.mensagemDeErro');
+    criarSelecaoCustomizada(selecao, selecionarSetor, erro);
   }
 }
 
-function renderizarFuncoesSetor() {
-  renderizarListaGenerica(FUNCOES_SETOR, funcoesSetorSelecionadas, 'containerFuncaoSetor', adicionarFuncaoSetor, 'removerFuncaoSetor', 'mostrarCampoNovoFuncaoSetor');
-}
-
-function mostrarCampoNovoFuncaoSetor() {
-  const container = document.getElementById('containerFuncaoSetor');
-  if (!container) return;
-  const usados = new Set(funcoesSetorSelecionadas);
-  const opcoes = FUNCOES_SETOR.filter(l => !usados.has(l.texto)).map(l => `<div data-value="${l.texto}">${l.texto}</div>`).join('');
-  container.querySelector('.linhaLocalTrabalho:last-child')?.remove();
-  const linha = document.createElement('div');
-  linha.className = 'linhaLocalTrabalho';
-  linha.innerHTML = `<div class="campoComBotao">
-    <div class="selecaoCustomizada" style="flex: 1;">
-      <input type="text" class="campo campoSelecionado mostrandoPlaceholder" placeholder="Selecione">
-      <div class="itensSelecao">${opcoes}</div>
-    </div>
-    <button type="button" class="botaoRemover" onclick="renderizarFuncoesSetor()"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-  </div>
-  <div class="mensagemDeErro"></div>`;
-  container.appendChild(linha);
-  const selecao = linha.querySelector('.selecaoCustomizada');
-  const erroEl = linha.querySelector('.mensagemDeErro');
-  criarSelecaoCustomizada(selecao, adicionarFuncaoSetor, erroEl);
+function mostrarCampoNovoSetor() {
+  renderizarSetor();
 }
 
 function atualizarPromocoes(posto) {
@@ -621,6 +622,7 @@ function atualizarPromocoes(posto) {
   if (!container) return;
   
   container.innerHTML = '';
+  renderizarSetor();
   
   if (!posto) return;
   
@@ -816,8 +818,8 @@ function mostrarCamposAdicionais(org) {
     });
     locaisSelecionados = [];
     renderizarLocaisTrabalho();
-    funcoesSetorSelecionadas = [];
-    renderizarFuncoesSetor();
+    setorSelecionado = '';
+    renderizarSetor();
     
     const btnEnviar = document.getElementById('btnEnviar');
     if (btnEnviar && !btnEnviar.hasAttribute('data-event-attached')) {
@@ -852,8 +854,8 @@ function mostrarCamposAdicionais(org) {
   });
   locaisSelecionados = [];
   renderizarLocaisTrabalho();
-  funcoesSetorSelecionadas = [];
-  renderizarFuncoesSetor();
+  setorSelecionado = '';
+  renderizarSetor();
 }
 
 function validarData(id) {
@@ -982,11 +984,13 @@ function validarTodosCampos() {
     todosValidos = false;
   }
   
-  if (funcoesSetorSelecionadas.length === 0) {
-    const container = document.getElementById('containerFuncaoSetor');
-    const primeiraLinha = container?.querySelector('.linhaLocalTrabalho');
-    const campo = primeiraLinha?.querySelector('.campoSelecionado');
-    const erroEl = primeiraLinha?.querySelector('.mensagemDeErro');
+  const postoSelecionado = document.getElementById('postoPatente')?.value.trim();
+  const ehPraca = POSTOS_PRACAS.includes(postoSelecionado);
+  
+  if (ehPraca && !setorSelecionado) {
+    const container = document.getElementById('containerSetor');
+    const campo = container?.querySelector('.campoSelecionado');
+    const erroEl = container?.querySelector('.mensagemDeErro');
     if (campo && erroEl) {
       campo.classList.add('erro');
       erroEl.textContent = 'Selecione uma opção';
@@ -1057,7 +1061,7 @@ function coletarDadosFormulario() {
     postoPatente: postoSelecionado,
     locaisTrabalho: [...locaisSelecionados],
     subunidade: subunidade,
-    funcoes: [...funcoesSetorSelecionadas],
+    setor: POSTOS_PRACAS.includes(postoSelecionado) ? setorSelecionado : '',
     dataInclusao: {
       dia: document.getElementById('diaInclusao')?.value,
       mes: converterMesParaNumero(document.getElementById('mesInclusao')?.value),
