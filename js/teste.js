@@ -25,7 +25,7 @@ const SOBRENOMES = [
     'Machado', 'Correia', 'Franco', 'Castro', 'Farias', 'Andrade', 'Melo', 'Bezerra', 'Batista', 'Barros'
 ];
 
-const POSTOS_OFICIAIS = ['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial','Cadete'];
+const POSTOS_OFICIAIS = ['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial'];
 const POSTOS_PRACAS = ['Subtenente','1º Sargento','2º Sargento','3º Sargento','Cabo','Soldado'];
 const SETORES = ['Administrativo', 'Operacional'];
 

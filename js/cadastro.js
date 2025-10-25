@@ -48,7 +48,7 @@
 const erro = id => document.getElementById(`erro${id[0].toUpperCase() + id.slice(1)}`);
 const botaoRemover = (onclick) => `<button type="button" class="botaoRemover" onclick="${onclick}"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
 
-const POSTOS_OFICIAIS = ['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial','Cadete'];
+const POSTOS_OFICIAIS = ['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial'];
 const POSTOS_PRACAS = ['Subtenente','1º Sargento','2º Sargento','3º Sargento','Cabo','Soldado'];
 
 const ajustarPosicao = (campo, lista) => {
