@@ -158,21 +158,20 @@ function gerarMilitar(posto, ehOficial) {
     const senha = Math.floor(Math.random() * 9000) + 1000;
     
     const locaisTrabalho = ['2ª CIBM - Umuarama'];
-    if (Math.random() > 0.3) {
-        const pelotoes = ['1º PEL', '2º PEL', '3º PEL'];
-        locaisTrabalho.push(pelotoes[Math.floor(Math.random() * pelotoes.length)]);
-    }
-    
     let subunidade = '';
     let setor = '';
     
     if (!ehOficial) {
-        const pelotonsSelecionados = locaisTrabalho.filter(local => local.includes('PEL'));
-        if (pelotonsSelecionados.length > 0) {
-            subunidade = pelotonsSelecionados.join(' / ');
+        // PRAÇAS: Adicionar PEL e setor
+        if (Math.random() > 0.3) {
+            const pelotoes = ['1º PEL', '2º PEL', '3º PEL'];
+            const pelSelecionado = pelotoes[Math.floor(Math.random() * pelotoes.length)];
+            locaisTrabalho.push(pelSelecionado);
+            subunidade = pelSelecionado; // Direto o PEL selecionado
         }
         setor = SETORES[Math.floor(Math.random() * SETORES.length)];
     }
+    // OFICIAIS: locaisTrabalho fica só com '2ª CIBM - Umuarama', subunidade e setor vazios
     
     return {
         id: Date.now() + Math.random(),
