@@ -126,11 +126,7 @@ function gerarPromocoes(posto, dataInclusao) {
         if (index === 0) {
             promocoes.push({
                 posto: p,
-                data: {
-                    dia: dataInclusao.dia,
-                    mes: dataInclusao.mes,
-                    ano: dataInclusao.ano
-                }
+                data: dataInclusao
             });
         } else {
             anoBase += Math.floor(Math.random() * 4) + 2;
@@ -189,11 +185,17 @@ function gerarMilitar(posto, ehOficial) {
         setor: setor,
         dataInclusao: dataInclusao,
         classificacaoCfpCfo: classificacao.toString(),
-        promocoes: promocoes,
-        senha: {
-            valor: senha.toString(),
-            idrw: '23'
-        }
+        promocao1: promocoes[1]?.data || null,
+        promocao2: promocoes[2]?.data || null,
+        promocao3: promocoes[3]?.data || null,
+        promocao4: promocoes[4]?.data || null,
+        promocao5: promocoes[5]?.data || null,
+        promocao6: promocoes[6]?.data || null,
+        promocao7: promocoes[7]?.data || null,
+        promocao8: promocoes[8]?.data || null,
+        promocao9: promocoes[9]?.data || null,
+        promocao10: promocoes[10]?.data || null,
+        senha: senha.toString()
     };
 }
 
