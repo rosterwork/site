@@ -108,37 +108,111 @@ function gerarDataInclusao(posto) {
     return gerarData(Math.max(1990, anoMin), Math.min(anoAtual, anoMax));
 }
 
-function gerarPromocoes(posto, dataInclusao) {
-    const promocoes = [];
-    let postos = [];
+function gerarDatasCarreira(posto, dataNascimento) {
+    // Definir quantas promoções cada posto deve ter
+    const numeroPromocoes = {
+        'Soldado': 1,
+        'Cabo': 2,
+        '3º Sargento': 3,
+        '2º Sargento': 4,
+        '1º Sargento': 5,
+        'Subtenente': 6,
+        'Aspirante a Oficial': 1,
+        '2º Tenente': 2,
+        '1º Tenente': 3,
+        'Capitão': 4,
+        'Major': 5,
+        'Tenente Coronel': 6,
+        'Coronel': 7
+    };
     
-    if (POSTOS_OFICIAIS.includes(posto)) {
-        const indice = POSTOS_OFICIAIS.indexOf(posto);
-        postos = POSTOS_OFICIAIS.slice(indice).reverse();
-    } else if (POSTOS_PRACAS.includes(posto)) {
-        const indice = POSTOS_PRACAS.indexOf(posto);
-        postos = POSTOS_PRACAS.slice(indice).reverse();
+    const totalPromocoes = numeroPromocoes[posto] || 1;
+    const anoNascimento = parseInt(dataNascimento.ano);
+    const anoAtual = new Date().getFullYear();
+    
+    // Calcular limites de idade
+    const anoMinimoInclusao = anoNascimento + 18; // Inclusão aos 18 anos no mínimo
+    const anoMaximoUltimaPromocao = anoNascimento + 60; // Última promoção aos 60 anos no máximo
+    
+    // Calcular o intervalo disponível para inclusão + todas as promoções
+    const anoInicioCarreira = Math.max(anoMinimoInclusao, 1990); // Não antes de 1990
+    const anoFimCarreira = Math.min(anoMaximoUltimaPromocao, anoAtual); // Não depois de hoje
+    
+    // Verificar se há espaço suficiente (inclusão + promoções precisam de pelo menos totalPromocoes anos)
+    const anosDisponiveis = anoFimCarreira - anoInicioCarreira;
+    if (anosDisponiveis < totalPromocoes) {
+        // Se não há espaço suficiente, usar distribuição mínima
+        return gerarCarreiraComLimite(totalPromocoes, anoInicioCarreira, anoFimCarreira);
     }
     
-    let anoBase = parseInt(dataInclusao.ano);
+    // Gerar data de inclusão (deixando espaço para as promoções)
+    const espacoNecessarioPromocoes = totalPromocoes; // Anos mínimos para as promoções
+    const anoMaximoInclusao = anoFimCarreira - espacoNecessarioPromocoes;
+    const anoInclusao = anoInicioCarreira + Math.floor(Math.random() * (anoMaximoInclusao - anoInicioCarreira + 1));
+    const dataInclusao = gerarData(anoInclusao, anoInclusao);
     
-    postos.forEach((p, index) => {
-        if (index === 0) {
-            promocoes.push({
-                posto: p,
-                data: dataInclusao
-            });
+    // Gerar promoções (cada uma pelo menos 1 ano depois da anterior)
+    const promocoes = [];
+    let anoAnterior = anoInclusao;
+    
+    for (let i = 1; i <= totalPromocoes; i++) {
+        const anosRestantes = totalPromocoes - i; // Quantas promoções ainda faltam
+        const anoMinimoEstaPromocao = anoAnterior + 1;
+        const anoMaximoEstaPromocao = anoFimCarreira - anosRestantes;
+        
+        let anoPromocao;
+        if (anoMinimoEstaPromocao <= anoMaximoEstaPromocao) {
+            anoPromocao = anoMinimoEstaPromocao + Math.floor(Math.random() * (anoMaximoEstaPromocao - anoMinimoEstaPromocao + 1));
         } else {
-            anoBase += Math.floor(Math.random() * 4) + 2;
-            const data = gerarData(anoBase, anoBase);
-            promocoes.push({
-                posto: p,
-                data: data
-            });
+            anoPromocao = anoMinimoEstaPromocao; // Forçar intervalo mínimo
         }
-    });
+        
+        const dataPromocao = gerarData(anoPromocao, anoPromocao);
+        promocoes.push({
+            posto: posto,
+            data: dataPromocao
+        });
+        
+        anoAnterior = anoPromocao;
+    }
     
-    return promocoes;
+    // Preencher array até índice 10 com null para manter consistência
+    while (promocoes.length <= 10) {
+        promocoes.push(null);
+    }
+    
+    return {
+        dataInclusao: dataInclusao,
+        promocoes: promocoes
+    };
+}
+
+function gerarCarreiraComLimite(totalPromocoes, anoInicio, anoFim) {
+    const anosDisponiveis = anoFim - anoInicio;
+    const intervalo = Math.floor(anosDisponiveis / Math.max(1, totalPromocoes));
+    
+    // Data de inclusão no início do período disponível
+    const dataInclusao = gerarData(anoInicio, anoInicio);
+    
+    // Promoções distribuídas uniformemente
+    const promocoes = [];
+    for (let i = 1; i <= totalPromocoes; i++) {
+        const anoPromocao = anoInicio + i * Math.max(1, intervalo);
+        const dataPromocao = gerarData(Math.min(anoPromocao, anoFim), Math.min(anoPromocao, anoFim));
+        promocoes.push({
+            posto: 'posto',
+            data: dataPromocao
+        });
+    }
+    
+    while (promocoes.length <= 10) {
+        promocoes.push(null);
+    }
+    
+    return {
+        dataInclusao: dataInclusao,
+        promocoes: promocoes
+    };
 }
 
 function gerarMilitar(posto, ehOficial) {
@@ -146,10 +220,12 @@ function gerarMilitar(posto, ehOficial) {
     const nomeGuerra = gerarNomeGuerra(nomeCompleto);
     const cpf = gerarCPF();
     const rg = gerarRG();
-    const dataNascimento = gerarData(1960, 2000);
+    const anoAtual = new Date().getFullYear();
+    const dataNascimento = gerarData(anoAtual - 60, anoAtual - 18);
     const categoriaCnh = ['A','B','C','D','E','AB','AC','AD','AE'][Math.floor(Math.random() * 9)];
-    const dataInclusao = gerarDataInclusao(posto);
-    const promocoes = gerarPromocoes(posto, dataInclusao);
+    const carreira = gerarDatasCarreira(posto, dataNascimento);
+    const dataInclusao = carreira.dataInclusao;
+    const promocoes = carreira.promocoes;
     const classificacao = Math.floor(Math.random() * 50000) + 1;
     const senha = Math.floor(Math.random() * 9000) + 1000;
     
@@ -304,33 +380,23 @@ async function enviarIndividual(militarId) {
     if (!militar) return;
     
     const btn = event.target;
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
     
-    cadastrosEnAndamento++;
-    atualizarContador();
-    
-    adicionarLog(`🚀 Iniciando cadastro individual: ${militar.nomeGuerra}`, 'info');
-    
-    try {
-        const resultado = await enviarCadastro(militar);
-        
-        if (resultado.sucesso) {
-            btn.textContent = 'Enviado';
-            btn.style.background = '#28a745';
-        } else {
-            btn.textContent = 'Erro';
-            btn.style.background = '#dc3545';
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.textContent = 'Enviar';
-                btn.style.background = '#28a745';
-            }, 3000);
-        }
-    } finally {
-        cadastrosEnAndamento--;
-        atualizarContador();
+    // Verificar se já foi enviado
+    if (btn.textContent === 'Enviado') {
+        return;
     }
+    
+    // Marcar como enviado imediatamente
+    btn.disabled = true;
+    btn.textContent = 'Enviado';
+    btn.style.background = '#28a745';
+    
+    adicionarLog(`✅ ${militar.nomeGuerra}: Enviado`, 'sucesso');
+    
+    // Enviar em background sem aguardar resposta
+    enviarCadastro(militar).catch(error => {
+        console.log(`Erro no envio em background para ${militar.nomeGuerra}:`, error);
+    });
 }
 
 async function enviarSelecionados() {

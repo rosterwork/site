@@ -1,4 +1,4 @@
-const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbxvQfOxgyzoPRS0pCLKKJ_EyHDLwcbd2LHZA42eOMifxkifIfoR9z8U1IKi2WtTg7eO/exec';
+const URL_GOOGLE_SCRIPT = 'https://script.google.com/macros/s/AKfycbykzB9hl6KHA4Y_JuraeRuoFiOmo23rgdSayiK8djFQvIKCfWoLhiXQzly1tqdHoDQ/exec';
 
 
 
