@@ -66,6 +66,11 @@ function gerarData(anoMin, anoMax) {
     return { dia: dia.toString().padStart(2, '0'), mes: mes.toString().padStart(2, '0'), ano: ano.toString() };
 }
 
+function dataParaISO(dataObj) {
+    if (!dataObj) return null;
+    return `${dataObj.ano}-${dataObj.mes}-${dataObj.dia}T00:00:00.000Z`;
+}
+
 function gerarNomeCompleto() {
     const masculino = Math.random() > 0.3;
     const nome = masculino ? 
@@ -152,7 +157,7 @@ function gerarDatasCarreira(posto, dataNascimento) {
     const dataInclusao = gerarData(anoInclusao, anoInclusao);
     
     // Gerar promoções (cada uma pelo menos 1 ano depois da anterior)
-    const promocoes = [];
+    const promocoes = [null]; // Índice 0 vazio para manter base 1
     let anoAnterior = anoInclusao;
     
     for (let i = 1; i <= totalPromocoes; i++) {
@@ -168,10 +173,10 @@ function gerarDatasCarreira(posto, dataNascimento) {
         }
         
         const dataPromocao = gerarData(anoPromocao, anoPromocao);
-        promocoes.push({
+        promocoes[i] = {
             posto: posto,
             data: dataPromocao
-        });
+        };
         
         anoAnterior = anoPromocao;
     }
@@ -195,14 +200,14 @@ function gerarCarreiraComLimite(totalPromocoes, anoInicio, anoFim) {
     const dataInclusao = gerarData(anoInicio, anoInicio);
     
     // Promoções distribuídas uniformemente
-    const promocoes = [];
+    const promocoes = [null]; // Índice 0 vazio para manter base 1
     for (let i = 1; i <= totalPromocoes; i++) {
         const anoPromocao = anoInicio + i * Math.max(1, intervalo);
         const dataPromocao = gerarData(Math.min(anoPromocao, anoFim), Math.min(anoPromocao, anoFim));
-        promocoes.push({
+        promocoes[i] = {
             posto: 'posto',
             data: dataPromocao
-        });
+        };
     }
     
     while (promocoes.length <= 10) {
@@ -253,24 +258,24 @@ function gerarMilitar(posto, ehOficial) {
         nomeGuerra: nomeGuerra,
         cpf: cpf,
         rg: rg,
-        dataNascimento: dataNascimento,
+        dataNascimento: dataParaISO(dataNascimento),
         categoriaCnh: categoriaCnh,
         postoPatente: posto,
         locaisTrabalho: locaisTrabalho,
         subunidade: subunidade,
         setor: setor,
-        dataInclusao: dataInclusao,
+        dataInclusao: dataParaISO(dataInclusao),
         classificacaoCfpCfo: classificacao.toString(),
-        promocao1: promocoes[1]?.data || null,
-        promocao2: promocoes[2]?.data || null,
-        promocao3: promocoes[3]?.data || null,
-        promocao4: promocoes[4]?.data || null,
-        promocao5: promocoes[5]?.data || null,
-        promocao6: promocoes[6]?.data || null,
-        promocao7: promocoes[7]?.data || null,
-        promocao8: promocoes[8]?.data || null,
-        promocao9: promocoes[9]?.data || null,
-        promocao10: promocoes[10]?.data || null,
+        promocao1: dataParaISO(promocoes[1]?.data),
+        promocao2: dataParaISO(promocoes[2]?.data),
+        promocao3: dataParaISO(promocoes[3]?.data),
+        promocao4: dataParaISO(promocoes[4]?.data),
+        promocao5: dataParaISO(promocoes[5]?.data),
+        promocao6: dataParaISO(promocoes[6]?.data),
+        promocao7: dataParaISO(promocoes[7]?.data),
+        promocao8: dataParaISO(promocoes[8]?.data),
+        promocao9: dataParaISO(promocoes[9]?.data),
+        promocao10: dataParaISO(promocoes[10]?.data),
         senha: senha.toString()
     };
 }
