@@ -425,30 +425,63 @@ async function enviarSelecionados() {
     cadastrosEnAndamento = militaresSelecionados.length;
     atualizarContador();
     
-    adicionarLog(`🚀 Iniciando envio de ${militaresSelecionados.length} cadastros simultâneos`, 'info');
+    adicionarLog(`🚀 Iniciando envio realístico de ${militaresSelecionados.length} cadastros (intervalos de 1-2s, máx 10 simultâneos)`, 'info');
     
-    const promises = militaresSelecionados.map(async (militar, index) => {
-        await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
-        
-        try {
-            const resultado = await enviarCadastro(militar);
-            
-            const progresso = ((index + 1) / militaresSelecionados.length) * 100;
-            progressFill.style.width = `${progresso}%`;
-            
-            return { militar, resultado };
-        } catch (error) {
-            return { militar, resultado: { sucesso: false, mensagem: error.message } };
-        }
-    });
+    // Dividir em grupos de máximo 10 para simular cenário real
+    const tamanhoGrupo = Math.min(10, militaresSelecionados.length);
+    const grupos = [];
+    
+    for (let i = 0; i < militaresSelecionados.length; i += tamanhoGrupo) {
+        grupos.push(militaresSelecionados.slice(i, i + tamanhoGrupo));
+    }
+    
+    let totalProcessados = 0;
+    const todosResultados = [];
     
     try {
-        const resultados = await Promise.all(promises);
+        // Processar cada grupo com intervalo entre grupos
+        for (let g = 0; g < grupos.length; g++) {
+            const grupo = grupos[g];
+            
+            if (g > 0) {
+                // Aguardar 2-3 segundos entre grupos para simular entrada escalonada
+                adicionarLog(`⏳ Aguardando ${2 + g}s antes do próximo grupo...`, 'info');
+                await new Promise(resolve => setTimeout(resolve, (2 + g) * 1000));
+            }
+            
+            adicionarLog(`📦 Processando grupo ${g + 1}/${grupos.length} (${grupo.length} cadastros)`, 'info');
+            
+            // Dentro do grupo, adicionar intervalos de 1-2 segundos entre cada envio
+            const promisesGrupo = grupo.map(async (militar, index) => {
+                // Delay escalonado: 0s, 1s, 2s, 1.5s, 2.5s, etc.
+                const delay = index * (1000 + Math.random() * 1000); // 1-2 segundos entre cada um
+                await new Promise(resolve => setTimeout(resolve, delay));
+                
+                try {
+                    const resultado = await enviarCadastro(militar);
+                    
+                    totalProcessados++;
+                    const progresso = (totalProcessados / militaresSelecionados.length) * 100;
+                    progressFill.style.width = `${progresso}%`;
+                    
+                    return { militar, resultado };
+                } catch (error) {
+                    totalProcessados++;
+                    const progresso = (totalProcessados / militaresSelecionados.length) * 100;
+                    progressFill.style.width = `${progresso}%`;
+                    
+                    return { militar, resultado: { sucesso: false, mensagem: error.message } };
+                }
+            });
+            
+            const resultadosGrupo = await Promise.all(promisesGrupo);
+            todosResultados.push(...resultadosGrupo);
+        }
         
-        const sucessos = resultados.filter(r => r.resultado.sucesso).length;
-        const erros = resultados.filter(r => !r.resultado.sucesso).length;
+        const sucessos = todosResultados.filter(r => r.resultado.sucesso).length;
+        const erros = todosResultados.filter(r => !r.resultado.sucesso).length;
         
-        adicionarLog(`✅ Concluído: ${sucessos} sucessos, ${erros} erros`, sucessos > erros ? 'sucesso' : 'erro');
+        adicionarLog(`✅ Simulação realística concluída: ${sucessos} sucessos, ${erros} erros`, sucessos > erros ? 'sucesso' : 'erro');
         
         checkboxes.forEach(cb => cb.checked = false);
         
