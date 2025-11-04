@@ -360,7 +360,7 @@ async function enviarCadastro(militar) {
     params.append('dados', JSON.stringify(militar));
 
     try {
-        const response = await fetch(URL_GOOGLE_SCRIPT, {
+        const response = await fetch(GITHUB_API_URL, {
             method: 'POST',
             body: params
         });

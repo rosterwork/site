@@ -55,7 +55,7 @@ const API = {
       if (params.senha) p.append('senha', params.senha);
       if (params.tipo) p.append('tipo', params.tipo);
       if (params.token) p.append('token', params.token);
-      return fetch(URL_GOOGLE_SCRIPT, { method: 'POST', body: p }).then(r => r.json());
+      return fetch(GITHUB_API_URL, { method: 'POST', body: p }).then(r => r.json());
     }
     return window.requisicaoSegura(params);
   },

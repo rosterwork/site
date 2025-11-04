@@ -930,10 +930,6 @@ function voltarParaLogin() {
   window.location.href = 'index.html';
 }
 
-// ============================================================================
-// VALIDAÇÃO E ENVIO DE CADASTRO
-// ============================================================================
-
 function validarTodosCampos() {
   let todosValidos = true;
   
@@ -1034,11 +1030,9 @@ function coletarDadosFormulario() {
     });
   }
 
-  // Determinar subunidade baseada na seleção de pelotões para praças
   let subunidade = '';
   const ehPraca = POSTOS_PRACAS.includes(postoSelecionado);
   if (ehPraca) {
-    // Para praças, pegar apenas pelotões selecionados (excluindo "2ª CIBM - Umuarama")
     const pelotonsSelecionados = locaisSelecionados.filter(local => local.includes('PEL'));
     if (pelotonsSelecionados.length > 0) {
       subunidade = pelotonsSelecionados.join(' / ');
@@ -1107,23 +1101,31 @@ function enviarCadastro() {
   btnEnviar.disabled = true;
 
   const dados = coletarDadosFormulario();
+  const conteudo = btoa(JSON.stringify(dados, null, 2));
 
-  const params = new URLSearchParams();
-  params.append('acao', 'cadastro');
-  params.append('dados', JSON.stringify(dados));
-
-  fetch(URL_GOOGLE_SCRIPT, {
-    method: 'POST',
-    body: params
+  fetch(GITHUB_API_URL, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${GITHUB_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: `Novo cadastro: ${dados.nomeGuerra}`,
+      content: conteudo
+    })
   })
-    .then(r => r.json())
-    .then(r => {
-      if (r && r.message) mostrarModalSucesso(r.message);
-      else mostrarModalErro('Erro ao receber resposta do servidor.');
+    .then(response => response.json())
+    .then(data => {
+      if (data.content) {
+        mostrarModalSucesso('Cadastro enviado com sucesso! Será processado em breve.');
+      } else {
+        throw new Error('Erro na resposta');
+      }
       resetarBotaoEnviar();
     })
-    .catch(() => {
-      mostrarModalErro('Erro ao receber resposta do servidor.');
+    .catch(error => {
+      console.error('Erro ao enviar cadastro:', error);
+      mostrarModalErro('Erro ao enviar cadastro. Verifique sua conexão e tente novamente.');
       resetarBotaoEnviar();
     });
 }

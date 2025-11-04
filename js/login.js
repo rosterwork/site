@@ -51,7 +51,7 @@ window.requisicaoSegura = function(params) {
     return Promise.reject('Token não encontrado');
   }
   
-  const validarToken = fetch(URL_GOOGLE_SCRIPT, {
+  const validarToken = fetch(GITHUB_API_URL, {
     method: 'POST',
     body: new URLSearchParams([['acao', 'validarToken'], ['token', token]])
   }).then(r => r.json());
@@ -64,7 +64,7 @@ window.requisicaoSegura = function(params) {
   if (params.tipo) p.append('tipo', params.tipo);
   if (params.token) p.append('token', params.token);
   
-  const executarOperacao = fetch(URL_GOOGLE_SCRIPT, { method: 'POST', body: p }).then(r => r.json());
+  const executarOperacao = fetch(GITHUB_API_URL, { method: 'POST', body: p }).then(r => r.json());
   
   return Promise.all([validarToken, executarOperacao]).then(([validacao, resultado]) => {
     if (!validacao.valido) {
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
     formData.append('senha', senha);
     formData.append('tipo', tipo);
 
-    fetch(URL_GOOGLE_SCRIPT, {
+    fetch(GITHUB_API_URL, {
       method: 'POST',
       body: formData
     })
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
     formData.append('acao', 'validarToken');
     formData.append('token', token);
     
-    fetch(URL_GOOGLE_SCRIPT, {
+    fetch(GITHUB_API_URL, {
       method: 'POST',
       body: formData
     })
