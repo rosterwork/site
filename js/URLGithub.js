@@ -1,2 +1,3 @@
-const GITHUB_API_URL = 'https://api.github.com/repos/rosterwork/action/contents/dados_cadastro.json';
-const GITHUB_TOKEN = 'TOKEN_SERA_SUBSTITUIDO_PELO_WORKFLOW';
+// API Proxy Segura - O token nunca é exposto no frontend
+const API_PROXY_URL = 'https://api.github.com/repos/rosterwork/action/dispatches';
+const WORKFLOW_TRIGGER = 'manual-cadastro';
