@@ -47,21 +47,20 @@
 
 const API = {
   request: function(params) {
-    if (params.acao === 'login' || params.acao === 'cadastro') {
-      const p = new URLSearchParams();
-      if (params.acao) p.append('acao', params.acao);
-      if (params.dados) p.append('dados', JSON.stringify(params.dados));
-      if (params.documento) p.append('documento', params.documento);
-      if (params.senha) p.append('senha', params.senha);
-      if (params.tipo) p.append('tipo', params.tipo);
-      if (params.token) p.append('token', params.token);
-      return fetch(GITHUB_API_URL, { method: 'POST', body: p }).then(r => r.json());
+    if (params.acao === 'cadastro') {
+      return enviarCadastroSeguro(params.dados);
     }
     return window.requisicaoSegura(params);
   },
-  login: function(documento, senha, tipo) { return this.request({acao: 'login', documento: documento, senha: senha, tipo: tipo}); },
-  cadastro: function(dados) { return this.request({acao: 'cadastro', dados: dados}); },
-  validarToken: function(token) { return this.request({acao: 'validarToken', token: token}); }
+  login: function(documento, senha, tipo) { 
+    return this.request({acao: 'login', documento: documento, senha: senha, tipo: tipo}); 
+  },
+  cadastro: function(dados) { 
+    return this.request({acao: 'cadastro', dados: dados}); 
+  },
+  validarToken: function(token) { 
+    return this.request({acao: 'validarToken', token: token}); 
+  }
 };
 
 if (typeof window !== 'undefined') window.API = API;

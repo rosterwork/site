@@ -355,24 +355,15 @@ function adicionarLog(mensagem, tipo = 'info') {
 }
 
 async function enviarCadastro(militar) {
-    const params = new URLSearchParams();
-    params.append('acao', 'cadastro');
-    params.append('dados', JSON.stringify(militar));
-
     try {
-        const response = await fetch(GITHUB_API_URL, {
-            method: 'POST',
-            body: params
-        });
+        const resultado = await enviarCadastroSeguro(militar);
         
-        const result = await response.json();
-        
-        if (result && result.message) {
-            adicionarLog(`✅ ${militar.nomeGuerra}: ${result.message}`, 'sucesso');
-            return { sucesso: true, mensagem: result.message };
+        if (resultado.success) {
+            adicionarLog(`✅ ${militar.nomeGuerra}: ${resultado.message}`, 'sucesso');
+            return { sucesso: true, mensagem: resultado.message };
         } else {
-            adicionarLog(`❌ ${militar.nomeGuerra}: Erro na resposta do servidor`, 'erro');
-            return { sucesso: false, mensagem: 'Erro na resposta do servidor' };
+            adicionarLog(`❌ ${militar.nomeGuerra}: ${resultado.error}`, 'erro');
+            return { sucesso: false, mensagem: resultado.error };
         }
     } catch (error) {
         adicionarLog(`❌ ${militar.nomeGuerra}: ${error.message}`, 'erro');

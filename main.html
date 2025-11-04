@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/confirmacaoSair.css">
     <script src="js/URLGithub.js"></script>
+    <script src="js/cadastro-seguro.js"></script>
     <script>
     (function(){
       var paginaAtual = window.location.pathname.split('/').pop();
@@ -21,21 +22,7 @@
         window.location.href = 'index.html';
         return;
       }
-      setTimeout(function() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', URL_GOOGLE_SCRIPT, false);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('acao=validarToken&token=' + encodeURIComponent(token));
-        if (xhr.status === 200) {
-          var resultado = JSON.parse(xhr.responseText);
-          if (!resultado.valido) {
-            localStorage.removeItem('tokenRosterWork');
-            localStorage.removeItem('usuarioRosterWork');
-            localStorage.removeItem('expiracaoToken');
-            window.location.href = 'index.html';
-          }
-        }
-      }, 100);
+
     })();
     </script>
     <script src="js/seguranca.js"></script>

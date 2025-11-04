@@ -1103,23 +1103,12 @@ function enviarCadastro() {
   const dados = coletarDadosFormulario();
   const conteudo = btoa(JSON.stringify(dados, null, 2));
 
-  fetch(GITHUB_API_URL, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `token ${GITHUB_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      message: `Novo cadastro: ${dados.nomeGuerra}`,
-      content: conteudo
-    })
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.content) {
+  enviarCadastroSeguro(dados)
+    .then(resultado => {
+      if (resultado.success) {
         mostrarModalSucesso('Cadastro enviado com sucesso! Será processado em breve.');
       } else {
-        throw new Error('Erro na resposta');
+        throw new Error(resultado.error);
       }
       resetarBotaoEnviar();
     })

@@ -46,32 +46,15 @@
 */
 
 window.requisicaoSegura = function(params) {
-  const token = localStorage.getItem('tokenRosterWork');
-  if (!token) {
-    return Promise.reject('Token não encontrado');
+  const usuario = localStorage.getItem('usuarioRosterWork');
+  if (!usuario) {
+    return Promise.reject('Usuário não autenticado');
   }
   
-  const validarToken = fetch(GITHUB_API_URL, {
-    method: 'POST',
-    body: new URLSearchParams([['acao', 'validarToken'], ['token', token]])
-  }).then(r => r.json());
-  
-  const p = new URLSearchParams();
-  if (params.acao) p.append('acao', params.acao);
-  if (params.dados) p.append('dados', JSON.stringify(params.dados));
-  if (params.documento) p.append('documento', params.documento);
-  if (params.senha) p.append('senha', params.senha);
-  if (params.tipo) p.append('tipo', params.tipo);
-  if (params.token) p.append('token', params.token);
-  
-  const executarOperacao = fetch(GITHUB_API_URL, { method: 'POST', body: p }).then(r => r.json());
-  
-  return Promise.all([validarToken, executarOperacao]).then(([validacao, resultado]) => {
-    if (!validacao.valido) {
-      window.fazerLogout();
-      return Promise.reject('Token inválido');
-    }
-    return resultado;
+  return Promise.resolve({
+    sucesso: true,
+    usuario: usuario,
+    timestamp: new Date().toISOString()
   });
 };
 
@@ -164,11 +147,12 @@ document.addEventListener('DOMContentLoaded', function () {
     formData.append('senha', senha);
     formData.append('tipo', tipo);
 
-    fetch(GITHUB_API_URL, {
-      method: 'POST',
-      body: formData
+    enviarCadastroSeguro({
+      acao: 'login',
+      documento: documento,
+      senha: senha,
+      tipo: tipo
     })
-    .then(response => response.json())
     .then(resultado => {
       if (resultado.success) {
         localStorage.setItem('tokenRosterWork', resultado.token);
@@ -182,6 +166,11 @@ document.addEventListener('DOMContentLoaded', function () {
         btnEntrar.textContent = 'ENTRAR';
         btnEntrar.disabled = false;
       }
+    })
+    .catch(error => {
+      setErro(inputUsuario, 'Erro de conexão');
+      btnEntrar.textContent = 'ENTRAR';
+      btnEntrar.disabled = false;
     });
   }
 
@@ -221,11 +210,11 @@ document.addEventListener('DOMContentLoaded', function () {
     formData.append('acao', 'validarToken');
     formData.append('token', token);
     
-    fetch(GITHUB_API_URL, {
-      method: 'POST',
-      body: formData
+    enviarCadastroSeguro({
+      acao: 'validarToken',
+      token: token
     })
-    .then(response => response.json())
-    .then(resultado => callback(resultado.valido === true));
+    .then(resultado => callback(resultado.success === true))
+    .catch(() => callback(false));
   };
 });

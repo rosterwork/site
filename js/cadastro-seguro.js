@@ -7,11 +7,11 @@ async function enviarCadastroSeguro(dadosCadastro) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                event_type: 'manual-cadastro',
+                event_type: 'processar-cadastro',
                 client_payload: {
                     dados: dadosCadastro,
                     timestamp: new Date().toISOString(),
-                    origem: 'site-github-pages'
+                    origem: 'frontend-seguro'
                 }
             })
         });
