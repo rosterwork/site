@@ -1,0 +1,29 @@
+name: Deploy Site
+
+on:
+  push:
+    paths:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  deploy_site:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    - name: Gerar arquivo de configuração seguro
+      run: |
+        cat > js/URLGithub.js << EOF
+        const GITHUB_API_URL = 'https://api.github.com/repos/rosterwork/action/contents/dados_cadastro.json';
+        const GITHUB_TOKEN = '${{ secrets.TOKEN_SECRET }}';
+        EOF
+        
+    - name: Deploy para GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./
+        publish_branch: gh-pages
