@@ -1,1 +1,1 @@
-const API_PROXY_URL = 'https://api.github.com/repos/rosterwork/action/dispatches';
+const API_URL = 'https://sua-api-vercel.vercel.app';

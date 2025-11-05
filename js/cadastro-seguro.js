@@ -1,19 +1,11 @@
 async function enviarCadastroSeguro(dadosCadastro) {
     try {
-        const response = await fetch('https://api.github.com/repos/rosterwork/action/dispatches', {
+        const response = await fetch('https://sua-api-vercel.vercel.app/api/cadastro', {
             method: 'POST',
             headers: {
-                'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                event_type: 'processar-cadastro',
-                client_payload: {
-                    dados: dadosCadastro,
-                    timestamp: new Date().toISOString(),
-                    origem: 'frontend-seguro'
-                }
-            })
+            body: JSON.stringify(dadosCadastro)
         });
         
         if (response.ok) {

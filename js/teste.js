@@ -377,19 +377,16 @@ async function enviarIndividual(militarId) {
     
     const btn = event.target;
     
-    // Verificar se já foi enviado
     if (btn.textContent === 'Enviado') {
         return;
     }
     
-    // Marcar como enviado imediatamente
     btn.disabled = true;
     btn.textContent = 'Enviado';
     btn.style.background = '#28a745';
     
     adicionarLog(`✅ ${militar.nomeGuerra}: Enviado`, 'sucesso');
     
-    // Enviar em background sem aguardar resposta
     enviarCadastro(militar).catch(error => {
         console.log(`Erro no envio em background para ${militar.nomeGuerra}:`, error);
     });
