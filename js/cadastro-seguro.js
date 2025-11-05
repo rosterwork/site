@@ -1,6 +1,6 @@
 async function enviarCadastroSeguro(dadosCadastro) {
     try {
-        const response = await fetch('https://sua-api-vercel.vercel.app/api/cadastro', {
+        const response = await fetch('https://rosterworkbackend.vercel.app/api/cadastro', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
