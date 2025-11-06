@@ -48,14 +48,14 @@ function gerarCPF() {
     if (digito2 >= 10) digito2 = 0;
     cpf.push(digito2);
     
-    return cpf.join('').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    return cpf.join('');
 }
 
 function gerarRG() {
     const rg = Array.from({length: 8}, () => Math.floor(Math.random() * 10));
     const digito = Math.floor(Math.random() * 10);
     rg.push(digito);
-    return rg.join('').replace(/(\d{2})(\d{3})(\d{3})(\d{1})/, '$1.$2.$3-$4');
+    return rg.join('');
 }
 
 function gerarData(anoMin, anoMax) {
@@ -63,12 +63,12 @@ function gerarData(anoMin, anoMax) {
     const mes = Math.floor(Math.random() * 12) + 1;
     const diasNoMes = [31,28,31,30,31,30,31,31,30,31,30,31][mes-1];
     const dia = Math.floor(Math.random() * diasNoMes) + 1;
-    return { dia: dia.toString().padStart(2, '0'), mes: mes.toString().padStart(2, '0'), ano: ano.toString() };
+    return `${ano}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
 }
 
-function dataParaISO(dataObj) {
-    if (!dataObj) return null;
-    return `${dataObj.ano}-${dataObj.mes}-${dataObj.dia}T00:00:00.000Z`;
+function dataParaISO(dataString) {
+    if (!dataString) return null;
+    return dataString;
 }
 
 function gerarNomeCompleto() {
@@ -132,7 +132,7 @@ function gerarDatasCarreira(posto, dataNascimento) {
     };
     
     const totalPromocoes = numeroPromocoes[posto] || 1;
-    const anoNascimento = parseInt(dataNascimento.ano);
+    const anoNascimento = parseInt(dataNascimento.split('-')[0]);
     const anoAtual = new Date().getFullYear();
     
     // Calcular limites de idade
@@ -232,23 +232,23 @@ function gerarMilitar(posto, ehOficial) {
     const dataInclusao = carreira.dataInclusao;
     const promocoes = carreira.promocoes;
     const classificacao = Math.floor(Math.random() * 50000) + 1;
-    const senha = Math.floor(Math.random() * 9000) + 1000;
+    const senha = Math.floor(Math.random() * 900000) + 100000;
+    // Garantir que a senha sempre tenha 6 dígitos
+    const senhaString = senha.toString().padStart(6, '0');
     
     const locaisTrabalho = ['2ª CIBM - Umuarama'];
     let subunidade = '';
     let setor = '';
     
     if (!ehOficial) {
-        // PRAÇAS: Adicionar PEL e setor
         if (Math.random() > 0.3) {
             const pelotoes = ['1º PEL', '2º PEL', '3º PEL'];
             const pelSelecionado = pelotoes[Math.floor(Math.random() * pelotoes.length)];
             locaisTrabalho.push(pelSelecionado);
-            subunidade = pelSelecionado; // Direto o PEL selecionado
+            subunidade = pelSelecionado; 
         }
         setor = SETORES[Math.floor(Math.random() * SETORES.length)];
     }
-    // OFICIAIS: locaisTrabalho fica só com '2ª CIBM - Umuarama', subunidade e setor vazios
     
     return {
         id: Date.now() + Math.random(),
@@ -261,22 +261,17 @@ function gerarMilitar(posto, ehOficial) {
         dataNascimento: dataParaISO(dataNascimento),
         categoriaCnh: categoriaCnh,
         postoPatente: posto,
+        tipoMilitar: ehOficial ? 'Oficial' : 'Praça',
         locaisTrabalho: locaisTrabalho,
         subunidade: subunidade,
         setor: setor,
         dataInclusao: dataParaISO(dataInclusao),
         classificacaoCfpCfo: classificacao.toString(),
-        promocao1: dataParaISO(promocoes[1]?.data),
-        promocao2: dataParaISO(promocoes[2]?.data),
-        promocao3: dataParaISO(promocoes[3]?.data),
-        promocao4: dataParaISO(promocoes[4]?.data),
-        promocao5: dataParaISO(promocoes[5]?.data),
-        promocao6: dataParaISO(promocoes[6]?.data),
-        promocao7: dataParaISO(promocoes[7]?.data),
-        promocao8: dataParaISO(promocoes[8]?.data),
-        promocao9: dataParaISO(promocoes[9]?.data),
-        promocao10: dataParaISO(promocoes[10]?.data),
-        senha: senha.toString()
+        promocoes: promocoes.slice(1).filter(p => p !== null).map(p => ({
+            posto: p.posto,
+            data: dataParaISO(p.data)
+        })),
+        senha: senhaString
     };
 }
 
