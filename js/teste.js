@@ -231,60 +231,73 @@ function gerarMilitar(posto, ehOficial) {
     const carreira = gerarDatasCarreira(posto, dataNascimento);
     const dataInclusao = carreira.dataInclusao;
     const promocoes = carreira.promocoes;
-    const classificacao = Math.floor(Math.random() * 50000) + 1;
+    const classificacao = Math.floor(Math.random() * 9999) + 1;
     const senha = Math.floor(Math.random() * 900000) + 100000;
-    // Garantir que a senha sempre tenha 6 dígitos
     const senhaString = senha.toString().padStart(6, '0');
     
-    const locaisTrabalho = ['2ª CIBM - Umuarama'];
-    let subunidade = '';
-    let setor = '';
+    // Dados específicos da unidade 4CRBM2CIBM
+    let pelotao = null;
+    let setor = null;
     
     if (!ehOficial) {
-        if (Math.random() > 0.3) {
-            const pelotoes = ['1º PEL', '2º PEL', '3º PEL'];
-            const pelSelecionado = pelotoes[Math.floor(Math.random() * pelotoes.length)];
-            locaisTrabalho.push(pelSelecionado);
-            subunidade = pelSelecionado; 
-        }
-        setor = SETORES[Math.floor(Math.random() * SETORES.length)];
+        // Praças: pelotão 1, 2 ou 3 + setor OPERACIONAL ou ADMINISTRATIVO
+        pelotao = Math.floor(Math.random() * 3) + 1; // 1, 2 ou 3
+        setor = SETORES[Math.floor(Math.random() * SETORES.length)].toUpperCase();
     }
+    // Oficiais: pelotao=null, setor=null
     
+    // Estrutura compatível com as 6 tabelas do banco
     return {
         id: Date.now() + Math.random(),
-        idrwPlanilha: 'cbmpr',
-        organizacao: 'cbmpr',
-        nomeCompleto: nomeCompleto,
-        nomeGuerra: nomeGuerra,
+        
+        // TABELA LOGIN
         cpf: cpf,
         rg: rg,
-        dataNascimento: dataParaISO(dataNascimento),
-        categoriaCnh: categoriaCnh,
-        postoPatente: posto,
-        tipoMilitar: ehOficial ? 'Oficial' : 'Praça',
-        locaisTrabalho: locaisTrabalho,
-        subunidade: subunidade,
-        setor: setor,
-        dataInclusao: dataParaISO(dataInclusao),
-        classificacaoCfpCfo: classificacao.toString(),
-        promocoes: promocoes.slice(1).filter(p => p !== null).map(p => ({
-            posto: p.posto,
-            data: dataParaISO(p.data)
-        })),
-        senha: senhaString
+        senha: senhaString,
+        
+        // TABELA USUARIOS
+        nome_completo: nomeCompleto,
+        nome_guerra: nomeGuerra,
+        posto_patente: posto,
+        tipo_militar: ehOficial ? 'oficial' : 'praca',
+        data_nascimento: dataParaISO(dataNascimento),
+        categoria_cnh: categoriaCnh,
+        // antiguidade será calculada pelo worker
+        
+        // TABELA PROMOCOES
+        data_inclusao: dataParaISO(dataInclusao),
+        classificacao_cfo_cfp: classificacao.toString().padStart(4, '0'),
+        data_primeira_promocao: promocoes[1] ? dataParaISO(promocoes[1].data) : null,
+        data_segunda_promocao: promocoes[2] ? dataParaISO(promocoes[2].data) : null,
+        data_terceira_promocao: promocoes[3] ? dataParaISO(promocoes[3].data) : null,
+        data_quarta_promocao: promocoes[4] ? dataParaISO(promocoes[4].data) : null,
+        data_quinta_promocao: promocoes[5] ? dataParaISO(promocoes[5].data) : null,
+        data_sexta_promocao: promocoes[6] ? dataParaISO(promocoes[6].data) : null,
+        data_setima_promocao: promocoes[7] ? dataParaISO(promocoes[7].data) : null,
+        data_oitava_promocao: promocoes[8] ? dataParaISO(promocoes[8].data) : null,
+        data_nona_promocao: promocoes[9] ? dataParaISO(promocoes[9].data) : null,
+        data_decima_promocao: promocoes[10] ? dataParaISO(promocoes[10].data) : null,
+        
+        // TABELA LOTACOES
+        unidade_codigo: '4CRBM2CIBM',
+        data_inicio_lotacao: dataParaISO(dataInclusao),
+        
+        // TABELA _4CRBM2CIBM_usuarios
+        pelotao: pelotao,
+        setor: setor
     };
 }
 
 function renderizarMilitar(militar, container) {
-    const ehOficial = POSTOS_OFICIAIS.includes(militar.postoPatente);
+    const ehOficial = POSTOS_OFICIAIS.includes(militar.posto_patente);
     const div = document.createElement('div');
     div.className = 'item-militar';
     div.innerHTML = `
         <input type="checkbox" class="checkbox-militar" data-id="${militar.id}" onchange="atualizarContador()">
         <div class="dados-militar">
-            <div class="nome-militar">${militar.nomeCompleto} (${militar.nomeGuerra})</div>
-            <div class="posto-militar">${militar.postoPatente}</div>
-            <div class="setor-militar">${ehOficial ? 'Oficial' : militar.setor}</div>
+            <div class="nome-militar">${militar.nome_completo} (${militar.nome_guerra})</div>
+            <div class="posto-militar">${militar.posto_patente}</div>
+            <div class="setor-militar">${ehOficial ? 'Oficial' : (militar.setor || 'Sem setor')}</div>
             <div class="cpf-militar">${militar.cpf}</div>
         </div>
         <button class="btn-enviar-individual" onclick="enviarIndividual('${militar.id}')">
@@ -314,7 +327,7 @@ function gerarTodosMilitares() {
     listaPracas.innerHTML = '';
     
     militaresGerados.forEach(militar => {
-        const ehOficial = POSTOS_OFICIAIS.includes(militar.postoPatente);
+        const ehOficial = POSTOS_OFICIAIS.includes(militar.posto_patente);
         const container = ehOficial ? listaOficiais : listaPracas;
         renderizarMilitar(militar, container);
     });
@@ -349,19 +362,85 @@ function adicionarLog(mensagem, tipo = 'info') {
     logContent.scrollTop = logContent.scrollHeight;
 }
 
+function formatarDadosParaWorker(militar) {
+    // Formatar dados para estrutura compatível com as 6 tabelas
+    return {
+        // Dados para tabela LOGIN
+        login: {
+            cpf: militar.cpf,
+            rg: militar.rg,
+            senha_hash: militar.senha, // Será hasheada pelo worker
+            nivel: 'Usuário',
+            aprovacao: 'Aguardando'
+        },
+        
+        // Dados para tabela USUARIOS
+        usuarios: {
+            cpf: militar.cpf,
+            nome_completo: militar.nome_completo,
+            nome_guerra: militar.nome_guerra,
+            posto_patente: militar.posto_patente,
+            tipo_militar: militar.tipo_militar,
+            rg: militar.rg,
+            data_nascimento: militar.data_nascimento,
+            categoria_cnh: militar.categoria_cnh,
+            antiguidade: null, // Será calculada pelo worker
+            ativo: true
+        },
+        
+        // Dados para tabela PROMOCOES
+        promocoes: {
+            cpf: militar.cpf,
+            data_inclusao: militar.data_inclusao,
+            classificacao_cfo_cfp: militar.classificacao_cfo_cfp,
+            data_nascimento: militar.data_nascimento,
+            data_primeira_promocao: militar.data_primeira_promocao,
+            data_segunda_promocao: militar.data_segunda_promocao,
+            data_terceira_promocao: militar.data_terceira_promocao,
+            data_quarta_promocao: militar.data_quarta_promocao,
+            data_quinta_promocao: militar.data_quinta_promocao,
+            data_sexta_promocao: militar.data_sexta_promocao,
+            data_setima_promocao: militar.data_setima_promocao,
+            data_oitava_promocao: militar.data_oitava_promocao,
+            data_nona_promocao: militar.data_nona_promocao,
+            data_decima_promocao: militar.data_decima_promocao
+        },
+        
+        // Dados para tabela LOTACOES
+        lotacoes: {
+            lotacao_codigo: `${militar.unidade_codigo}-${militar.cpf}-001`,
+            cpf: militar.cpf,
+            unidade_codigo: militar.unidade_codigo,
+            data_inicio: militar.data_inicio_lotacao,
+            data_fim: null,
+            ativo: true
+        },
+        
+        // Dados para tabela _4CRBM2CIBM_usuarios (apenas se for da unidade)
+        unidade_especifica: militar.unidade_codigo === '4CRBM2CIBM' ? {
+            cpf: militar.cpf,
+            pelotao: militar.pelotao,
+            setor: militar.setor
+        } : null
+    };
+}
+
 async function enviarCadastro(militar) {
     try {
-        const resultado = await enviarCadastroSeguro(militar);
+        // Formatar dados para estrutura das 6 tabelas
+        const dadosFormatados = formatarDadosParaWorker(militar);
+        
+        const resultado = await enviarCadastroSeguro(dadosFormatados);
         
         if (resultado.success) {
-            adicionarLog(`✅ ${militar.nomeGuerra}: ${resultado.message}`, 'sucesso');
+            adicionarLog(`✅ ${militar.nome_guerra}: ${resultado.message}`, 'sucesso');
             return { sucesso: true, mensagem: resultado.message };
         } else {
-            adicionarLog(`❌ ${militar.nomeGuerra}: ${resultado.error}`, 'erro');
+            adicionarLog(`❌ ${militar.nome_guerra}: ${resultado.error}`, 'erro');
             return { sucesso: false, mensagem: resultado.error };
         }
     } catch (error) {
-        adicionarLog(`❌ ${militar.nomeGuerra}: ${error.message}`, 'erro');
+        adicionarLog(`❌ ${militar.nome_guerra}: ${error.message}`, 'erro');
         return { sucesso: false, mensagem: error.message };
     }
 }
@@ -380,7 +459,7 @@ async function enviarIndividual(militarId) {
     btn.textContent = 'Enviado';
     btn.style.background = '#28a745';
     
-    adicionarLog(`✅ ${militar.nomeGuerra}: Enviado`, 'sucesso');
+    adicionarLog(`✅ ${militar.nome_guerra}: Enviado`, 'sucesso');
     
     enviarCadastro(militar).catch(error => {
         console.log(`Erro no envio em background para ${militar.nomeGuerra}:`, error);

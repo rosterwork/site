@@ -950,43 +950,14 @@ function validarTodosCampos() {
 }
 
 function coletarDadosFormulario() {
-  const promocoes = [];
   const postoSelecionado = document.getElementById('postoPatente')?.value.trim();
-  
-  if (postoSelecionado) {
-    let postos = [];
-    if (POSTOS_OFICIAIS.includes(postoSelecionado)) {
-      const indice = POSTOS_OFICIAIS.indexOf(postoSelecionado);
-      postos = POSTOS_OFICIAIS.slice(indice).reverse();
-    } else if (POSTOS_PRACAS.includes(postoSelecionado)) {
-      const indice = POSTOS_PRACAS.indexOf(postoSelecionado);
-      postos = POSTOS_PRACAS.slice(indice).reverse();
-    }
-    
-    postos.forEach(posto => {
-      const slug = posto.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-      const dia = document.getElementById(`diaPromocao${slug}`)?.value;
-      const mes = document.getElementById(`mesPromocao${slug}`)?.value;
-      const ano = document.getElementById(`anoPromocao${slug}`)?.value;
-      
-      if (dia && mes && ano) {
-        promocoes.push({
-          posto: posto,
-          data: `${ano}-${converterMesParaNumero(mes)}-${dia.padStart(2, '0')}`
-        });
-      }
-    });
-  }
-
-  let subunidade = '';
+  const ehOficial = POSTOS_OFICIAIS.includes(postoSelecionado);
   const ehPraca = POSTOS_PRACAS.includes(postoSelecionado);
-  if (ehPraca) {
-    const pelotonsSelecionados = locaisSelecionados.filter(local => local.includes('PEL'));
-    if (pelotonsSelecionados.length > 0) {
-      subunidade = pelotonsSelecionados.join(' / ');
-    }
-  }
-
+  
+  const cpf = document.getElementById('cpf')?.value.replace(/\D/g, '');
+  const rg = document.getElementById('rg')?.value.replace(/\D/g, '');
+  const senha = document.getElementById('senha')?.value.trim();
+  
   const diaData = document.getElementById('diaData')?.value || '';
   const mesData = document.getElementById('mesData')?.value || '';
   const anoData = document.getElementById('anoData')?.value || '';
@@ -995,28 +966,117 @@ function coletarDadosFormulario() {
   const mesInclusao = document.getElementById('mesInclusao')?.value || '';
   const anoInclusao = document.getElementById('anoInclusao')?.value || '';
 
-  // Validar se os dados de data estão completos
   const dataNascimentoValida = diaData && mesData && anoData;
   const dataInclusaoValida = diaInclusao && mesInclusao && anoInclusao;
+  
+  const dataNascimento = dataNascimentoValida ? `${anoData}-${converterMesParaNumero(mesData)}-${diaData.padStart(2, '0')}` : '';
+  const dataInclusao = dataInclusaoValida ? `${anoInclusao}-${converterMesParaNumero(mesInclusao)}-${diaInclusao.padStart(2, '0')}` : '';
 
+  // Coletar promoções no formato correto
+  const promocoesData = {};
+  promocoesData.data_primeira_promocao = null;
+  promocoesData.data_segunda_promocao = null;
+  promocoesData.data_terceira_promocao = null;
+  promocoesData.data_quarta_promocao = null;
+  promocoesData.data_quinta_promocao = null;
+  promocoesData.data_sexta_promocao = null;
+  promocoesData.data_setima_promocao = null;
+  promocoesData.data_oitava_promocao = null;
+  promocoesData.data_nona_promocao = null;
+  promocoesData.data_decima_promocao = null;
+  
+  if (postoSelecionado) {
+    let postos = [];
+    if (ehOficial) {
+      const indice = POSTOS_OFICIAIS.indexOf(postoSelecionado);
+      postos = POSTOS_OFICIAIS.slice(indice).reverse();
+    } else if (ehPraca) {
+      const indice = POSTOS_PRACAS.indexOf(postoSelecionado);
+      postos = POSTOS_PRACAS.slice(indice).reverse();
+    }
+    
+    const nomes = ['primeira', 'segunda', 'terceira', 'quarta', 'quinta', 'sexta', 'setima', 'oitava', 'nona', 'decima'];
+    
+    postos.forEach((posto, index) => {
+      if (index < 10) {
+        const slug = posto.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        const dia = document.getElementById(`diaPromocao${slug}`)?.value;
+        const mes = document.getElementById(`mesPromocao${slug}`)?.value;
+        const ano = document.getElementById(`anoPromocao${slug}`)?.value;
+        
+        if (dia && mes && ano) {
+          const nomePromocao = `data_${nomes[index]}_promocao`;
+          promocoesData[nomePromocao] = `${ano}-${converterMesParaNumero(mes)}-${dia.padStart(2, '0')}`;
+        }
+      }
+    });
+  }
+
+  // Determinar pelotão e setor para unidade específica
+  let pelotao = null;
+  let setor = null;
+  
+  if (ehPraca) {
+    const pelotonsSelecionados = locaisSelecionados.filter(local => local.includes('PEL'));
+    if (pelotonsSelecionados.length > 0) {
+      const pelotaoTexto = pelotonsSelecionados[0];
+      if (pelotaoTexto.includes('1º')) pelotao = 1;
+      else if (pelotaoTexto.includes('2º')) pelotao = 2;
+      else if (pelotaoTexto.includes('3º')) pelotao = 3;
+    }
+    setor = setorSelecionado ? setorSelecionado.toUpperCase() : null;
+  }
+
+  // Estrutura das 6 tabelas
   return {
-    idrwPlanilha: idrwP1A1,
-    organizacao: document.getElementById('organizacao')?.value.trim(),
-    nomeCompleto: document.getElementById('nomeCompleto')?.value.trim(),
-    nomeGuerra: document.getElementById('nomeGuerra')?.value.trim(),
-    cpf: document.getElementById('cpf')?.value.replace(/\D/g, ''),
-    rg: document.getElementById('rg')?.value.replace(/\D/g, ''),
-    dataNascimento: dataNascimentoValida ? `${anoData}-${converterMesParaNumero(mesData)}-${diaData.padStart(2, '0')}` : '',
-    categoriaCnh: document.getElementById('categoriaCnh')?.value.trim(),
-    postoPatente: postoSelecionado,
-    tipoMilitar: POSTOS_OFICIAIS.includes(postoSelecionado) ? 'Oficial' : 'Praça',
-    locaisTrabalho: locaisSelecionados.length > 0 ? [...locaisSelecionados] : ['2ª CIBM - Umuarama'],
-    subunidade: subunidade,
-    setor: POSTOS_PRACAS.includes(postoSelecionado) ? setorSelecionado : '',
-    dataInclusao: dataInclusaoValida ? `${anoInclusao}-${converterMesParaNumero(mesInclusao)}-${diaInclusao.padStart(2, '0')}` : '',
-    classificacaoCfpCfo: document.getElementById('classificacaoCfpCfo')?.value.trim(),
-    promocoes: promocoes,
-    senha: document.getElementById('senha')?.value.trim()
+    // TABELA LOGIN
+    login: {
+      cpf: cpf,
+      rg: rg,
+      senha_hash: senha,
+      nivel: 'Usuário',
+      aprovacao: 'Aguardando'
+    },
+    
+    // TABELA USUARIOS
+    usuarios: {
+      cpf: cpf,
+      nome_completo: document.getElementById('nomeCompleto')?.value.trim(),
+      nome_guerra: document.getElementById('nomeGuerra')?.value.trim(),
+      posto_patente: postoSelecionado,
+      tipo_militar: ehOficial ? 'oficial' : 'praca',
+      rg: rg,
+      data_nascimento: dataNascimento,
+      categoria_cnh: document.getElementById('categoriaCnh')?.value.trim(),
+      antiguidade: null,
+      ativo: true
+    },
+    
+    // TABELA PROMOCOES
+    promocoes: {
+      cpf: cpf,
+      data_inclusao: dataInclusao,
+      classificacao_cfo_cfp: document.getElementById('classificacaoCfpCfo')?.value.trim().padStart(4, '0'),
+      data_nascimento: dataNascimento,
+      ...promocoesData
+    },
+    
+    // TABELA LOTACOES
+    lotacoes: {
+      lotacao_codigo: `4CRBM2CIBM-${cpf}-001`,
+      cpf: cpf,
+      unidade_codigo: '4CRBM2CIBM',
+      data_inicio: dataInclusao,
+      data_fim: null,
+      ativo: true
+    },
+    
+    // TABELA _4CRBM2CIBM_usuarios (apenas se for da unidade)
+    unidade_especifica: {
+      cpf: cpf,
+      pelotao: pelotao,
+      setor: setor
+    }
   };
 }
 
