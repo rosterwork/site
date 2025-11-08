@@ -427,7 +427,6 @@ function formatarDadosParaWorker(militar) {
 
 async function enviarCadastro(militar) {
     try {
-        // Formatar dados para estrutura das 6 tabelas
         const dadosFormatados = formatarDadosParaWorker(militar);
         
         const resultado = await enviarCadastroSeguro(dadosFormatados);
