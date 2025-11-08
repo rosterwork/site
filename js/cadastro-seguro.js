@@ -5,9 +5,9 @@ async function enviarCadastroSeguro(dadosCadastro) {
         const { data, error } = await client
             .from('fila_cadastros')
             .insert([{
+                cpf: dadosCadastro.login?.cpf || dadosCadastro.cpf || '00000000000',
                 dados_json: dadosCadastro,
-                status: 'pendente',
-                criado_em: new Date().toISOString()
+                status: 'PENDENTE'
             }]);
         
         if (error) {
