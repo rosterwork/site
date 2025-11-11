@@ -232,8 +232,7 @@ function gerarMilitar(posto, ehOficial) {
     const dataInclusao = carreira.dataInclusao;
     const promocoes = carreira.promocoes;
     const classificacao = Math.floor(Math.random() * 9999) + 1;
-    const senha = Math.floor(Math.random() * 900000) + 100000;
-    const senhaString = senha.toString().padStart(6, '0');
+    const senhaString = '123456';
     
     // Dados específicos da unidade 4CRBM2CIBM
     let pelotao = null;
