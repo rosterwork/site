@@ -13,14 +13,15 @@
     
     <script src="js/supabase-config.js"></script>
     <script src="js/cadastro-seguro.js"></script>
+    <script src="js/utils.js"></script>
     <script>
     (function(){
       var paginaAtual = window.location.pathname.split('/').pop();
       if (paginaAtual === '') paginaAtual = 'index.html';
       if (['index.html','cadastro.html'].indexOf(paginaAtual) !== -1) return;
-      var token = localStorage.getItem('tokenRosterWork');
+      var usuario = localStorage.getItem('usuarioRosterWork');
       var expiracao = localStorage.getItem('expiracaoToken');
-      if (!token || !expiracao || new Date() >= new Date(expiracao)) {
+      if (!usuario || !expiracao || new Date() >= new Date(expiracao)) {
         window.location.href = 'index.html';
         return;
       }
@@ -39,9 +40,9 @@
       </div>
       <div class="cabecalhoDireito">
         <div class="cabecalhoDireita">
-          <div class="cabecalhoDireitaBox cabecalhoDireitaBox1">4ºCRBM / 2ªCIBM / 1ºPEL</div>
-          <div class="cabecalhoDireitaBox cabecalhoDireitaBox2">Cb. Henry</div>
-          <div class="cabecalhoDireitaBox cabecalhoDireitaBox3">Administrador</div>
+          <div class="cabecalhoDireitaBox cabecalhoDireitaBox1">Carregando...</div>
+          <div class="cabecalhoDireitaBox cabecalhoDireitaBox2">Carregando...</div>
+          <div class="cabecalhoDireitaBox cabecalhoDireitaBox3">Usuário</div>
         </div>
         <div class="cabecalhoBotoes">
           <button class="botaoCabecalho">

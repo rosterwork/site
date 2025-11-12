@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function fazerLogin() {
+  async function fazerLogin() {
     const documento = apenasDigitos(inputUsuario.value);
     const senha = inputSenha.value.trim();
     const tipo = documento.length <= 9 ? 'rg' : 'cpf';
@@ -141,44 +141,45 @@ document.addEventListener('DOMContentLoaded', function () {
     btnEntrar.textContent = 'Verificando...';
     btnEntrar.disabled = true;
     
-    const formData = new FormData();
-    formData.append('acao', 'login');
-    formData.append('documento', documento);
-    formData.append('senha', senha);
-    formData.append('tipo', tipo);
-
-    enviarCadastroSeguro({
-      acao: 'login',
-      documento: documento,
-      senha: senha,
-      tipo: tipo
-    })
-    .then(resultado => {
-      if (resultado.success) {
-        localStorage.setItem('tokenRosterWork', resultado.token);
-        localStorage.setItem('usuarioRosterWork', JSON.stringify(resultado.usuario));
-        localStorage.setItem('expiracaoToken', resultado.expiracao);
+    try {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase.rpc('validar_login', {
+        p_documento: documento,
+        p_senha: senha,
+        p_tipo: tipo
+      });
+      
+      if (error) throw new Error('Erro no sistema');
+      
+      if (data.error) {
+        setErro(inputUsuario, data.error);
+        btnEntrar.textContent = 'ENTRAR';
+        btnEntrar.disabled = false;
+        return;
+      }
+      
+      if (data.success) {
+        const expiracao = new Date();
+        expiracao.setDate(expiracao.getDate() + 7);
+        
+        localStorage.setItem('usuarioRosterWork', JSON.stringify(data.usuario));
+        localStorage.setItem('expiracaoToken', expiracao.toISOString());
         
         btnEntrar.textContent = 'Login realizado!';
         setTimeout(() => window.location.href = 'main.html', 1000);
-      } else {
-        setErro(inputUsuario, resultado.message);
-        btnEntrar.textContent = 'ENTRAR';
-        btnEntrar.disabled = false;
       }
-    })
-    .catch(error => {
-      setErro(inputUsuario, 'Erro de conexão');
+    } catch (error) {
+      setErro(inputUsuario, 'Erro no sistema');
       btnEntrar.textContent = 'ENTRAR';
       btnEntrar.disabled = false;
-    });
+    }
   }
 
   window.verificarLogin = function() {
-    const token = localStorage.getItem('tokenRosterWork');
     const expiracao = localStorage.getItem('expiracaoToken');
+    const usuario = localStorage.getItem('usuarioRosterWork');
     
-    if (!token || !expiracao || new Date() >= new Date(expiracao)) {
+    if (!usuario || !expiracao || new Date() >= new Date(expiracao)) {
       window.fazerLogout();
       return false;
     }
@@ -191,30 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   window.fazerLogout = function() {
-    localStorage.removeItem('tokenRosterWork');
     localStorage.removeItem('usuarioRosterWork');
     localStorage.removeItem('expiracaoToken');
-    localStorage.removeItem('loginTentativa');
-    
     window.location.href = 'index.html';
-  };
-
-  window.validarTokenNoServidor = function(callback) {
-    const token = localStorage.getItem('tokenRosterWork');
-    if (!token) {
-      callback(false);
-      return;
-    }
-    
-    const formData = new FormData();
-    formData.append('acao', 'validarToken');
-    formData.append('token', token);
-    
-    enviarCadastroSeguro({
-      acao: 'validarToken',
-      token: token
-    })
-    .then(resultado => callback(resultado.success === true))
-    .catch(() => callback(false));
   };
 });

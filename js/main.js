@@ -234,6 +234,7 @@ function atualizarConteudoPeloMenu(menuId, submenuId = '', terceiroNivel = '') {
 
 function inicializarMain() {
   inicializarSeguranca();
+  carregarDadosUsuario();
   
   document.addEventListener('click', function(event) {
     if (!event.target.closest('.tituloClicavel') && !event.target.closest('.dropdownTitulo')) {
@@ -241,6 +242,20 @@ function inicializarMain() {
       document.querySelector('.setaTitulo').style.transform = 'rotate(0deg)';
     }
   });
+}
+
+function carregarDadosUsuario() {
+  const usuarioJson = localStorage.getItem('usuarioRosterWork');
+  if (!usuarioJson) return;
+  
+  const usuario = JSON.parse(usuarioJson);
+  
+  const unidadeFormatada = formatarUnidade(usuario.unidade, usuario.pelotao);
+  const postoAbreviado = abreviarPosto(usuario.posto_patente);
+  
+  document.querySelector('.cabecalhoDireitaBox1').textContent = unidadeFormatada;
+  document.querySelector('.cabecalhoDireitaBox2').textContent = `${postoAbreviado} ${usuario.nome_guerra}`;
+  document.querySelector('.cabecalhoDireitaBox3').textContent = usuario.nivel;
 }
 
 document.addEventListener('DOMContentLoaded', inicializarMain);
