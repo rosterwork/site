@@ -234,28 +234,65 @@ function atualizarConteudoPeloMenu(menuId, submenuId = '', terceiroNivel = '') {
 
 function inicializarMain() {
   inicializarSeguranca();
-  carregarDadosUsuario();
+  carregarCabecalhoNovo();
   
   document.addEventListener('click', function(event) {
     if (!event.target.closest('.tituloClicavel') && !event.target.closest('.dropdownTitulo')) {
-      document.getElementById('dropdownTitulo').classList.remove('aberto');
-      document.querySelector('.setaTitulo').style.transform = 'rotate(0deg)';
+      const dropdown = document.getElementById('dropdownTitulo');
+      if (dropdown) {
+        dropdown.classList.remove('aberto');
+        const seta = document.querySelector('.setaTitulo');
+        if (seta) seta.style.transform = 'rotate(0deg)';
+      }
     }
   });
 }
 
-function carregarDadosUsuario() {
+function parseUnidade(unidade) {
+  if (!unidade) return { parte1: '', parte2: '' };
+  
+  const match = unidade.match(/(\d+[A-Z]+)(\d+[A-Z]+)?/);
+  if (!match) return { parte1: '', parte2: '' };
+  
+  const parte1 = match[1] ? `/ ${match[1].replace(/(\d+)([A-Z]+)/, '$1º$2')}` : '';
+  const parte2 = match[2] ? `/ ${match[2].replace(/(\d+)([A-Z]+)/, '$1ª$2')}` : '';
+  
+  return { parte1, parte2 };
+}
+
+function carregarCabecalhoNovo() {
   const usuarioJson = localStorage.getItem('usuarioRosterWork');
   if (!usuarioJson) return;
   
   const usuario = JSON.parse(usuarioJson);
   
-  const unidadeFormatada = formatarUnidade(usuario.unidade, usuario.pelotao);
-  const postoAbreviado = abreviarPosto(usuario.posto_patente);
+  const unidade1El = document.getElementById('unidade-1');
+  const unidade2El = document.getElementById('unidade-2');
+  const pelotaoEl = document.getElementById('pelotao');
+  const usuarioTextoEl = document.getElementById('usuario-texto');
   
-  document.querySelector('.cabecalhoDireitaBox1').textContent = unidadeFormatada;
-  document.querySelector('.cabecalhoDireitaBox2').textContent = `${postoAbreviado} ${usuario.nome_guerra}`;
-  document.querySelector('.cabecalhoDireitaBox3').textContent = usuario.nivel;
+  if (unidade1El && unidade2El) {
+    const { parte1, parte2 } = parseUnidade(usuario.unidade);
+    unidade1El.textContent = parte1;
+    unidade2El.textContent = parte2;
+  }
+  
+  if (pelotaoEl && usuario.pelotao) {
+    pelotaoEl.textContent = `/ ${usuario.pelotao}ºPEL`;
+  }
+  
+  if (usuarioTextoEl) {
+    const postoAbreviado = abreviarPosto(usuario.posto_patente);
+    const tipoMilitar = usuario.tipo_militar === 'Oficial' ? 'QOBM' : 'QPBM';
+    const textoUsuario = `${postoAbreviado} ${tipoMilitar} ${usuario.nome_guerra}`;
+    
+    usuarioTextoEl.textContent = textoUsuario;
+    usuarioTextoEl.title = usuario.nivel || 'Usuário';
+  }
+}
+
+function carregarDadosUsuario() {
+  carregarCabecalhoNovo();
 }
 
 document.addEventListener('DOMContentLoaded', inicializarMain);

@@ -47,49 +47,6 @@
       </div>
     </div>
 
-    <script>
-      function parseUnidade(unidade) {
-        if (!unidade) return { parte1: '', parte2: '' };
-        
-        const match = unidade.match(/(\d+[A-Z]+)(\d+[A-Z]+)?/);
-        if (!match) return { parte1: '', parte2: '' };
-        
-        const parte1 = match[1] ? `/ ${match[1].replace(/(\d+)([A-Z]+)/, '$1º$2')}` : '';
-        const parte2 = match[2] ? `/ ${match[2].replace(/(\d+)([A-Z]+)/, '$1ª$2')}` : '';
-        
-        return { parte1, parte2 };
-      }
-      
-      function carregarCabecalhoNovo() {
-        const usuarioJson = localStorage.getItem('usuarioRosterWork');
-        if (!usuarioJson) return;
-        
-        const usuario = JSON.parse(usuarioJson);
-        
-        const { parte1, parte2 } = parseUnidade(usuario.unidade);
-        document.getElementById('unidade-1').textContent = parte1;
-        document.getElementById('unidade-2').textContent = parte2;
-        
-        if (usuario.pelotao) {
-          document.getElementById('pelotao').textContent = `/ ${usuario.pelotao}ºPEL`;
-        }
-        
-        const postoAbreviado = abreviarPosto(usuario.posto_patente);
-        const tipoMilitar = usuario.tipo_militar === 'Oficial' ? 'QOBM' : 'QPBM';
-        const textoUsuario = `${postoAbreviado} ${tipoMilitar} ${usuario.nome_guerra}`;
-        
-        const elementoUsuario = document.getElementById('usuario-texto');
-        elementoUsuario.textContent = textoUsuario;
-        elementoUsuario.title = usuario.nivel || 'Usuário';
-      }
-      
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', carregarCabecalhoNovo);
-      } else {
-        carregarCabecalhoNovo();
-      }
-    </script>
-
     <script src="js/login.js"></script>
     <script src="js/main.js"></script>
   </body>
