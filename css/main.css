@@ -9,7 +9,19 @@ html, body {
   padding: 0;
   background: #fff;
   font-family: 'Montserrat', sans-serif;
+  width: 100%;
   min-width: 1024px;
+}
+
+@media (max-width: 1023px) {
+  html {
+    width: 1024px;
+  }
+  body {
+    width: 1024px;
+    transform-origin: 0 0;
+    transform: scale(calc(100vw / 1024));
+  }
 }
 
 .cabecalho-novo {
@@ -167,7 +179,7 @@ html, body {
   position: absolute;
   top: 48px;
   left: 0;
-  height: calc(100vh - 48px);
+  min-height: max(700px, calc(100vh - 48px));
   width: 48px;
   background: #fff;
   border-right: 1px solid #e0e0e0;
@@ -248,7 +260,7 @@ html, body {
   position: absolute;
   top: 48px;
   left: 48px;
-  height: calc(100vh - 48px);
+  min-height: max(700px, calc(100vh - 48px));
   width: 256px;
   background: #fff;
   border-right: 1px solid #e0e0e0;
@@ -283,7 +295,7 @@ html, body {
   left: 48px;
   width: calc(100vw - 48px);
   min-width: 976px;
-  height: calc(100vh - 48px);
+  min-height: max(700px, calc(100vh - 48px));
   background: #fff;
   overflow-y: auto;
   display: none;
