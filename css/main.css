@@ -9,19 +9,7 @@ html, body {
   padding: 0;
   background: #fff;
   font-family: 'Montserrat', sans-serif;
-  width: 100%;
   min-width: 1024px;
-}
-
-@media (max-width: 1023px) {
-  html {
-    width: 1024px;
-  }
-  body {
-    width: 1024px;
-    transform-origin: 0 0;
-    transform: scale(calc(100vw / 1024));
-  }
 }
 
 .cabecalho-novo {
@@ -179,7 +167,7 @@ html, body {
   position: absolute;
   top: 48px;
   left: 0;
-  min-height: max(700px, calc(100vh - 48px));
+  height: calc(100vh - 48px);
   width: 48px;
   background: #fff;
   border-right: 1px solid #e0e0e0;
@@ -260,7 +248,7 @@ html, body {
   position: absolute;
   top: 48px;
   left: 48px;
-  min-height: max(700px, calc(100vh - 48px));
+  height: calc(100vh - 48px);
   width: 256px;
   background: #fff;
   border-right: 1px solid #e0e0e0;
@@ -295,7 +283,7 @@ html, body {
   left: 48px;
   width: calc(100vw - 48px);
   min-width: 976px;
-  min-height: max(700px, calc(100vh - 48px));
+  height: calc(100vh - 48px);
   background: #fff;
   overflow-y: auto;
   display: none;
@@ -628,4 +616,282 @@ html, body {
 .calendario-celula.vazio:hover {
   background: transparent;
   cursor: default;
+}
+
+.lista-usuarios {
+  position: absolute;
+  top: 48px;
+  left: 304px;
+  width: calc(100vw - 304px);
+  min-width: 720px;
+  height: calc(100vh - 48px);
+  background: #fff;
+  overflow-y: auto;
+  display: none;
+}
+
+.lista-usuarios.active {
+  display: block;
+}
+
+.container-lista-usuarios {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 48px;
+}
+
+.topo-lista-usuarios {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+  gap: 8px;
+}
+
+.titulo-lista-usuarios h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 25px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.subtitulo-lista-usuarios {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  margin: 0;
+}
+
+.tabela-usuarios-container {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.tabela-usuarios-header {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(120px, auto) minmax(150px, auto) minmax(200px, 1fr) minmax(150px, auto);
+  background: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tabela-usuarios-coluna {
+  padding: 16px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.tabela-usuarios-coluna:last-child {
+  border-right: none;
+}
+
+.tabela-usuarios-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabela-usuarios-linha {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(120px, auto) minmax(150px, auto) minmax(200px, 1fr) minmax(150px, auto);
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 200ms ease;
+}
+
+.tabela-usuarios-linha:hover {
+  background-color: #f8f9fa;
+}
+
+.tabela-usuarios-linha:last-child {
+  border-bottom: none;
+}
+
+.tabela-usuarios-celula {
+  padding: 16px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+  border-right: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+}
+
+.tabela-usuarios-celula:last-child {
+  border-right: none;
+}
+
+.tabela-usuarios-footer {
+  border-top: 1px solid #e0e0e0;
+  padding: 12px 20px;
+  background: #f8f9fa;
+}
+
+.paginacao-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.paginacao-controles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.paginacao-btn {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+
+.paginacao-btn:hover:not(:disabled) {
+  border-color: #999;
+  color: #333;
+}
+
+.paginacao-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.paginacao-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.paginacao-texto {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+}
+
+.paginacao-input {
+  width: 48px;
+  height: 26px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  text-align: center;
+  background: #fff;
+  color: #333;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.paginacao-input::-webkit-outer-spin-button,
+.paginacao-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.paginacao-input:focus {
+  outline: none;
+  border-color: #999;
+}
+
+.total-registros {
+  display: flex;
+  align-items: center;
+}
+
+.total-texto {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+}
+
+.linhas-por-pagina {
+  position: relative;
+}
+
+.linhas-btn {
+  height: 26px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  display: flex;
+  align-items: center;
+  color: #333;
+}
+
+.linhas-btn:hover {
+  border-color: #999;
+}
+
+.linhas-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.linhas-menu {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: max-content;
+  display: none;
+  z-index: 1000;
+}
+
+.linhas-menu.active {
+  display: block;
+}
+
+.linhas-item {
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+  transition: background 200ms ease;
+  display: flex;
+  align-items: center;
+}
+
+.linhas-item:first-child {
+  border-radius: 4px 4px 0 0;
+}
+
+.linhas-item:last-child {
+  border-radius: 0 0 4px 4px;
+}
+
+.linhas-item:hover {
+  background: #f5f5f5;
 }

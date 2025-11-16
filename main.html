@@ -10,36 +10,11 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/confirmacaoSair.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
-    
     <script src="js/supabase-config.js"></script>
     <script src="js/cadastro-seguro.js"></script>
     <script src="js/utils.js"></script>
     <script>
     (function(){
-      // DEV_START - Dados fictícios para teste local
-      const isLocal = window.location.hostname === 'localhost' || 
-                      window.location.hostname === '127.0.0.1' ||
-                      window.location.protocol === 'file:';
-      
-      if (isLocal) {
-        const dadosFicticios = {
-          unidade: "4CRBM2CIBM",
-          pelotao: 2,
-          posto_patente: "2º Sargento", 
-          tipo_militar: "Praça",
-          nome_guerra: "Silva",
-          nivel: "Administrador"
-        };
-        
-        const expiracao = new Date();
-        expiracao.setDate(expiracao.getDate() + 7);
-        
-        localStorage.setItem('usuarioRosterWork', JSON.stringify(dadosFicticios));
-        localStorage.setItem('expiracaoToken', expiracao.toISOString());
-        return; // Pular verificação de login
-      }
-      // DEV_END
-      
       var paginaAtual = window.location.pathname.split('/').pop();
       if (paginaAtual === '') paginaAtual = 'index.html';
       if (['index.html','cadastro.html'].indexOf(paginaAtual) !== -1) return;
@@ -363,6 +338,77 @@
             <div class="calendario-dia-nome">SÁB</div>
           </div>
           <div class="calendario-grade" id="calendario-grade">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lista-usuarios" id="lista-usuarios">
+      <div class="container-lista-usuarios">
+        <div class="topo-lista-usuarios">
+          <div class="titulo-lista-usuarios">
+            <h1>Lista de Usuários</h1>
+            <div class="subtitulo-lista-usuarios">4ºCRBM / 2ªCIBM</div>
+          </div>
+        </div>
+
+        <div class="tabela-usuarios-container">
+          <div class="tabela-usuarios-header">
+            <div class="tabela-usuarios-coluna">NOME</div>
+            <div class="tabela-usuarios-coluna">RG</div>
+            <div class="tabela-usuarios-coluna">CPF</div>
+            <div class="tabela-usuarios-coluna">LOTAÇÃO</div>
+            <div class="tabela-usuarios-coluna">SETOR</div>
+          </div>
+          <div class="tabela-usuarios-body" id="tabela-usuarios-body">
+            <div class="tabela-usuarios-linha">
+              <div class="tabela-usuarios-celula">2º Sgt Silva</div>
+              <div class="tabela-usuarios-celula">12.345.***</div>
+              <div class="tabela-usuarios-celula">123.***.**-**</div>
+              <div class="tabela-usuarios-celula">4ºCRBM / 2ªCIBM / 1ºPEL</div>
+              <div class="tabela-usuarios-celula">Operações</div>
+            </div>
+            <div class="tabela-usuarios-linha">
+              <div class="tabela-usuarios-celula">Cb Santos</div>
+              <div class="tabela-usuarios-celula">98.765.***</div>
+              <div class="tabela-usuarios-celula">987.***.**-**</div>
+              <div class="tabela-usuarios-celula">4ºCRBM / 2ªCIBM / 2ºPEL</div>
+              <div class="tabela-usuarios-celula">Comunicações</div>
+            </div>
+          </div>
+          <div class="tabela-usuarios-footer">
+            <div class="paginacao-container">
+              <div class="paginacao-controles">
+                <button class="paginacao-btn" disabled>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m12 19-7-7 7-7"></path>
+                    <path d="M19 12H5"></path>
+                  </svg>
+                </button>
+                <span class="paginacao-texto">Página</span>
+                <input type="number" class="paginacao-input" value="1" min="1" max="2">
+                <span class="paginacao-texto">de 2</span>
+                <button class="paginacao-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
+                </button>
+                <div class="linhas-por-pagina">
+                  <button class="linhas-btn" id="linhas-btn">
+                    <span>50 linhas</span>
+                  </button>
+                  <div class="linhas-menu" id="linhas-menu">
+                    <button class="linhas-item" data-value="50">50 linhas</button>
+                    <button class="linhas-item" data-value="100">100 linhas</button>
+                    <button class="linhas-item" data-value="200">200 linhas</button>
+                  </div>
+                </div>
+                <div class="total-registros">
+                  <span class="total-texto">150 registros</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
