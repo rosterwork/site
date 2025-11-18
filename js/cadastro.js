@@ -1,9 +1,7 @@
 const erro = id => document.getElementById(`erro${id[0].toUpperCase() + id.slice(1)}`);
 const botaoRemover = (onclick) => `<button type="button" class="botaoRemover" onclick="${onclick}"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>`;
-
 const POSTOS_OFICIAIS = ['Coronel','Tenente Coronel','Major','Capitão','1º Tenente','2º Tenente','Aspirante a Oficial'];
 const POSTOS_PRACAS = ['Subtenente','1º Sargento','2º Sargento','3º Sargento','Cabo','Soldado'];
-
 const ajustarPosicao = (campo, lista) => {
   lista.classList.remove('paraCima');
   const rect = campo.getBoundingClientRect();
@@ -11,7 +9,6 @@ const ajustarPosicao = (campo, lista) => {
   const alturaLista = lista.offsetHeight || 160;
   if (espacoAbaixo < alturaLista + 8) lista.classList.add('paraCima');
 };
-
 document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener('click', e => {
     const ativo = document.querySelector('.campoSelecionado.setaAtiva');
@@ -22,24 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
       ativo.classList.remove('setaAtiva');
     }
   });
-  
   document.querySelectorAll('.selecaoCustomizada').forEach(container => {
     const campo = container.querySelector('.campoSelecionado');
     criarSelecaoCustomizada(container, campo.id === 'organizacao' ? mostrarCamposAdicionais : null);
-    
     campo.addEventListener('focus', () => {
       if (!document.getElementById('preloadCalendario')) {
         if (typeof preloadCalendario === 'function') preloadCalendario();
       }
     }, { once: true });
-    
     campo.addEventListener('input', () => {
       if (!document.getElementById('preloadCamposAdicionais')) {
         if (typeof preloadCamposAdicionais === 'function') preloadCamposAdicionais();
       }
     }, { once: true });
   });
-  
   const schedulePreload = () => {
     const iniciarPreload = () => { 
       if (typeof preloadCamposAdicionais === 'function') preloadCamposAdicionais();
@@ -48,14 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if ('requestIdleCallback' in window) requestIdleCallback(iniciarPreload, {timeout: 1000}); else setTimeout(iniciarPreload, 300);
   };
   if ('requestAnimationFrame' in window) requestAnimationFrame(() => setTimeout(schedulePreload, 50)); else setTimeout(schedulePreload, 200);
-  
   window.addEventListener('scroll', () => {
     document.querySelectorAll('.campoSelecionado.setaAtiva').forEach(campo => {
       const lista = campo.parentNode.querySelector('.itensSelecao');
       if (lista) ajustarPosicao(campo, lista);
     });
   });
-  
   window.addEventListener('resize', () => {
     document.querySelectorAll('.campoSelecionado.setaAtiva').forEach(campo => {
       const lista = campo.parentNode.querySelector('.itensSelecao');
@@ -63,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
 function criarSelecaoCustomizada(container, callback, erroElCustom) {
   const campo = container.querySelector('.campoSelecionado');
   const lista = container.querySelector('.itensSelecao');
@@ -73,7 +63,6 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
   let valor = '';
   let prevLabel = '';
   let escolhido = false;
-  
   const filtrar = termo => {
     const t = (termo || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     opcoes.forEach(o => {
@@ -82,7 +71,6 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
       o.style.fontWeight = '';
     });
   };
-  
   lista.addEventListener('mousedown', e => e.preventDefault());
   lista.onclick = e => {
     const opt = e.target.closest('div[data-value]');
@@ -99,7 +87,6 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
       validarData(campo.id);
     }
   };
-  
   campo.addEventListener('focus', () => {
     prevLabel = campo.classList.contains('mostrandoPlaceholder') ? '' : (campo.value || '');
     escolhido = false;
@@ -109,7 +96,6 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
     opcoes.forEach(o => o.style.fontWeight = '');
     idx = -1;
   });
-  
   campo.addEventListener('blur', () => {
     campo.classList.remove('setaAtiva');
     if (campo.dataset.abriu) setTimeout(() => {
@@ -142,13 +128,11 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
       delete campo.dataset.abriu;
     }, 0);
   });
-  
   campo.addEventListener('input', () => {
     filtrar(campo.value);
     const vis = Array.from(opcoes).filter(o => !o.classList.contains('oculto'));
     if (vis.length === 1) vis[0].style.fontWeight = '800';
   });
-  
   let idx = -1;
   campo.addEventListener('keydown', e => {
     const vis = Array.from(opcoes).filter(o => !o.classList.contains('oculto'));
@@ -169,12 +153,10 @@ function criarSelecaoCustomizada(container, callback, erroElCustom) {
     } else if (e.key === 'Escape') campo.blur();
   });
 }
-
 function configurarCamposTexto(root = document) {
   const nome = n => n.toLowerCase().replace(/[0-9]/g, '').split(' ').map((p, i) => 
     p && (i === 0 || !['de','da','do','dos','das','e','del','della','di','van','von','el','la','le'].includes(p)) 
     ? p[0].toUpperCase() + p.slice(1) : p).join(' ');
-    
   (root.querySelectorAll ? root.querySelectorAll('.campoNomeCompleto') : document.querySelectorAll('.campoNomeCompleto')).forEach(el => {
     const erroEl = erro(el.id);
     const limpar = () => el.classList.contains('erro') && (el.classList.remove('erro'), erroEl.textContent = '');
@@ -182,7 +164,6 @@ function configurarCamposTexto(root = document) {
       if (!ok) { el.classList.add('erro'); erroEl.textContent = msg; return false; }
       return true;
     };
-    
     el.oninput = () => {
       if (el.id.includes('nome')) {
         el.value = nome(el.value);
@@ -207,7 +188,6 @@ function configurarCamposTexto(root = document) {
       }
         limpar();
       };
-      
     el.onblur = () => {
       const v = el.value.trim();
       if (el.id === 'nomeCompleto') validar(v.split(/\s+/).filter(p => p).length >= 2, 'Digite seu nome completo');
@@ -231,7 +211,6 @@ function configurarCamposTexto(root = document) {
     };
   });
 }
-
 function gerarCamposAdicionais() {
   const campo = (id, label, tipo = 'textarea', placeholder = '', extra = '') =>
   `<div class="grupoDeFormulario"><label for="${id}">${label}:</label>
@@ -293,16 +272,12 @@ function gerarCamposAdicionais() {
   campo('senha', 'Senha', 'input', 'Digite sua senha', 'type="password"') +
   campo('confirmeSenha', 'Confirme a senha', 'input', 'Confirme sua senha', 'type="password"');
 }
-
 const idrwP1A1 = 'cbmpr';
-
 const idrwP1A1L8 = '8';
 const idrwP1A1L9 = '9';
 const idrwP1A1L11 = '11';
 const idrwP1A1L12 = '12';
-
 const idrwP1A1C23 = '23'; 
-
 const LOCAIS_TRABALHO = [
   { texto: '2ª CIBM - Umuarama', nivel: 1, idrw: {oficiais: {inicio: idrwP1A1L8, fim: idrwP1A1L9}, pracas: {inicio: idrwP1A1L11, fim: idrwP1A1L12}} },
   { texto: '3º PEL', nivel: 1 },
@@ -310,12 +285,10 @@ const LOCAIS_TRABALHO = [
   { texto: '1º PEL', nivel: 1 }
 ];
 let locaisSelecionados = [];
-
 function renderizarListaGenerica(LISTA, selecionados, containerId, adicionarFn, removerFnName, mostrarNovoFnName) {
   if (containerId === 'containerLocaisTrabalho') {
     return renderizarLocaisTrabalhoSimplificado();
   }
-  
   const container = document.getElementById(containerId);
   if (!container) return;
   selecionados.sort((a, b) => LISTA.findIndex(l => l.texto === a) - LISTA.findIndex(l => l.texto === b));
@@ -359,19 +332,15 @@ function renderizarListaGenerica(LISTA, selecionados, containerId, adicionarFn, 
     }, erroEl);
   });
 }
-
 function renderizarLocaisTrabalhoSimplificado() {
   const container = document.getElementById('containerLocaisTrabalho');
   if (!container) return;
-  
   // Sempre garantir que 2ª CIBM está selecionada
   if (!locaisSelecionados.includes('2ª CIBM - Umuarama')) {
     locaisSelecionados = ['2ª CIBM - Umuarama'];
   }
-  
   // Obter apenas pelotões disponíveis
   const pelotoesDisponiveis = LOCAIS_TRABALHO.filter(l => l.texto.includes('PEL') && !locaisSelecionados.includes(l.texto));
-  
   container.innerHTML = `
     <div class="linhaLocalTrabalho">
       <div class="campoComBotao">
@@ -405,16 +374,13 @@ function renderizarLocaisTrabalhoSimplificado() {
       </div>
     ` : ''}
   `;
-  
   // Configurar seleções customizadas para pelotões editáveis
   container.querySelectorAll('.linhaLocalTrabalho').forEach(linha => {
     const selecao = linha.querySelector('.selecaoCustomizada');
     const campo = selecao?.querySelector('.campoSelecionado');
     if (!campo || campo.hasAttribute('readonly')) return;
-    
     const erroEl = linha.querySelector('.mensagemDeErro');
     const idx = campo.dataset.index;
-    
     criarSelecaoCustomizada(selecao, valor => {
       if (idx !== undefined) {
         const indexReal = parseInt(idx) - 1;
@@ -426,7 +392,6 @@ function renderizarLocaisTrabalhoSimplificado() {
     }, erroEl);
   });
 }
-
 function adicionarLocal(valor) {
   if (valor === '2ª CIBM - Umuarama') {
     // 2ª CIBM sempre obrigatória, não adicionar duplicata
@@ -437,42 +402,32 @@ function adicionarLocal(valor) {
     renderizarLocaisTrabalho();
   }
 }
-
 function removerLocalTrabalho(index) {
   if (index === 0) {
     // Não permitir remoção da 2ª CIBM
     return;
   }
-  
   // Remover pelotão específico
   const pelotonAtual = locaisSelecionados.filter(l => l.includes('PEL'));
   const indexPelotao = index - 1;
-  
   if (indexPelotao >= 0 && indexPelotao < pelotonAtual.length) {
     pelotonAtual.splice(indexPelotao, 1);
     locaisSelecionados = ['2ª CIBM - Umuarama', ...pelotonAtual];
     renderizarLocaisTrabalho();
   }
 }
-
 function renderizarLocaisTrabalho() {
   renderizarListaGenerica(LOCAIS_TRABALHO, locaisSelecionados, 'containerLocaisTrabalho', adicionarLocal, 'removerLocalTrabalho', 'mostrarCampoNovo');
 }
-
 function mostrarCampoNovo() {
   const container = document.getElementById('containerLocaisTrabalho');
   if (!container) return;
-  
   const usados = new Set(locaisSelecionados);
   const pelotoesDisponiveis = LOCAIS_TRABALHO.filter(l => l.texto.includes('PEL') && !usados.has(l.texto));
-  
   if (pelotoesDisponiveis.length === 0) return;
-  
   const opcoes = pelotoesDisponiveis.map(l => `<div data-value="${l.texto}">${l.texto}</div>`).join('');
-  
   // Remover botão adicionar
   container.querySelector('.linhaLocalTrabalho:last-child')?.remove();
-  
   // Adicionar nova linha de seleção
   const linha = document.createElement('div');
   linha.className = 'linhaLocalTrabalho';
@@ -484,23 +439,18 @@ function mostrarCampoNovo() {
     <button type="button" class="botaoRemover" onclick="renderizarLocaisTrabalho()"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="3" x2="13" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/><line x1="13" y1="3" x2="3" y2="13" stroke="hsl(0, 0%, 20%)" stroke-width="1.5" stroke-linecap="round"/></svg></button>
   </div>
   <div class="mensagemDeErro"></div>`;
-  
   container.appendChild(linha);
-  
   const selecao = linha.querySelector('.selecaoCustomizada');
   const erroEl = linha.querySelector('.mensagemDeErro');
   criarSelecaoCustomizada(selecao, adicionarLocal, erroEl);
 }
-
 const SETORES = ['Administrativo', 'Operacional'];
 let setorSelecionado = '';
-
 function selecionarSetor(valor) {
   if (!SETORES.includes(valor)) return;
   setorSelecionado = valor;
   renderizarSetor();
 }
-
 function removerSetor() {
   setorSelecionado = '';
   renderizarSetor();
@@ -515,22 +465,17 @@ function removerSetor() {
     }
   }, 0);
 }
-
 function renderizarSetor() {
   const container = document.getElementById('containerSetor');
   if (!container) return;
-  
   const postoAtual = document.getElementById('postoPatente')?.value.trim();
   const ehPraca = POSTOS_PRACAS.includes(postoAtual);
-  
   if (!ehPraca) {
     container.innerHTML = '';
     container.style.display = 'none';
     return;
   }
-  
   container.style.display = 'block';
-  
   if (setorSelecionado) {
     container.innerHTML = `
       <div class="linhaLocalTrabalho">
@@ -544,7 +489,6 @@ function renderizarSetor() {
         <div class="mensagemDeErro"></div>
       </div>
     `;
-    
     const selecao = container.querySelector('.selecaoCustomizada');
     const erro = container.querySelector('.mensagemDeErro');
     criarSelecaoCustomizada(selecao, selecionarSetor, erro);
@@ -558,33 +502,26 @@ function renderizarSetor() {
         <div class="mensagemDeErro"></div>
       </div>
     `;
-    
     const selecao = container.querySelector('.selecaoCustomizada');
     const erro = container.querySelector('.mensagemDeErro');
     criarSelecaoCustomizada(selecao, selecionarSetor, erro);
   }
 }
-
 function mostrarCampoNovoSetor() {
   renderizarSetor();
 }
-
 function atualizarPromocoes(posto) {
   const container = document.getElementById('containerPromocoes');
   if (!container) return;
-  
   container.innerHTML = '';
   renderizarSetor();
-  
   if (!posto) return;
-  
   const preload = document.getElementById('preloadPromocoes');
   if (preload) {
     const preloadContainer = preload.querySelector(`[data-posto="${posto}"]`);
     if (preloadContainer) {
       const clonedHTML = preloadContainer.innerHTML;
       container.innerHTML = clonedHTML;
-      
       container.querySelectorAll('[data-slug]').forEach(el => {
         const slug = el.dataset.slug;
         const tipo = el.dataset.tipo;
@@ -595,7 +532,6 @@ function atualizarPromocoes(posto) {
         else if (tipo === 'erroMes') el.id = `erroMesPromocao${slug}`;
         else if (tipo === 'erroAno') el.id = `erroAnoPromocao${slug}`;
       });
-      
       container.querySelectorAll('.selecaoCustomizada').forEach(s => {
         const campo = s.querySelector('.campoSelecionado');
         const callback = (campo && campo.id && campo.id.includes('Promocao')) ? () => validarData(campo.id) : null;
@@ -604,7 +540,6 @@ function atualizarPromocoes(posto) {
       return;
     }
   }
-  
   let postos = [];
   if (POSTOS_OFICIAIS.includes(posto)) {
     const indice = POSTOS_OFICIAIS.indexOf(posto);
@@ -613,7 +548,6 @@ function atualizarPromocoes(posto) {
     const indice = POSTOS_PRACAS.indexOf(posto);
     postos = POSTOS_PRACAS.slice(indice).reverse();
   }
-  
   postos.forEach(p => {
     const slug = p.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     const html = `<div class="grupoDeFormulario"><label>Data de promoção à ${p}:</label>
@@ -638,26 +572,22 @@ function atualizarPromocoes(posto) {
     </button></div></div>`;
     container.insertAdjacentHTML('beforeend', html);
   });
-  
   container.querySelectorAll('.selecaoCustomizada').forEach(s => {
     const campo = s.querySelector('.campoSelecionado');
     const callback = (campo && campo.id && campo.id.includes('Promocao')) ? () => validarData(campo.id) : null;
     criarSelecaoCustomizada(s, callback);
   });
 }
-
 function preloadPromocoes() {
   if (document.getElementById('preloadPromocoes')) return;
   const pre = document.createElement('div');
   pre.id = 'preloadPromocoes';
   pre.style.display = 'none';
   document.body.appendChild(pre);
-  
   [...POSTOS_OFICIAIS, ...POSTOS_PRACAS].forEach(posto => {
     const container = document.createElement('div');
     container.dataset.posto = posto;
     pre.appendChild(container);
-    
     let postos = [];
     if (POSTOS_OFICIAIS.includes(posto)) {
       const indice = POSTOS_OFICIAIS.indexOf(posto);
@@ -666,7 +596,6 @@ function preloadPromocoes() {
       const indice = POSTOS_PRACAS.indexOf(posto);
       postos = POSTOS_PRACAS.slice(indice).reverse();
     }
-    
     postos.forEach(p => {
       const slug = p.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
       const html = `<div class="grupoDeFormulario"><label>Data de promoção à ${p}:</label>
@@ -693,7 +622,6 @@ function preloadPromocoes() {
     });
   });
 }
-
 function preloadCamposAdicionais() {
   if (document.getElementById('preloadCamposAdicionais')) return;
   const pre = document.createElement('div');
@@ -701,13 +629,10 @@ function preloadCamposAdicionais() {
   pre.style.display = 'none';
   pre.innerHTML = gerarCamposAdicionais();
   document.body.appendChild(pre);
-  
   preloadPromocoes();
 }
-
 function preloadCalendario() {
   if (document.getElementById('preloadCalendario')) return;
-  
   const container = document.createElement('div');
   container.id = 'preloadCalendario';
   container.style.display = 'none';
@@ -715,9 +640,7 @@ function preloadCalendario() {
   container.style.position = 'absolute';
   container.style.left = '-9999px';
   container.style.top = '-9999px';
-  
   document.body.appendChild(container);
-  
   if (window.calendarioShared && window.calendarioShared.create) {
     try {
       window.calendarioShared.create();
@@ -732,7 +655,6 @@ function preloadCalendario() {
     }, 100);
   }
 }
-
 function mostrarCamposAdicionais(org) {
   const c = document.getElementById('camposAdicionais');
   const btn = document.getElementById('btnEnviar');
@@ -772,7 +694,6 @@ function mostrarCamposAdicionais(org) {
     renderizarLocaisTrabalho();
     setorSelecionado = '';
     renderizarSetor();
-    
     const btnEnviar = document.getElementById('btnEnviar');
     if (btnEnviar && !btnEnviar.hasAttribute('data-event-attached')) {
       btnEnviar.addEventListener('click', enviarCadastro);
@@ -783,7 +704,6 @@ function mostrarCamposAdicionais(org) {
   c.innerHTML = gerarCamposAdicionais();
   c.style.display = 'block';
   configurarCamposTexto(c);
-  
   const btnEnviar = document.getElementById('btnEnviar');
   if (btnEnviar && !btnEnviar.hasAttribute('data-event-attached')) {
     btnEnviar.addEventListener('click', enviarCadastro);
@@ -809,7 +729,6 @@ function mostrarCamposAdicionais(org) {
   setorSelecionado = '';
   renderizarSetor();
 }
-
 function validarData(id) {
   const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const prefixFromId = (ident) => {
@@ -869,7 +788,6 @@ function validarData(id) {
     }
   }
 }
-
 function abrirCalendario(event) {
   event = event || window.event;
   var botao = event.target.closest('.botaoCalendario');
@@ -877,12 +795,9 @@ function abrirCalendario(event) {
     window.abrirCalendarioModal(botao);
   }
 }
-
-
 function voltarParaLogin() {
   window.location.href = 'index.html';
 }
-
 async function enviarCadastroSeguro(dadosCadastro) {
   try {
     const client = getSupabaseClient();
@@ -901,14 +816,11 @@ async function enviarCadastroSeguro(dadosCadastro) {
     return { success: false, error: error.message };
   }
 }
-
 if (typeof window !== 'undefined') {
   window.enviarCadastroSeguro = enviarCadastroSeguro;
 }
-
 function validarTodosCampos() {
   let todosValidos = true;
-  
   const organizacao = document.getElementById('organizacao');
   if (!organizacao || organizacao.classList.contains('mostrandoPlaceholder') || !organizacao.value.trim()) {
     organizacao.classList.add('erro');
@@ -916,7 +828,6 @@ function validarTodosCampos() {
     if (erroEl) erroEl.textContent = 'Selecione uma opção';
     todosValidos = false;
   }
-  
   document.querySelectorAll('.campoNomeCompleto').forEach(el => {
     if (el.offsetParent !== null) {
       const evento = new Event('blur');
@@ -926,7 +837,6 @@ function validarTodosCampos() {
       }
     }
   });
-  
   ['diaData', 'mesData', 'anoData', 'categoriaCnh', 'postoPatente'].forEach(id => {
     const campo = document.getElementById(id);
     if (campo && (campo.classList.contains('mostrandoPlaceholder') || !campo.value.trim())) {
@@ -943,7 +853,6 @@ function validarTodosCampos() {
       todosValidos = false;
     }
   });
-  
   if (locaisSelecionados.length === 0) {
     const container = document.getElementById('containerLocaisTrabalho');
     const primeiraLinha = container?.querySelector('.linhaLocalTrabalho');
@@ -955,10 +864,8 @@ function validarTodosCampos() {
     }
     todosValidos = false;
   }
-  
   const postoSelecionado = document.getElementById('postoPatente')?.value.trim();
   const ehPraca = POSTOS_PRACAS.includes(postoSelecionado);
-  
   if (ehPraca && !setorSelecionado) {
     const container = document.getElementById('containerSetor');
     const campo = container?.querySelector('.campoSelecionado');
@@ -969,33 +876,25 @@ function validarTodosCampos() {
     }
     todosValidos = false;
   }
-  
   return todosValidos;
 }
-
 function coletarDadosFormulario() {
   const postoSelecionado = document.getElementById('postoPatente')?.value.trim();
   const ehOficial = POSTOS_OFICIAIS.includes(postoSelecionado);
   const ehPraca = POSTOS_PRACAS.includes(postoSelecionado);
-  
   const cpf = document.getElementById('cpf')?.value.replace(/\D/g, '');
   const rg = document.getElementById('rg')?.value.replace(/\D/g, '');
   const senha = document.getElementById('senha')?.value.trim();
-  
   const diaData = document.getElementById('diaData')?.value || '';
   const mesData = document.getElementById('mesData')?.value || '';
   const anoData = document.getElementById('anoData')?.value || '';
-  
   const diaInclusao = document.getElementById('diaInclusao')?.value || '';
   const mesInclusao = document.getElementById('mesInclusao')?.value || '';
   const anoInclusao = document.getElementById('anoInclusao')?.value || '';
-
   const dataNascimentoValida = diaData && mesData && anoData;
   const dataInclusaoValida = diaInclusao && mesInclusao && anoInclusao;
-  
   const dataNascimento = dataNascimentoValida ? `${anoData}-${converterMesParaNumero(mesData)}-${diaData.padStart(2, '0')}` : '';
   const dataInclusao = dataInclusaoValida ? `${anoInclusao}-${converterMesParaNumero(mesInclusao)}-${diaInclusao.padStart(2, '0')}` : '';
-
   // Coletar promoções no formato correto
   const promocoesData = {};
   promocoesData.data_primeira_promocao = null;
@@ -1008,7 +907,6 @@ function coletarDadosFormulario() {
   promocoesData.data_oitava_promocao = null;
   promocoesData.data_nona_promocao = null;
   promocoesData.data_decima_promocao = null;
-  
   if (postoSelecionado) {
     let postos = [];
     if (ehOficial) {
@@ -1018,16 +916,13 @@ function coletarDadosFormulario() {
       const indice = POSTOS_PRACAS.indexOf(postoSelecionado);
       postos = POSTOS_PRACAS.slice(indice).reverse();
     }
-    
     const nomes = ['primeira', 'segunda', 'terceira', 'quarta', 'quinta', 'sexta', 'setima', 'oitava', 'nona', 'decima'];
-    
     postos.forEach((posto, index) => {
       if (index < 10) {
         const slug = posto.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
         const dia = document.getElementById(`diaPromocao${slug}`)?.value;
         const mes = document.getElementById(`mesPromocao${slug}`)?.value;
         const ano = document.getElementById(`anoPromocao${slug}`)?.value;
-        
         if (dia && mes && ano) {
           const nomePromocao = `data_${nomes[index]}_promocao`;
           promocoesData[nomePromocao] = `${ano}-${converterMesParaNumero(mes)}-${dia.padStart(2, '0')}`;
@@ -1035,11 +930,9 @@ function coletarDadosFormulario() {
       }
     });
   }
-
   // Determinar pelotão e setor para unidade específica
   let pelotao = null;
   let setor = null;
-  
   if (ehPraca) {
     const pelotonsSelecionados = locaisSelecionados.filter(local => local.includes('PEL'));
     if (pelotonsSelecionados.length > 0) {
@@ -1050,7 +943,6 @@ function coletarDadosFormulario() {
     }
     setor = setorSelecionado ? setorSelecionado.toUpperCase() : null;
   }
-
   // Estrutura das 6 tabelas
   return {
     // TABELA LOGIN
@@ -1061,7 +953,6 @@ function coletarDadosFormulario() {
       nivel: 'Usuário',
       aprovacao: 'Aguardando'
     },
-    
     // TABELA USUARIOS
     usuarios: {
       cpf: cpf,
@@ -1075,7 +966,6 @@ function coletarDadosFormulario() {
       antiguidade: null,
       ativo: true
     },
-    
     // TABELA PROMOCOES
     promocoes: {
       cpf: cpf,
@@ -1084,7 +974,6 @@ function coletarDadosFormulario() {
       data_nascimento: dataNascimento,
       ...promocoesData
     },
-    
     // TABELA LOTACOES
     lotacoes: {
       lotacao_codigo: `4CRBM2CIBM-${cpf}-001`,
@@ -1094,7 +983,6 @@ function coletarDadosFormulario() {
       data_fim: null,
       ativo: true
     },
-    
     // TABELA _4CRBM2CIBM_usuarios (apenas se for da unidade)
     unidade_especifica: {
       cpf: cpf,
@@ -1103,7 +991,6 @@ function coletarDadosFormulario() {
     }
   };
 }
-
 function converterMesParaNumero(mes) {
   const meses = {
     'Janeiro': '01', 'Fevereiro': '02', 'Março': '03', 'Abril': '04',
@@ -1112,31 +999,25 @@ function converterMesParaNumero(mes) {
   };
   return meses[mes] || mes.toString().padStart(2, '0');
 }
-
 function setErro(campo, mensagem) {
   if (!campo) return;
   campo.classList.add('erro');
   const erroEl = campo.closest('.grupoDeFormulario')?.querySelector('.mensagemDeErro');
   if (erroEl) erroEl.textContent = mensagem;
 }
-
 function limparErro(campo) {
   if (!campo) return;
   campo.classList.remove('erro');
   const erroEl = campo.closest('.grupoDeFormulario')?.querySelector('.mensagemDeErro');
   if (erroEl) erroEl.textContent = '';
 }
-
 function enviarCadastro() {
   if (!validarTodosCampos()) return;
-
   const btnEnviar = document.getElementById('btnEnviar');
   btnEnviar.textContent = 'ENVIANDO...';
   btnEnviar.disabled = true;
-
   const dados = coletarDadosFormulario();
   const conteudo = btoa(JSON.stringify(dados, null, 2));
-
   enviarCadastroSeguro(dados)
     .then(resultado => {
       if (resultado.success) {
@@ -1152,82 +1033,65 @@ function enviarCadastro() {
       resetarBotaoEnviar();
     });
 }
-
 function mostrarModalSucesso(mensagemSucesso = 'Cadastro realizado com sucesso!') {
   const modal = document.createElement('div');
   modal.className = 'modalCadastro';
-  
   const caixa = document.createElement('div');
   caixa.className = 'caixaCadastro';
-  
   const mensagem = document.createElement('p');
   mensagem.className = 'mensagemCadastro';
   mensagem.textContent = mensagemSucesso;
-  
   const botao = document.createElement('button');
   botao.className = 'botaoCadastroOk';
   botao.textContent = 'OK';
-  
   botao.onclick = () => {
     document.body.removeChild(modal);
     resetarFormulario();
   };
-  
   caixa.appendChild(mensagem);
   caixa.appendChild(botao);
   modal.appendChild(caixa);
   document.body.appendChild(modal);
 }
-
 function mostrarModalErro(mensagemErro) {
   const modal = document.createElement('div');
   modal.className = 'modalCadastro';
-  
   const caixa = document.createElement('div');
   caixa.className = 'caixaCadastro';
-  
   const mensagem = document.createElement('p');
   mensagem.className = 'mensagemCadastro erro';
   mensagem.textContent = 'Erro: ' + mensagemErro;
-  
   const botao = document.createElement('button');
   botao.className = 'botaoCadastroOk';
   botao.textContent = 'OK';
-  
   botao.onclick = () => {
     document.body.removeChild(modal);
     resetarBotaoEnviar();
   };
-  
   caixa.appendChild(mensagem);
   caixa.appendChild(botao);
   modal.appendChild(caixa);
   document.body.appendChild(modal);
 }
-
 function resetarFormulario() {
   const btnEnviar = document.getElementById('btnEnviar');
   btnEnviar.textContent = 'ENVIAR';
   btnEnviar.disabled = false;
-  
   const camposAdicionais = document.getElementById('camposAdicionais');
   if (camposAdicionais) {
     camposAdicionais.innerHTML = '';
   }
-  
   const organizacao = document.getElementById('organizacao');
   if (organizacao) {
     organizacao.value = '';
     organizacao.classList.add('mostrandoPlaceholder');
   }
 }
-
 function resetarBotaoEnviar() {
   const btnEnviar = document.getElementById('btnEnviar');
   btnEnviar.textContent = 'ENVIAR';
   btnEnviar.disabled = false;
 }
-
 function voltarParaLogin() {
   window.location.href = 'index.html';
 }

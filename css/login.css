@@ -2,7 +2,6 @@
   box-sizing: border-box;
   font-family: Montserrat;
 }
-
 body {
   height: 100vh;
   color: hsl(0, 0%, 13%);
@@ -14,16 +13,13 @@ body {
   justify-content: flex-start;
   padding: 7rem 2rem 2rem 2rem;
 }
-
 .logo-area {
   margin-left: 2rem;
   margin-bottom: 1rem;
 }
-
 .logo-area img {
   height: 6rem;
 }
-
 .card {
   background: hsl(0, 0%, 100%);
   border-radius: 0.3rem;
@@ -32,12 +28,10 @@ body {
   width: 23rem;
   max-width: 100%;
 }
-
 .form-row {
   position: relative;
   margin-bottom: 1rem;
 }
-
 label {
   position: absolute;
   left: 0.6rem;
@@ -52,7 +46,6 @@ label {
   pointer-events: none;
   z-index: 2;
 }
-
 input[type="text"],
 input[type="password"] {
   background: hsl(0, 0%, 100%);
@@ -65,18 +58,15 @@ input[type="password"] {
   width: 100%;
   padding: 0 0.6rem;
 }
-
 input[type="text"]:focus,
 input[type="password"]:focus {
   outline: none;
   border-width: 2px;
 }
-
 input[type="text"].erro,
 input[type="password"].erro {
   background: hsl(0, 100%, 90%);
 }
-
 .mensagemDeErro {
   color: hsl(0, 90%, 40%);
   font-size: 0.7rem;
@@ -84,16 +74,13 @@ input[type="password"].erro {
   margin: 0.1rem 0 0 0.6rem;
   display: none;
 }
-
 .mensagemDeErro:not(:empty) {
   display: block;
 }
-
 .actions {
   display: flex;
   flex-direction: column;
 }
-
 .btn {
   border: none;
   border-radius: 0.3rem;
@@ -108,17 +95,14 @@ input[type="password"].erro {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
 }
-
 .btn:hover {
   font-weight: 800;
 }
-
 .links {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 .links button {
   border: none;
   border-radius: 0.3rem;
@@ -132,11 +116,9 @@ input[type="password"].erro {
   background: none;
   color: hsl(0, 0%, 0%);
 }
-
 .links button:first-child {
   margin-bottom: 0.5rem;
 }
-
 .links button:hover {
   font-weight: 800;
 }

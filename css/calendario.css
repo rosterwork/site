@@ -1,7 +1,6 @@
 html {
   font-size: 1rem;
 }
-
 .calendario-calendar {
   background: transparent;
   opacity: 0;
@@ -27,30 +26,25 @@ html {
   -webkit-box-shadow: 0.065rem 0 0 #e6e6e6, -0.065rem 0 0 #e6e6e6, 0 0.065rem 0 #e6e6e6, 0 -0.065rem 0 #e6e6e6, 0 0.205rem 0.875rem rgba(0, 0, 0, 0.08);
   box-shadow: 0.065rem 0 0 #e6e6e6, -0.065rem 0 0 #e6e6e6, 0 0.065rem 0 #e6e6e6, 0 -0.065rem 0 #e6e6e6, 0 0.205rem 0.875rem rgba(0, 0, 0, 0.08);
 }
-
 .calendario-calendar.open,
 .calendario-calendar.inline {
   opacity: 1;
   max-height: none;
   visibility: visible;
 }
-
 .calendario-calendar.open {
   display: inline-block;
   z-index: 99999;
 }
-
 .calendario-calendar.animate.open {
   -webkit-animation: fpFadeInDown 300ms cubic-bezier(.23, 1, .32, 1);
   animation: fpFadeInDown 300ms cubic-bezier(.23, 1, .32, 1);
 }
-
 .calendario-calendar.inline {
   display: block;
   position: relative;
   top: 0.14rem;
 }
-
 .calendario-overlay {
   position: fixed;
   inset: 0;
@@ -62,27 +56,22 @@ html {
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
-
 .calendario-calendar.static {
   position: absolute;
   top: calc(100% + 0.14rem);
 }
-
 .calendario-calendar.static.open {
   z-index: 999;
   display: block;
 }
-
 .calendario-wrapper {
   position: relative;
   display: inline-block;
 }
-
 .calendario-months {
   display: flex;
   width: 16.632rem;
 }
-
 .calendario-header {
   display: flex;
   width: 16.632rem;
@@ -90,7 +79,6 @@ html {
   align-items: center;
   margin-left: -0.4rem;
 }
-
 .month-container {
   display: flex;
   align-items: center;
@@ -98,7 +86,6 @@ html {
   flex: 4;
   margin-right: 0.6rem;
 }
-
 .month-container .cur-month {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
@@ -109,14 +96,12 @@ html {
   font-size: 1.14rem;
   text-align: center;
 }
-
 .year-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex: 2;
 }
-
 .year-container .cur-year {
   font-family: 'Montserrat', sans-serif;
   color: rgba(0, 0, 0, 0.9);
@@ -127,9 +112,6 @@ html {
   font-size: 1.14rem;
   text-align: center;
 }
-
-
-
 .calendario-month {
   background: transparent;
   color: rgba(0, 0, 0, 0.9);
@@ -141,7 +123,6 @@ html {
   overflow: visible;
   flex: 1;
 }
-
 .calendario-prev-month,
 .calendario-next-month {
   user-select: none;
@@ -157,15 +138,12 @@ html {
   border-radius: 50%;
   transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
-
 .calendario-prev-month {
   transform: rotate(90deg);
 }
-
 .calendario-next-month {
   transform: rotate(-90deg);
 }
-
 .calendario-prev-month svg,
 .calendario-next-month svg {
   width: 0.9rem;
@@ -174,15 +152,11 @@ html {
   stroke-width: 1.5;
   fill: none;
 }
-
 .calendario-prev-month:hover,
 .calendario-next-month:hover {
   color: rgba(0, 0, 0, 0.9);
   background: #e6e6e6;
 }
-
-
-
 .calendario-weekdays {
   background: transparent;
   text-align: center;
@@ -192,13 +166,11 @@ html {
   align-items: center;
   height: 1.89rem;
 }
-
 .calendario-weekdaycontainer {
   display: flex;
   width: 16.632rem;
   box-sizing: border-box;
 }
-
 span.calendario-weekday {
   cursor: default;
   font-size: 90%;
@@ -215,12 +187,10 @@ span.calendario-weekday {
   padding: 0.27rem 0;
   box-sizing: border-box;
 }
-
 .dayContainer,
 .calendario-weeks {
   padding: 0.065rem 0 0 0;
 }
-
 .calendario-days {
   position: relative;
   overflow: hidden;
@@ -229,7 +199,6 @@ span.calendario-weekday {
   width: 16.632rem;
   padding: 0;
 }
-
 .dayContainer {
   padding: 0;
   outline: 0;
@@ -242,7 +211,6 @@ span.calendario-weekday {
   transform: translate3d(0, 0, 0);
   opacity: 1;
 }
-
 .calendario-day {
   background: none;
   border: 0.065rem solid transparent;
@@ -265,7 +233,6 @@ span.calendario-weekday {
   align-items: center;
   text-align: center;
 }
-
 .calendario-day.inRange,
 .calendario-day.prevMonthDay.inRange,
 .calendario-day.nextMonthDay.inRange,
@@ -283,18 +250,15 @@ span.calendario-weekday {
   background: #e6e6e6;
   border-color: #e6e6e6;
 }
-
 .calendario-day.today {
   border-color: #959ea9;
 }
-
 .calendario-day.today:hover,
 .calendario-day.today:focus {
   border-color: #959ea9;
   background: #959ea9;
   color: #fff;
 }
-
 .calendario-day.selected,
 .calendario-day.startRange,
 .calendario-day.endRange {
@@ -303,51 +267,41 @@ span.calendario-weekday {
   color: #fff;
   border-color: #569ff7;
 }
-
 .calendario-day.selected.startRange {
   border-radius: 3.38rem 0 0 3.38rem;
 }
-
 .calendario-day.selected.endRange {
   border-radius: 0 3.38rem 3.38rem 0;
 }
-
 .calendario-day.inRange {
   border-radius: 0;
   box-shadow: -0.335rem 0 0 #e6e6e6, 0.335rem 0 0 #e6e6e6;
 }
-
 .calendario-day.disabled,
 .calendario-day.prevMonthDay,
 .calendario-day.nextMonthDay {
   color: rgba(57, 57, 57, 0.3);
 }
-
 .calendario-day.disabled {
   cursor: default;
 }
-
 .calendario-day.prevMonthDay,
 .calendario-day.nextMonthDay {
   color: #ddd;
   cursor: pointer;
 }
-
 .calendario-day.prevMonthDay:hover,
 .calendario-day.nextMonthDay:hover {
   color: #bbb;
   background: transparent;
 }
-
 .calendario-time {
   height: 0;
   overflow: hidden;
 }
-
 .calendario-input[readonly] {
   cursor: pointer;
 }
-
 @keyframes fpFadeInDown {
   from {
     opacity: 0;

@@ -1,6 +1,11 @@
 const SUPABASE_URL = 'https://dyrroflwjsntlunwteod.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5cnJvZmx3anNudGx1bnd0ZW9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIxOTQ1NjEsImV4cCI6MjA3Nzc3MDU2MX0.ItqYhIeLNAnhRCUjIGRmIXKE_skDk4s1JH816cf7Cto';
 
+// === REMOVER ESTA PARTE QUANDO SISTEMA ESTIVER PRONTO ===
+const SUPABASE_SECRET_KEY_LOCAL = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5cnJvZmx3anNudGx1bnd0ZW9kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MjE5NDU2MSwiZXhwIjoyMDc3NzcwNTYxfQ.pNaZmHp4k8CYVrQLfPWcpCa-xNLqVJL8FRlSGzDQoxY';
+const isLocalSupabase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+// === FIM DA PARTE PARA REMOVER ===
+
 let supabaseClient = null;
 
 function initSupabase() {
@@ -10,7 +15,9 @@ function initSupabase() {
   }
   
   if (!supabaseClient) {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Detecção automática de ambiente
+    const key = isLocalSupabase ? SUPABASE_SECRET_KEY_LOCAL : SUPABASE_ANON_KEY;
+    supabaseClient = supabase.createClient(SUPABASE_URL, key);
   }
   
   return supabaseClient;

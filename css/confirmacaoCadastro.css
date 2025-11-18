@@ -11,7 +11,6 @@
   z-index: 99999;
   backdrop-filter: blur(3px);
 }
-
 .caixaCadastro {
   background: white;
   padding: 30px;
@@ -22,18 +21,15 @@
   margin: 20px;
   font-family: 'Montserrat', sans-serif;
 }
-
 .mensagemCadastro {
   margin: 0 0 20px 0;
   font-size: 16px;
   color: #4caf50;
   font-weight: 500;
 }
-
 .mensagemCadastro.erro {
   color: #d32f2f;
 }
-
 .botaoCadastroOk {
   background: #000;
   color: white;
@@ -46,11 +42,9 @@
   font-weight: 600;
   transition: background 0.2s;
 }
-
 .botaoCadastroOk:hover {
   background: #333;
 }
-
 .botaoCadastroOk:active {
   background: #000;
 }
