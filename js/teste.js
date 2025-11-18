@@ -88,11 +88,62 @@ function gerarNomeCompleto() {
 
 function gerarNomeGuerra(nomeCompleto) {
     const partes = nomeCompleto.split(' ');
-    const opcoes = [
-        partes[0],
-        partes[partes.length - 1],
-        partes[0] + ' ' + partes[partes.length - 1]
-    ];
+    const conectivos = ['DE', 'DA', 'DO', 'DOS', 'DAS', 'E'];
+    const opcoes = [];
+    
+    // Função para verificar se uma palavra é conectivo
+    const ehConectivo = (palavra) => conectivos.includes(palavra.toUpperCase());
+    
+    // Função para verificar se uma combinação é válida (não termina nem começa com conectivo sozinho)
+    const combinacaoValida = (inicio, fim) => {
+        if (inicio === fim) {
+            // Nome de uma palavra só - não pode ser conectivo
+            return !ehConectivo(partes[inicio]);
+        } else {
+            // Nome de duas palavras - não pode começar nem terminar com conectivo
+            return !ehConectivo(partes[inicio]) && !ehConectivo(partes[fim]);
+        }
+    };
+    
+    // Gerar todas as combinações válidas de 1 palavra
+    for (let i = 0; i < partes.length; i++) {
+        if (combinacaoValida(i, i)) {
+            opcoes.push(partes[i]);
+        }
+    }
+    
+    // Gerar todas as combinações válidas de 2 palavras consecutivas
+    for (let i = 0; i < partes.length - 1; i++) {
+        if (combinacaoValida(i, i + 1)) {
+            const palavra1 = partes[i];
+            const palavra2 = partes[i + 1];
+            
+            // Versão completa
+            opcoes.push(palavra1 + ' ' + palavra2);
+            
+            // Versão com primeira palavra abreviada (aleatório se aplica)
+            if (Math.random() > 0.5) {
+                opcoes.push(palavra1.charAt(0) + '. ' + palavra2);
+            }
+            
+            // Versão com segunda palavra abreviada (aleatório se aplica)
+            if (Math.random() > 0.5) {
+                opcoes.push(palavra1 + ' ' + palavra2.charAt(0) + '.');
+            }
+        }
+    }
+    
+    // Se não houver opções válidas (caso extremo), usar o primeiro nome não-conectivo
+    if (opcoes.length === 0) {
+        for (let i = 0; i < partes.length; i++) {
+            if (!ehConectivo(partes[i])) {
+                return partes[i];
+            }
+        }
+        return partes[0]; // fallback final
+    }
+    
+    // Retornar opção aleatória
     return opcoes[Math.floor(Math.random() * opcoes.length)];
 }
 
