@@ -412,68 +412,7 @@ function adicionarLog(mensagem, tipo = 'info') {
     logContent.scrollTop = logContent.scrollHeight;
 }
 
-function formatarDadosParaWorker(militar) {
-    // Formatar dados para estrutura compatível com as 6 tabelas
-    return {
-        // Dados para tabela LOGIN
-        login: {
-            cpf: militar.cpf,
-            rg: militar.rg,
-            senha_hash: militar.senha, // Será hasheada pelo worker
-            nivel: 'Usuário',
-            aprovacao: 'Aguardando'
-        },
-        
-        // Dados para tabela USUARIOS
-        usuarios: {
-            cpf: militar.cpf,
-            nome_completo: militar.nome_completo,
-            nome_guerra: militar.nome_guerra,
-            posto_patente: militar.posto_patente,
-            tipo_militar: militar.tipo_militar,
-            rg: militar.rg,
-            data_nascimento: militar.data_nascimento,
-            categoria_cnh: militar.categoria_cnh,
-            antiguidade: null, // Será calculada pelo worker
-            ativo: true
-        },
-        
-        // Dados para tabela PROMOCOES
-        promocoes: {
-            cpf: militar.cpf,
-            data_inclusao: militar.data_inclusao,
-            classificacao_cfo_cfp: militar.classificacao_cfo_cfp,
-            data_nascimento: militar.data_nascimento,
-            data_primeira_promocao: militar.data_primeira_promocao,
-            data_segunda_promocao: militar.data_segunda_promocao,
-            data_terceira_promocao: militar.data_terceira_promocao,
-            data_quarta_promocao: militar.data_quarta_promocao,
-            data_quinta_promocao: militar.data_quinta_promocao,
-            data_sexta_promocao: militar.data_sexta_promocao,
-            data_setima_promocao: militar.data_setima_promocao,
-            data_oitava_promocao: militar.data_oitava_promocao,
-            data_nona_promocao: militar.data_nona_promocao,
-            data_decima_promocao: militar.data_decima_promocao
-        },
-        
-        // Dados para tabela LOTACOES
-        lotacoes: {
-            lotacao_codigo: `${militar.unidade_codigo}-${militar.cpf}-001`,
-            cpf: militar.cpf,
-            unidade_codigo: militar.unidade_codigo,
-            data_inicio: militar.data_inicio_lotacao,
-            data_fim: null,
-            ativo: true
-        },
-        
-        // Dados para tabela _4CRBM2CIBM_usuarios (apenas se for da unidade)
-        unidade_especifica: militar.unidade_codigo === '4CRBM2CIBM' ? {
-            cpf: militar.cpf,
-            pelotao: militar.pelotao,
-            setor: militar.setor
-        } : null
-    };
-}
+// Função removida - formatação agora é feita diretamente na função enviarCadastro
 
 async function enviarCadastro(militar) {
     try {
@@ -483,33 +422,64 @@ async function enviarCadastro(militar) {
             throw new Error('Cliente Supabase não disponível');
         }
         
-        // Preparar dados para fila_cadastros
+        // Preparar dados para fila_cadastros (estrutura que o worker espera)
         const dadosParaFila = {
-            cpf: militar.cpf,
-            nome_completo: militar.nome_completo,
-            nome_guerra: militar.nome_guerra,
-            posto_patente: militar.posto_patente,
-            tipo_militar: militar.tipo_militar,
-            rg: militar.rg,
-            data_nascimento: militar.data_nascimento,
-            categoria_cnh: militar.categoria_cnh,
-            data_inclusao: militar.data_inclusao,
-            classificacao_cfo_cfp: militar.classificacao_cfo_cfp,
-            data_primeira_promocao: militar.data_primeira_promocao,
-            data_segunda_promocao: militar.data_segunda_promocao,
-            data_terceira_promocao: militar.data_terceira_promocao,
-            data_quarta_promocao: militar.data_quarta_promocao,
-            data_quinta_promocao: militar.data_quinta_promocao,
-            data_sexta_promocao: militar.data_sexta_promocao,
-            data_setima_promocao: militar.data_setima_promocao,
-            data_oitava_promocao: militar.data_oitava_promocao,
-            data_nona_promocao: militar.data_nona_promocao,
-            data_decima_promocao: militar.data_decima_promocao,
-            unidade_codigo: militar.unidade_codigo,
-            data_inicio_lotacao: militar.data_inicio_lotacao,
-            pelotao: militar.pelotao,
-            setor: militar.setor,
-            senha: militar.senha
+            // Dados para tabela LOGIN
+            login: {
+                cpf: militar.cpf,
+                rg: militar.rg,
+                senha_hash: militar.senha, // Worker fará o hash
+                nivel: 'Usuário',
+                aprovacao: 'Aguardando'
+            },
+            
+            // Dados para tabela USUARIOS
+            usuarios: {
+                cpf: militar.cpf,
+                nome_completo: militar.nome_completo,
+                nome_guerra: militar.nome_guerra,
+                posto_patente: militar.posto_patente,
+                tipo_militar: militar.tipo_militar,
+                rg: militar.rg,
+                data_nascimento: militar.data_nascimento,
+                categoria_cnh: militar.categoria_cnh,
+                ativo: true
+            },
+            
+            // Dados para tabela PROMOCOES
+            promocoes: {
+                cpf: militar.cpf,
+                data_inclusao: militar.data_inclusao,
+                classificacao_cfo_cfp: militar.classificacao_cfo_cfp,
+                data_nascimento: militar.data_nascimento, // Duplicado conforme worker espera
+                data_primeira_promocao: militar.data_primeira_promocao,
+                data_segunda_promocao: militar.data_segunda_promocao,
+                data_terceira_promocao: militar.data_terceira_promocao,
+                data_quarta_promocao: militar.data_quarta_promocao,
+                data_quinta_promocao: militar.data_quinta_promocao,
+                data_sexta_promocao: militar.data_sexta_promocao,
+                data_setima_promocao: militar.data_setima_promocao,
+                data_oitava_promocao: militar.data_oitava_promocao,
+                data_nona_promocao: militar.data_nona_promocao,
+                data_decima_promocao: militar.data_decima_promocao
+            },
+            
+            // Dados para tabela LOTACOES
+            lotacoes: {
+                lotacao_codigo: `${militar.unidade_codigo}-${militar.cpf}-001`,
+                cpf: militar.cpf,
+                unidade_codigo: militar.unidade_codigo,
+                data_inicio: militar.data_inicio_lotacao,
+                data_fim: null,
+                ativo: true
+            },
+            
+            // Dados para tabela _4CRBM2CIBM_usuarios (apenas se for da unidade)
+            unidade_especifica: militar.unidade_codigo === '4CRBM2CIBM' ? {
+                cpf: militar.cpf,
+                pelotao: militar.pelotao,
+                setor: militar.setor
+            } : null
         };
         
         // Usar função segura do PostgreSQL
