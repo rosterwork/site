@@ -477,17 +477,58 @@ function formatarDadosParaWorker(militar) {
 
 async function enviarCadastro(militar) {
     try {
-        const dadosFormatados = formatarDadosParaWorker(militar);
-        
-        const resultado = await enviarCadastroSeguro(dadosFormatados);
-        
-        if (resultado.success) {
-            adicionarLog(`✅ ${militar.nome_guerra}: ${resultado.message}`, 'sucesso');
-            return { sucesso: true, mensagem: resultado.message };
-        } else {
-            adicionarLog(`❌ ${militar.nome_guerra}: ${resultado.error}`, 'erro');
-            return { sucesso: false, mensagem: resultado.error };
+        // Verificar se Supabase está disponível
+        const client = getSupabaseClient();
+        if (!client) {
+            throw new Error('Cliente Supabase não disponível');
         }
+        
+        // Preparar dados para fila_cadastros
+        const dadosParaFila = {
+            cpf: militar.cpf,
+            nome_completo: militar.nome_completo,
+            nome_guerra: militar.nome_guerra,
+            posto_patente: militar.posto_patente,
+            tipo_militar: militar.tipo_militar,
+            rg: militar.rg,
+            data_nascimento: militar.data_nascimento,
+            categoria_cnh: militar.categoria_cnh,
+            data_inclusao: militar.data_inclusao,
+            classificacao_cfo_cfp: militar.classificacao_cfo_cfp,
+            data_primeira_promocao: militar.data_primeira_promocao,
+            data_segunda_promocao: militar.data_segunda_promocao,
+            data_terceira_promocao: militar.data_terceira_promocao,
+            data_quarta_promocao: militar.data_quarta_promocao,
+            data_quinta_promocao: militar.data_quinta_promocao,
+            data_sexta_promocao: militar.data_sexta_promocao,
+            data_setima_promocao: militar.data_setima_promocao,
+            data_oitava_promocao: militar.data_oitava_promocao,
+            data_nona_promocao: militar.data_nona_promocao,
+            data_decima_promocao: militar.data_decima_promocao,
+            unidade_codigo: militar.unidade_codigo,
+            data_inicio_lotacao: militar.data_inicio_lotacao,
+            pelotao: militar.pelotao,
+            setor: militar.setor,
+            senha: militar.senha
+        };
+        
+        // Inserir na tabela fila_cadastros do Supabase
+        const { data, error } = await client
+            .from('fila_cadastros')
+            .insert({
+                cpf: militar.cpf,
+                dados_json: dadosParaFila,
+                status: 'PENDENTE'
+            })
+            .select();
+        
+        if (error) {
+            throw new Error(`Erro Supabase: ${error.message}`);
+        }
+        
+        adicionarLog(`✅ ${militar.nome_guerra}: Inserido na fila (ID: ${data[0].id})`, 'sucesso');
+        return { sucesso: true, mensagem: 'Inserido na fila do Supabase', dados: data[0] };
+        
     } catch (error) {
         adicionarLog(`❌ ${militar.nome_guerra}: ${error.message}`, 'erro');
         return { sucesso: false, mensagem: error.message };
@@ -536,9 +577,7 @@ async function enviarSelecionados() {
     cadastrosEnAndamento = militaresSelecionados.length;
     atualizarContador();
     
-    adicionarLog(`🚀 Iniciando envio realístico de ${militaresSelecionados.length} cadastros (intervalos de 1-2s, máx 10 simultâneos)`, 'info');
-    
-    // Dividir em grupos de máximo 10 para simular cenário real
+        adicionarLog(`🚀 Iniciando envio REAL para Supabase de ${militaresSelecionados.length} cadastros (intervalos de 1-2s, máx 10 simultâneos)`, 'info');    // Dividir em grupos de máximo 10 para simular cenário real
     const tamanhoGrupo = Math.min(10, militaresSelecionados.length);
     const grupos = [];
     
@@ -592,7 +631,7 @@ async function enviarSelecionados() {
         const sucessos = todosResultados.filter(r => r.resultado.sucesso).length;
         const erros = todosResultados.filter(r => !r.resultado.sucesso).length;
         
-        adicionarLog(`✅ Simulação realística concluída: ${sucessos} sucessos, ${erros} erros`, sucessos > erros ? 'sucesso' : 'erro');
+        adicionarLog(`✅ Envio real para Supabase concluído: ${sucessos} sucessos, ${erros} erros`, sucessos > erros ? 'sucesso' : 'erro');
         
         checkboxes.forEach(cb => cb.checked = false);
         
@@ -607,9 +646,19 @@ async function enviarSelecionados() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    adicionarLog('🔄 Inicializando sistema de teste real...', 'info');
+    
+    // Testar conexão com Supabase
+    const conexao = await testSupabaseConnection();
+    if (conexao.success) {
+        adicionarLog('✅ Conexão com Supabase estabelecida', 'sucesso');
+    } else {
+        adicionarLog(`❌ Erro na conexão: ${conexao.error}`, 'erro');
+    }
+    
     adicionarLog('🔄 Gerando militares aleatórios...', 'info');
     gerarTodosMilitares();
-    adicionarLog('✅ 150 militares gerados (50 oficiais + 100 praças)', 'sucesso');
+    adicionarLog('✅ 150 militares gerados (50 oficiais + 100 praças) - PRONTO PARA ENVIO REAL', 'sucesso');
     atualizarContador();
 });
