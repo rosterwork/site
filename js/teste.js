@@ -512,22 +512,24 @@ async function enviarCadastro(militar) {
             senha: militar.senha
         };
         
-        // Inserir na tabela fila_cadastros do Supabase
-        const { data, error } = await client
-            .from('fila_cadastros')
-            .insert({
-                cpf: militar.cpf,
-                dados_json: dadosParaFila,
-                status: 'PENDENTE'
-            })
-            .select();
+        // Usar função segura do PostgreSQL
+        const { data, error } = await client.rpc('processar_cadastro_teste', {
+            p_cpf: militar.cpf,
+            p_dados_json: dadosParaFila,
+            p_origem: 'teste-carga'
+        });
         
         if (error) {
-            throw new Error(`Erro Supabase: ${error.message}`);
+            throw new Error(`Erro na função: ${error.message}`);
         }
         
-        adicionarLog(`✅ ${militar.nome_guerra}: Inserido na fila (ID: ${data[0].id})`, 'sucesso');
-        return { sucesso: true, mensagem: 'Inserido na fila do Supabase', dados: data[0] };
+        // Verificar se a função retornou sucesso
+        if (!data.success) {
+            throw new Error(data.error || 'Erro desconhecido');
+        }
+        
+        adicionarLog(`✅ ${militar.nome_guerra}: Inserido na fila (ID: ${data.id})`, 'sucesso');
+        return { sucesso: true, mensagem: 'Inserido na fila do Supabase', dados: data };
         
     } catch (error) {
         adicionarLog(`❌ ${militar.nome_guerra}: ${error.message}`, 'erro');
